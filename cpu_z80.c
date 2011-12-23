@@ -857,28 +857,28 @@ static void cbPrefix()
 		case 0x0:
 			if(lowInst < 8) // RLC
 				ticks += rotateRegLeftC(reg);
-			else			// RRC
+			else            // RRC
 				ticks += rotateRegRightC(reg);
 			break;
 		case 0x1:
 			if(lowInst < 8) // RL
 				ticks += rotateRegLeft(reg);
-			else			// RR
+			else            // RR
 			 	ticks += rotateRegRight(reg);
 			break;
 		case 0x2:
 			if(lowInst < 8) // SLA
 				ticks += shiftRegLeftA(reg);
-			else			// SRA
+			else            // SRA
 				ticks += shiftRegRightA(reg);
 			break;			
 		case 0x3:
 			if(lowInst < 8) // SWAP
 				ticks += swapReg(reg);
-			else			// SRL
+			else            // SRL
 				ticks += shiftRegRightL(reg);
 			break;
-		case 0x4:			// BIT
+		case 0x4:           // BIT
 		case 0x5:
 		case 0x6:
 		case 0x7:
@@ -889,7 +889,7 @@ static void cbPrefix()
 			// test bit does not need to write back to memory.
 			memWrite = 0;
 			break;
-		case 0x8:			// RES
+		case 0x8:            // RES
 		case 0x9:
 		case 0xA:
 		case 0xB:
@@ -898,7 +898,7 @@ static void cbPrefix()
 			else
 				ticks += resetRegBit(reg, ((highInst - 8) * 2) + 1);
 			break;
-		case 0xC:			// SET
+		case 0xC:             // SET
 		case 0xD:
 		case 0xE:
 		case 0xF:

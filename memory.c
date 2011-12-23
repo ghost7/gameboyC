@@ -51,7 +51,7 @@ GAME_ERROR initMemory(Cartidge* game)
 	gameBoyMem[0xFF23 - memLoc] = 0xBF; // NR30
 	gameBoyMem[0xFF24 - memLoc] = 0x77; // NR50
 	gameBoyMem[0xFF25 - memLoc] = 0xF3; // NR51
-	if(game->SGB)						// NR52
+	if(game->SGB)                       // NR52
 		gameBoyMem[0xFF26 - memLoc] = 0xF0; 
 	else
 		gameBoyMem[0xFF26 - memLoc] = 0xF1; 
