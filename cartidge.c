@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "cartidge.h"
-#include "mbc.h"
 
 static int8_t* getFileContents(char* fileName);
 static char* getGameTitle(int8_t* fileData);
@@ -453,7 +452,7 @@ static GAME_ERROR verifyCheckSums(int8_t* fileData, int romSize)
 		printf("Invalid Global check sum. Should be %d but is %d.\n", 
 			globalSum, gCheckSum);
 #endif
-		return G_CHECK_SUM_ERR;
+		//return G_CHECK_SUM_ERR;
 	}
 	
 	return NO_ERR;
