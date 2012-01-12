@@ -1,10 +1,14 @@
 #include <stdint.h>
 #include <stdio.h>
+#include "cpu_z80.h"
 #include "cpu_z80_inst.h"
 #include "memory.h"
 #include "registers.h"
+#ifdef DEBUG
+	#include "debug.h"
+#endif
 
-static void cbPrefix();
+static int cbPrefix();
 static int getFRegister();
 static void setFRegister(int8_t value);
 static int8_t registerF;
@@ -23,16 +27,58 @@ void initCpu()
 	setFRegister(0xB0);
 	registers.H = 0x01;
 	registers.L = 0x4D;
-	registers.PC = 0x100;
+	registers.PC = 0x00;
 	registers.SP = 0xFFFE;
+}
+
+
+int checkInterrupts()
+{
+	// Mask off interrupts that are not enabled.
+	uint8_t interruptState = register_IE & register_IF;     // IE & IF
+	int ticks = 0;
+
+	if(interruptState && intMasEnable)
+	{
+		switch(interruptState)
+		{
+			case 0x01:                 // Vertical Blank
+				ticks += sysCall(0x40);
+				ioRegisters[0x0F] = 0;
+				break;
+			case 0x02:                 // LCD status triggers
+				ticks += sysCall(0x48);
+				ioRegisters[0x0F] = 0;
+				break;
+			case 0x04:                 // Timer overflow
+				ticks += sysCall(0x50);
+				ioRegisters[0x0F] = 0;
+				break;
+			case 0x08:                 // Serial link
+				ticks += sysCall(0x58);
+				ioRegisters[0x0F] = 0;
+				break;
+			case 0x10:                 // Joypad State
+				ticks += sysCall(0x60);
+				ioRegisters[0x0F] = 0;
+				break;
+		}
+	}
+	return ticks;
 }
 
 /**
  * Execute the next instruction.
  */
-void step()
+int cpuStep()
 {
 	uint8_t cpuInst = memoryRead(registers.PC++);
+
+#ifdef DEBUG
+	printInst(registers.PC - 1, cpuInst);
+#endif
+
+	int ticks = 0;	
 	switch(cpuInst)
 	{
 		case 0x00: // NOP
@@ -123,7 +169,7 @@ void step()
 			ticks += incReg8(&registers.E);
 			break;
 		case 0x1D: // DEC E 
-			ticks += incReg8(&registers.E);
+			ticks += decReg8(&registers.E);
 			break;
 		case 0x1E: // LD E, n
 			ticks += loadImmReg8(&registers.E);
@@ -182,11 +228,11 @@ void step()
 		case 0x30: // JR NC, d
 			ticks += conditionalRelativeJump(flags.C == 0);
 			break;
-		case 0x31: // LDD (HL), A
-			ticks += storeDecrement(); 
+		case 0x31: // LD SP, nn
+			ticks += loadSPImm();
 			break;
 		case 0x32: // LD (nn), A
-			ticks += storeAInd();
+			ticks += storeDecrement();
 			break;
 		case 0x33: // INC SP
 			registers.SP++;
@@ -647,7 +693,7 @@ void step()
 			ticks += conditionalJump(flags.Z == 1);
 			break;
 		case 0xCB: // Prefix
-			cbPrefix();
+			return cbPrefix();
 			break;
 		case 0xCC: // CALL Z, nn
 			ticks += conditionalCall(flags.Z == 1);
@@ -777,14 +823,20 @@ void step()
 		default:
 			printf("%x is an unsupported instruction\n", cpuInst); 
 	}
+	return ticks;
 }
 
-static void cbPrefix()
+static int cbPrefix()
 {
+
 	// break the instruction down
 	int inst = memoryRead(registers.PC++);
 	int highInst = (inst >> 4) & 0xF;
 	int lowInst = inst & 0xF;
+
+#ifdef DEBUG
+	printCBInst(registers.PC - 1, inst);
+#endif
 	
 	// value that is being used
 	int8_t* reg = 0;
@@ -851,7 +903,8 @@ static void cbPrefix()
 			reg = &registers.A;
 			break;
 	}
-
+	
+	int ticks = 0;
 	switch(highInst)
 	{
 		case 0x0:
@@ -922,6 +975,8 @@ static void cbPrefix()
 			ticks += 4;
 		}
 	}
+
+	return ticks;
 }
 
 static int getFRegister()

@@ -6,6 +6,8 @@
 #define _Z80_INST_
 
 #include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 // 8-bit load commands
 int loadReg8(int8_t* src, int8_t* dest);      // ld r, r      r = r
@@ -30,7 +32,7 @@ int loadDecrement();                          // ldd A, (HL)   A = (HL), HL = HL
 int loadReg16(int8_t* reg1, int8_t* reg2);    // ld rr, nn
 int loadSPImm();                              // ld SP, nn
 int loadHLToSP();                             // ld SP, HL
-int pushToStack(int8_t reg1, int8_t reg2);    // push          SP = SP - 2, (SP) = rr			
+int pushToStack(int8_t reg1, int8_t reg2);    // push          SP = SP - 2, (SP) = rr
 int popFromStack(int8_t* reg1, int8_t* reg2); // pop           SP = SP + 2, rr = (SP)
 
 // 8-bit arithmetic/logical commands

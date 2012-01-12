@@ -1,7 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <SDL/SDL.h>
 #include "cartidge.h"
+#include "cpu_z80.h"
+#include "memory.h"
+#include "gpu_gb.h"
+
+int running = 1;
 
 /**
  * Reads a rom file and prints info about the game.
@@ -25,12 +31,45 @@ int main(int argc, char* argv[])
 
 	printGameInfo(game);
 
+	initCpu();
+	initMemory(game);
+	
+	if(SDL_Init(SDL_INIT_EVERYTHING) != 0)
+	{
+		printf("SDL could not initilize\n");
+		return 1;
+	}
+
+
+	SDL_Surface *screen = SDL_SetVideoMode(160, 144, 32, SDL_HWSURFACE);
+	if(!screen) {
+		SDL_Quit();
+		fprintf(stderr, "SDL_SetVideoMode failed\n");
+		return 1;
+	}
+	
+	//gpuInit(screen->pixels);
+	///SDL_Flip(screen);
+
+	SDL_Event event;
+	
+	while(running)
+	{
+		int ticks = cpuStep();
+		printRegisters();
+		//ticks += checkInterrupts();
+		while(SDL_PollEvent(&event))
+		{
+			if(event.type == SDL_QUIT)
+				running = 0;
+		}
+		gpuStep(ticks);
+		//if(SDL_Flip(screen) == -1)
+		//	return 1;
+	}
+
 	destroyGame(game);
 
-	int r = -1;
-	uint8_t tes = r;
-	tes += 1;
-	printf("%d\n", tes);
 
 	return 0;
 }
