@@ -26,8 +26,8 @@ uint8_t register_LYC;   // 0xFF45  LY Compare
 uint8_t register_WY;    // 0xFF4A  Window Y position
 uint8_t register_WX;    // 0xFF4B  Window X position minus 7
 uint8_t register_BGP[4];   // 0xFF47  Background Pallet Data
-uint8_t register_OBP0;  // 0xFF48  Object Pallete 0 Data
-uint8_t register_OBP1;  // 0xFF49  Object Pallete 1 Data
+uint8_t register_OBP0[4];  // 0xFF48  Object Pallete 0 Data
+uint8_t register_OBP1[4];  // 0xFF49  Object Pallete 1 Data
 
 // Interrupts
 uint8_t intMasEnable;   // Interrupt master enable

@@ -75,9 +75,9 @@ int cpuStep()
 	uint8_t cpuInst = memoryRead(registers.PC++);
 
 #ifdef DEBUG
-	printInst(registers.PC - 1, cpuInst);
+	printInst(registers.PC, cpuInst);
 #endif
-
+	
 	int ticks = 0;	
 	switch(cpuInst)
 	{
@@ -537,7 +537,7 @@ int cpuStep()
 			ticks += subHLInd(); 
 			break;
 		case 0x97: // SUB A
-			ticks += subReg(registers.B);
+			ticks += subReg(registers.A);
 			break;
 		case 0x98: // SBC A, B
 			ticks += sbcReg(registers.B);
@@ -897,7 +897,11 @@ static int cbPrefix()
 			reg = &registers.L;
 			break;
 		case 0xE:
-			HL = 1;
+			// (HL) is being used, grab it from memory and set the flag
+			isInd = 1;
+			HL = registers.H << 8 | registers.L;
+			hlMem = memoryRead(HL);
+			reg = &hlMem;
 			break;
 		case 0xF:
 			reg = &registers.A;

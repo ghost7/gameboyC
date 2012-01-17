@@ -132,15 +132,15 @@ uint8_t memoryRead(uint16_t memAddr)
 			case 0x43:
 				return register_SCX;
 			case 0x44:
-				return 0x90;
+				return register_LY;
 			case 0x45:
 				return register_LYC;
 			case 0x47:
 				return register_BGP[3] << 6 | register_BGP[2] << 4 | register_BGP[1] << 2 | register_BGP[0];
 			case 0x48:
-				return register_OBP0;
+				return register_OBP0[3] << 6 | register_OBP0[2] << 4 | register_OBP0[1] << 2 | register_OBP0[0];
 			case 0x49:
-				return register_OBP1;
+				return register_OBP1[3] << 6 | register_OBP1[2] << 4 | register_OBP1[1] << 2 | register_OBP1[0];
 			case 0x4A:
 				return register_WY;
 			case 0x4B:
@@ -150,7 +150,7 @@ uint8_t memoryRead(uint16_t memAddr)
 		}
 	}
 	else if (memAddr >= 0xFF80 && memAddr <= 0xFFFE)  // High RAM
-		return highRam[memAddr - 0xFF00];
+		return highRam[memAddr - 0xFF80];
 	else if(memAddr == 0xFFFF)                        // Interrupt enabled register.
 		return register_IE;
 	else                                              // All other addresses 
@@ -168,7 +168,7 @@ void memoryWrite(uint16_t memAddr, uint8_t data)
 	if(memAddr >= 0x8000 && memAddr <= 0xA000)        // Video RAM (switchable in CGB, add support later?)
 	{
 		int lcdMode = register_STAT & 0x3;
-		if(lcdMode != 3)                              // LCD controller is reading from VRAM when the lcdMode   	
+		//if(lcdMode != 3)                              // LCD controller is reading from VRAM when the lcdMode   	
 			videoRam[memAddr - 0x8000] = data;        // equals 3, so the CPU cannot access VRAM
 	}
 	else if (memAddr >= 0xC000 && memAddr <= 0xCFFF)  // Work RAM Bank 0 
@@ -186,7 +186,7 @@ void memoryWrite(uint16_t memAddr, uint8_t data)
 	else if(memAddr >= 0xFE00 && memAddr <= 0xFE9F)   // Sprite Attribute Table
 	{
 		int lcdMode = register_STAT & 0x3;
-		if((lcdMode == 0) | (lcdMode == 1))           // Can only access OAM during H-Blank or V-Blank
+		//if((lcdMode == 0) | (lcdMode == 1))           // Can only access OAM during H-Blank or V-Blank
 			spriteOAM[memAddr - 0xFE00] = data;
 	}
 	else if(memAddr >= 0xFF00 && memAddr <= 0xFF7F)   // I/O ports
@@ -222,10 +222,16 @@ void memoryWrite(uint16_t memAddr, uint8_t data)
 				register_BGP[3] = (data >> 6) & 0x3;
 				return;
 			case 0x48:
-				register_OBP0 = data;
+				register_OBP0[0] = data & 0x3;
+				register_OBP0[1] = (data >> 2) & 0x3;
+				register_OBP0[2] = (data >> 4) & 0x3;
+				register_OBP0[3] = (data >> 6) & 0x3;
 				return;
 			case 0x49:
-				register_OBP1 = data;
+				register_OBP1[0] = data & 0x3;
+				register_OBP1[1] = (data >> 2) & 0x3;
+				register_OBP1[2] = (data >> 4) & 0x3;
+				register_OBP1[3] = (data >> 6) & 0x3;
 				return;
 			case 0x4A:
 				register_WY = data;
@@ -234,17 +240,16 @@ void memoryWrite(uint16_t memAddr, uint8_t data)
 				register_WX = data;
 				return;
 			case 0x50:
-				bootEnabled == 0;
+				bootEnabled = 0;
 				printf("bootrom finished!\n");
-				exit(0);
+				//exit(0);
 			default:
 				ioRegisters[memAddr] = data;          // Basically stuff I havent done yet
 				return;
 		}
-		ioRegisters[memAddr - 0xFF00] = data;
 	}
 	else if (memAddr >= 0xFF80 && memAddr <= 0xFFFE)  // High RAM
-		highRam[memAddr - 0xFF00] = data;
+		highRam[memAddr - 0xFF80] = data;
 	else if(memAddr == 0xFFFF)                        // Interrupt enabled register.
 		register_IE = data;
 	else                                              // All other addresses 

@@ -23,7 +23,7 @@ int loadImmReg16(uint8_t* reg1, uint8_t* reg2)
 
 int loadReg8Ind(uint8_t* reg, uint8_t* src1, uint8_t* src2)
 {
-	uint16_t memAddr = (*src1 << 8) | (*src2 & 0x00FF);
+	uint16_t memAddr = ((*src1 & 0xFF) << 8) | (*src2 & 0xFF);
 	*reg = memoryRead(memAddr);
 	return 8;
 }
@@ -196,7 +196,7 @@ static int add8SetFlags(int8_t op1, int8_t op2)
 	int result = (op1 & 0xFF) + (op2 & 0xFF);
 	flags.C = (result > 255 || result < 0);
 	flags.Z = ((result & 0xFF) == 0);
-	flags.H = (op1 & 0xF) + (op2 + 0xF) > 0xF;
+	flags.H = (op1 & 0xF) + (op2 & 0xF) > 0xF;
 	flags.N = 0;
 	return result;
 }
@@ -850,7 +850,7 @@ int conditionalRelativeJump(int cond)
 int call()
 {
 	registers.PC+=2;
-	int pcHigh = (registers.PC >> 8) & 0xF;
+	int pcHigh = (registers.PC >> 8) & 0xFF;
 	int pcLow = registers.PC & 0xFF;
 	pushToStack(pcLow, pcHigh);
 	registers.PC-=2;
@@ -872,7 +872,7 @@ int returnPC()
 {
 	int8_t pcHigh, pcLow;
 	popFromStack(&pcLow, &pcHigh);
-	registers.PC = (pcHigh << 8) | pcLow;
+	registers.PC = ((pcHigh & 0xFF) << 8) | (pcLow & 0xFF);
 	return 16;
 }
 

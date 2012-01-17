@@ -538,7 +538,7 @@ void printRegisters()
 	printDebug("Registers: { A:%02X, B:%02X, C:%02X, D:%02X, E:%02X, H:%02X, L:%02X, PC:%04X, SP:%04X }\n",
 		registers.A & 0xFF, registers.B & 0xFF, registers.C & 0xFF, registers.D & 0xFF, registers.E & 0xFF, 
 		registers.H & 0xFF, registers.L & 0xFF, registers.PC & 0xFFFF, registers.SP & 0xFFFF);
-	printDebug("Flags: { C:%d, Z:%d, N:%d, H:%d }\n", flags.C, flags.Z, flags.N, flags.H);
+	printDebug("Flags: { C:%d, N:%d, Z:%d, H:%d }\n", flags.C, flags.N, flags.Z, flags.H);
 }
 
 void printDebug(const char* format, ...)

@@ -48,24 +48,22 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 	
-	//gpuInit(screen->pixels);
-	///SDL_Flip(screen);
+	gpuInit(screen->pixels);
+	SDL_Flip(screen);
 
 	SDL_Event event;
 	
 	while(running)
 	{
 		int ticks = cpuStep();
-		printRegisters();
+		//printRegisters();
 		//ticks += checkInterrupts();
 		while(SDL_PollEvent(&event))
 		{
 			if(event.type == SDL_QUIT)
 				running = 0;
 		}
-		gpuStep(ticks);
-		//if(SDL_Flip(screen) == -1)
-		//	return 1;
+		gpuStep(ticks, screen);
 	}
 
 	destroyGame(game);

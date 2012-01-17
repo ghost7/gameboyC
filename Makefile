@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS=-Wall -c -g -DDEBUG 
-LFLAGS=-Wall -g -lSDL 
+CFLAGS=-Wall -c -g 
+LFLAGS=-Wall -g -lSDL  
 COMPILE=${CC} ${CFLAGS}
 OBJS=test.o cartidge.o mbc.o memory.o cpu_z80.o cpu_z80_inst.o gpu_gb.o debug.o
 
