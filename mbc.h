@@ -9,16 +9,16 @@
 #include <stdint.h>
 #include "cartidge.h"
 
-uint8_t ROM_memoryRead(Cartidge* gameData, int memAddr);
-uint8_t MBC1_memoryRead(Cartidge* gameData, int memAddr);
-uint8_t MBC2_memoryRead(Cartidge* gameData, int memAddr);
-uint8_t MBC3_memoryRead(Cartidge* gameData, int memAddr);
-uint8_t MBC5_memoryRead(Cartidge* gameData, int memAddr);
+int8_t ROM_memoryRead(int8_t* gameData, int memAddr);
+int8_t MBC1_memoryRead(int8_t* gameData, int memAddr);
+int8_t MBC2_memoryRead(int8_t* gameData, int memAddr);
+int8_t MBC3_memoryRead(int8_t* gameData, int memAddr);
+int8_t MBC5_memoryRead(int8_t* gameData, int memAddr);
 
-void ROM_memoryWrite(Cartidge* gameData, int memAddr, int8_t writeData);
-void MBC1_memoryWrite(Cartidge* gameData, int memAddr, int8_t writeData);
-void MBC2_memoryWrite(Cartidge* gameData, int memAddr, int8_t writeData);
-void MBC3_memoryWrite(Cartidge* gameData, int memAddr, int8_t writeData);
-void MBC5_memoryWrite(Cartidge* gameData, int memAddr, int8_t writeData);
+void ROM_memoryWrite(int8_t* gameData, int memAddr, int8_t writeData);
+void MBC1_memoryWrite(int8_t* gameData, int memAddr, int8_t writeData);
+void MBC2_memoryWrite(int8_t* gameData, int memAddr, int8_t writeData);
+void MBC3_memoryWrite(int8_t* gameData, int memAddr, int8_t writeData);
+void MBC5_memoryWrite(int8_t* gameData, int memAddr, int8_t writeData);
 
 #endif

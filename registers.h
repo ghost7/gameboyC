@@ -1,10 +1,9 @@
-/**
- * Z80-registers.
- */
+#ifndef __Z80_REG__
+#define __Z80_REG__
 
 #include <stdint.h>
 
-typedef struct z80Reg
+struct z80Reg
 {
 	// Registers
 	int8_t A;		// Accumulator
@@ -16,15 +15,14 @@ typedef struct z80Reg
 	int8_t L;
 	uint16_t PC;	// Program counter
 	uint16_t SP;	// Stack pointer
-} z80Reg;
+};
 
-typedef struct z80Flags
+struct z80Flags
 {
 	int C;			// carry flag
 	int Z;			// zero flag;
 	int N;			// subtract flag
 	int H;			// half-carry flag
-} z80Flags;
+};
 
-z80Reg registers;
-z80Flags flags;
+#endif

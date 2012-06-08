@@ -1,5 +1,6 @@
 *.gb
 *.o
+*.a
 *.swp
 .~
 test

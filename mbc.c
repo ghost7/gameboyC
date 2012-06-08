@@ -5,55 +5,57 @@ uint8_t currRomBank = 1;
 uint8_t currRamBank = 1;
 int romBanking = 1;
 
-uint8_t ROM_memoryRead(Cartidge* game, int memAddr)
+int8_t ROM_memoryRead(int8_t *game_data, int mem_addr)
 {
 	// TODO implement
-	return game->romData[memAddr];
+	return game_data[mem_addr];
 }
 
-uint8_t MBC1_memoryRead(Cartidge* game, int memAddr)
+int8_t MBC1_memoryRead(int8_t *game_data, int mem_addr)
 {
 	// TODO implement
-	if(memAddr <= 0x3FFF)
-		return game->romData[memAddr];
-	else if (memAddr >= 0x4000 && memAddr <= 0x7FFF)
+	/*
+	if(mem_addr <= 0x3FFF)
+		return game_data[mem_addr];
+	else if (mem_addr >= 0x4000 && mem_addr <= 0x7FFF)
 	{
 		return game->romData[currRomBank * game->romSize / game->romBanks + memAddr];		
 	}
 	else if (memAddr >= 0xA000 && memAddr <= 0xBFFF)
 	{
 		return game->romData[currRamBank * game->ramSize / game->ramBanks + memAddr];
-	}
+	}*/
 
 	return -1;
 }
 
-uint8_t MBC2_memoryRead(Cartidge* game, int memAddr)
+int8_t MBC2_memoryRead(int8_t *game_data, int mem_addr)
 {
 	// TODO implement
 	return -1;
 }
 
-uint8_t MBC3_memoryRead(Cartidge* game, int memAddr)
+int8_t MBC3_memoryRead(int8_t *game_data, int mem_addr)
 {
 	// TODO implement
 	return -1;
 }
 
-uint8_t MBC5_memoryRead(Cartidge* game, int memAddr)
+int8_t MBC5_memoryRead(int8_t *game_data, int mem_addr)
 {
 	// TODO implement
 	return -1;
 }
 
-void ROM_memoryWrite(Cartidge* gameData, int memAddr, int8_t writeData)
+void ROM_memoryWrite(int8_t *game_data, int mem_addr, int8_t write_data)
 {
 	// no write in ROM, nothing to do here?
 }
 
-void MBC1_memoryWrite(Cartidge* game, int memAddr, int8_t writeData)
+void MBC1_memoryWrite(int8_t *game_data, int mem_addr, int8_t write_data)
 {
 	// TODO implement
+	/* 
 	if(memAddr >= 0xA000 && memAddr <= 0xBFFF)
 	{
 		game->romData[currRamBank * game->ramSize / game->ramBanks + memAddr] = writeData;
@@ -76,20 +78,20 @@ void MBC1_memoryWrite(Cartidge* game, int memAddr, int8_t writeData)
 		{
 			currRamBank = writeData & 0x3;
 		}
-	}
+	}*/
 }
 
-void MBC2_memoryWrite(Cartidge* gameData, int memAddr, int8_t writeData)
+void MBC2_memoryWrite(int8_t *game_data, int mem_addr, int8_t write_data)
 {
 	// TODO implement
 }
 
-void MBC3_memoryWrite(Cartidge* gameData, int memAddr, int8_t writeData)
+void MBC3_memoryWrite(int8_t *game_data, int mem_addr, int8_t write_data)
 {
 	// TODO implement
 }
 
-void MBC5_memoryWrite(Cartidge* gameData, int memAddr, int8_t writeData)
+void MBC5_memoryWrite(int8_t *game_data, int mem_addr, int8_t write_data)
 {
 	// TODO implement
 }

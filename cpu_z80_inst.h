@@ -9,6 +9,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "registers.h"
+
+/* Memory Read */
+typedef uint8_t (*mem_read)(uint16_t address);
+/* Memory Write */
+typedef void (*mem_write)(uint16_t address, uint8_t data);
+
+/**
+ * Initializies the z80 instruction set, must be called before executing any
+ * instruction
+ */
+void initialize_micro_ops(struct z80Reg *z80registers, struct z80Flags *z80flags,
+                          mem_read read, mem_write write);
+
 // 8-bit load commands
 int loadReg8(int8_t* src, int8_t* dest);      // ld r, r      r = r
 int loadImmReg8(int8_t* reg);                 // ld r, n      r = n
@@ -90,11 +104,8 @@ int shiftRegRightL(int8_t* reg);              // srl r         shift right logic
 
 // single bit operations
 int testRegBit(int8_t* reg, int n);           // bit n, r      test bit n of r
-int testHLIndBit(int n);                      // bit n, (HL)   test bit n of (HL)
 int setRegBit(int8_t* reg, int n);            // set n, r      set bit n of (HL)
-int setHLIndBit(int n);                       // set n (HL)    set bit n of r
 int resetRegBit(int8_t* reg, int n);          // res n, r      reset bit n of r
-int resetHLIndBit(int n);                     // res n, (HL)   reset bit n of (HL)
 
 // cpu control commands
 int complementCarry();                        // ccf           cy = cy ^ 1
