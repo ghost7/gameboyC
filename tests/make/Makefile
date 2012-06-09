@@ -29,7 +29,10 @@ CXXFLAGS += -g -Wall -Wextra
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = eightBitOpTests
+TESTS = microOpTests 
+
+MICRO_OP_TESTS = esixteenBitOpTest sightBitOpTests 
+MICRO_OP_TEST_OBJ = sixteenBitOpTests.o eightBitOpTests.o 
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -41,7 +44,7 @@ GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
 all : $(TESTS)
 
 clean :
-	rm -f $(TESTS) gtest.a gtest_main.a *.o
+	rm -f $(TESTS) $(MICRO_OP_TESTS) gtest.a gtest_main.a *.o
 
 # Builds gtest.a and gtest_main.a.
 
@@ -67,30 +70,28 @@ gtest.a : gtest-all.o
 gtest_main.a : gtest-all.o gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
-# Builds a sample test.  A test should link with either gtest.a or
-# gtest_main.a, depending on whether it defines its own main()
-# function.
-
-sample1.o : $(USER_DIR)/sample1.cc $(USER_DIR)/sample1.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/sample1.cc
-
-sample1_unittest.o : $(USER_DIR)/sample1_unittest.cc \
-                     $(USER_DIR)/sample1.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/sample1_unittest.cc
-
-sample1_unittest : sample1.o sample1_unittest.o gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+# Micro op tests.
 
 cpu_z80_inst.o : $(USER_DIR)/cpu_z80_inst.c $(USER_DIR)/cpu_z80_inst.h $(USER_DIR)/registers.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/cpu_z80_inst.c
+
+microOpTestBase.o : $(TEST_DIR)/microOpTestBase.cc  $(TEST_DIR)/microOpTestBase.h\
+                    $(USER_DIR)/cpu_z80_inst.h $(USER_DIR)/registers.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/microOpTestBase.cc
 
 eightBitOpTests.o : $(TEST_DIR)/eightBitOpTests.cc  $(TEST_DIR)/microOpTestBase.h\
                       $(USER_DIR)/cpu_z80_inst.h $(USER_DIR)/registers.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/eightBitOpTests.cc
 
-eightBitOpTests : microOpTestBase.o cpu_z80_inst.o eightBitOpTests.o gtest_main.a
+sixteenBitOpTests.o : $(TEST_DIR)/sixteenBitOpTests.cc  $(TEST_DIR)/microOpTestBase.h\
+                      $(USER_DIR)/cpu_z80_inst.h $(USER_DIR)/registers.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/sixteenBitOpTests.cc
+
+microOpTests : microOpTestBase.o cpu_z80_inst.o $(MICRO_OP_TEST_OBJ) gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
-microOpTestBase.o : $(TEST_DIR)/microOpTestBase.cc  $(TEST_DIR)/microOpTestBase.h\
-                    $(USER_DIR)/cpu_z80_inst.h $(USER_DIR)/registers.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/microOpTestBase.cc
+sixteenBitOpTests : microOpTestBase.o cpu_z80_inst.o sixteenBitOpTests.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+eightBitOpTests : microOpTestBase.o cpu_z80_inst.o eightBitOpTests.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@

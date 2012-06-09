@@ -57,7 +57,7 @@ void MicroOpTestBase::SetImmValue(uint8_t value)
     registers.PC = memoryAddress;
 }
 
-void MicroOpTestBase::SetImmValue(uint16_t value)
+void MicroOpTestBase::SetImm16Value(uint16_t value)
 {
     uint16_t memoryAddress = GetMemoryAddress();
     memory[memoryAddress] = value & 0xFF;

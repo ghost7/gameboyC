@@ -175,7 +175,7 @@ int loadSPImm()
 
 int loadHLToSP()
 {
-	int HL = (registers->H << 8) | registers->L;
+	int HL = (registers->H << 8) | (registers->L & 0xFF);
 	registers->SP = HL;
 	return 8;
 }

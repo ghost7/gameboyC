@@ -70,7 +70,7 @@ TEST_F(EightBitOpTest, LoadAIndTest)
     uint16_t memoryAddress = GetMemoryAddress();
     uint16_t imm = memoryAddress;
     SetMemory(memoryAddress, 20);
-    SetImmValue(imm);
+    SetImm16Value(imm);
     loadAInd();
     ASSERT_EQ(GetMemory(memoryAddress), registers.A);
 }
@@ -87,7 +87,7 @@ TEST_F(EightBitOpTest, StoreAIndTest)
 {
     uint16_t memoryAddress = GetMemoryAddress();
     uint16_t imm = memoryAddress;
-    SetImmValue(imm); 
+    SetImm16Value(imm); 
     registers.A = 20;
     storeAInd();
     ASSERT_EQ(registers.A, GetMemory(memoryAddress));

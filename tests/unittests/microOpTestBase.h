@@ -55,7 +55,7 @@ protected:
      *
      * \param value 16-bit value to be the next immediate value.
      */
-    void SetImmValue(uint16_t value);
+    void SetImm16Value(uint16_t value);
 
     /**
      * Stores a value into memory.
