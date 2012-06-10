@@ -204,9 +204,10 @@ int popFromStack(int8_t* reg1, int8_t* reg2)
 
 static int add8SetFlags(int8_t op1, int8_t op2)
 {
-	int result = (op1 & 0xFF) + (op2 & 0xFF);
-	flags->C = (result > 255 || result < 0);
-	flags->Z = ((result & 0xFF) == 0);
+	int8_t result = op1 + op2;
+	flags->C = (op1 > 0 && op2 > 0 && result < 0) ||
+               (op1 < 0 && op2 < 0 && result > 0);
+	flags->Z = result == 0;
 	flags->H = (op1 & 0xF) + (op2 & 0xF) > 0xF;
 	flags->N = 0;
 	return result;

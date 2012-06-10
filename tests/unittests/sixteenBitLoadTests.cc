@@ -3,12 +3,12 @@
 /**
  * Sixteen-Bit Operation Tests.
  */
-class SixteenBitOpTest : public ::MicroOpTestBase
+class SixteenBitLoadTest : public ::MicroOpTestBase
 {
 
 };
 
-TEST_F(SixteenBitOpTest, LoadReg16Test)
+TEST_F(SixteenBitLoadTest, LoadReg16Test)
 {
     uint16_t imm = 20;
     SetImm16Value(imm);
@@ -17,7 +17,7 @@ TEST_F(SixteenBitOpTest, LoadReg16Test)
     ASSERT_EQ(imm, BC);
 }
 
-TEST_F(SixteenBitOpTest, LoadSPImmTest)
+TEST_F(SixteenBitLoadTest, LoadSPImmTest)
 {
     uint16_t imm = 20;
     SetImm16Value(imm);
@@ -25,7 +25,7 @@ TEST_F(SixteenBitOpTest, LoadSPImmTest)
     ASSERT_EQ(imm, registers.SP);
 }
 
-TEST_F(SixteenBitOpTest, LoadHLToSP)
+TEST_F(SixteenBitLoadTest, LoadHLToSP)
 {
     LoadMemoryReg(&registers.H, &registers.L);
     loadHLToSP();
@@ -33,7 +33,7 @@ TEST_F(SixteenBitOpTest, LoadHLToSP)
     ASSERT_EQ(HL, registers.SP);
 }
 
-TEST_F(SixteenBitOpTest, PushPopTests)
+TEST_F(SixteenBitLoadTest, PushPopTests)
 {
     registers.SP = GetMemoryAddress();
     registers.B = 100;
