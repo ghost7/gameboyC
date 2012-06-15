@@ -31,8 +31,8 @@ CXXFLAGS += -g -Wall -Wextra
 # created to the list.
 TESTS = microOpTests 
 
-MICRO_OP_TESTS = eightBitLoadTests sixteenBitLoadTests eightBitMathTests
-MICRO_OP_TEST_OBJ = eightBitMathTests.o sixteenBitLoadTests.o eightBitLoadTests.o  
+MICRO_OP_TESTS = eightBitLoadTests sixteenBitLoadTests mathFlagsTests eightBitMathTests
+MICRO_OP_TEST_OBJ = eightBitMathTests.o mathFlagsTests.o sixteenBitLoadTests.o eightBitLoadTests.o
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -93,7 +93,10 @@ eightBitLoadTests.o : $(TEST_DIR)/eightBitLoadTests.cc  $(MICRO_OP_HEADERS) $(GT
 sixteenBitLoadTests.o : $(TEST_DIR)/sixteenBitLoadTests.cc  $(MICRO_OP_HEADERS) $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/sixteenBitLoadTests.cc
 
-eightBitMathTests.o : $(TEST_DIR)/eightBitMathTests.cc  $(FLAG_OP_HEADERS) $(GTEST_HEADERS)
+mathFlagsTests.o : $(TEST_DIR)/mathFlagsTests.cc  $(FLAG_OP_HEADERS) $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/mathFlagsTests.cc
+
+eightBitMathTests.o : $(TEST_DIR)/eightBitMathTests.cc  $(MICRO_OP_HEADERS) $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/eightBitMathTests.cc
 
 microOpTests : microOpTestBase.o flagOpTestBase.o cpu_z80_inst.o $(MICRO_OP_TEST_OBJ) gtest_main.a
@@ -105,5 +108,8 @@ sixteenBitLoadTests : microOpTestBase.o cpu_z80_inst.o sixteenBitLoadTests.o gte
 eightBitLoadTests : microOpTestBase.o cpu_z80_inst.o eightBitLoadTests.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
-eightBitMathTests : microOpTestBase.o flagOpTestBase.o cpu_z80_inst.o eightBitMathTests.o gtest_main.a
+mathFlagsTests : microOpTestBase.o flagOpTestBase.o cpu_z80_inst.o mathFlagsTests.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+eightBitMathTests : microOpTestBase.o cpu_z80_inst.o eightBitMathTests.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@

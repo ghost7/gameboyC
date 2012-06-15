@@ -3,4 +3,10 @@
 *.a
 *.swp
 .~
-test
+latex/
+html/
+eightBitLoadTests
+sixteenBitLoadTests
+mathFlagsTests
+eightBitMathTests
+microOpTests

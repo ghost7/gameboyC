@@ -24,13 +24,21 @@ protected:
     uint16_t GetMemoryAddress();
     
     /**
+     * Gets a random number that can be used as for the contentes of a memory
+     * address or a register.
+     *
+     * \param a ranodom 8-bit number.
+     */
+    uint8_t GetRandomNumber();
+    
+    /**
      * Loads a memory address into a 16 bit register
      * 
      * \param highReg the upper 8 bits of the register.
      * \param lowReg the lower 8 bits of the register.
      * \return the memory address stored into the register.
      */
-    uint16_t LoadMemoryReg(int8_t *highReg, int8_t *lowReg);
+    uint16_t LoadMemoryReg(uint8_t *highReg, uint8_t *lowReg);
     
     /**
      * Get a 16-bit value from a regiter.
@@ -39,8 +47,17 @@ protected:
      * \param lowReg the lower 8 bits of the register.
      * \return 16-bit value stored in the register.
      */
-    int16_t Get16BitRegister(int8_t highReg, int8_t lowReg);
+    uint16_t Get16BitRegister(uint8_t highReg, uint8_t lowReg);
     
+    /**
+     * Sets the value for a 16-bit register.
+     *
+     * \param highReg the upper 8 bits of the register.
+     * \param lowReg the lower 8 bits of the register.
+     * \param value the value to bestored in the register.
+     */
+    void Set16BitRegister(uint8_t *highReg, uint8_t *lowReg, uint16_t value);
+
     /**
      * Sets the next immediate value to be read to the specified 8-bit value.
      * Note this changes the PC.

@@ -1,3 +1,9 @@
+/**
+ * \file cartidge.c
+ * \brief Contains definitions for all functions involving loading and 
+ * accessing/modifying a cartidge. 
+ */
+
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -7,13 +13,14 @@
 #include "cartidge.h"
 #include "mbc.h"
 
+/**
+ * Error code
+ */
 static enum gb_error err;
 
-typedef int8_t (*read_data)(int8_t*, int);
-typedef void (*write_data)(int8_t*, int, int8_t);
-
 /**
- * Possible errors produced by the game.
+ * \enum gb_error
+ * Possible errors produced from loading the cartidge.
  */
 enum gb_error
 {
@@ -25,6 +32,10 @@ enum gb_error
 	INVALID_ERR
 };
 
+/**
+ * \enum rom_type
+ * \brief Represents the different possible rom types. 
+ */
 enum rom_type
 {
 	ROM =                   0x00,
@@ -58,37 +69,46 @@ enum rom_type
 	HUC3_RAM_BATT =         0xFF
 };
 
+/**
+ * \struct gb_cartidge
+ * \brief Contains all the information about a gamboy cartidge, loaded from a rom file.
+ *
+ * Note this structure should not be accessed from outside this file.
+ * Any access to information within in the cartidge should be made through
+ * the functions provided in cartidge.h.
+ */
 struct gb_cartidge
 {
-	char *title;
-	char *license;
+	char *title;        /**< The title of the cartridge */
+	char *license;      /**< The license code of the cartrige. */
 	
-	int rom_size;
-	int rom_banks;
-	int ram_size;
-	int ram_banks;
-	int rom_version;
-	int8_t* data;
+	int rom_size;       /**< The rom size of the cartridge. */
+	int rom_banks;      /**< The number of rom banks in the cartidge. */
+	int ram_size;       /**< The ram size of the cartidge. */
+	int ram_banks;      /**< The number of ram banks in the cartidge. */
+	int rom_version;    /**< The rom version of the cartidge. */
+	uint8_t* data;       /**< The data stored in the cartidge, which could read/written */
 
-	bool CGB;
-	bool SGB;
-	bool is_japanese;
+	bool CGB;           /**< True if made for the gameboy color, false otherwise */
+	bool SGB;           /**< True if made for the super gameboy, false otherwise. */
+	bool is_japanese;   /**< True if this is a japanese rom. */
 
-	enum rom_type rom;
+	enum rom_type rom;  /**< The rom type. */
 
-	read_data read;
-	write_data write;
+	read_data read;     /**< Function to read data from the cartidge, set based on rom type. */
+	write_data write;   /**< Function to write data to the cartidge, set based on rom type. */
 };
 
 /**
  * Turn the contents of a file into a char array.
+ *
  * \param fileName name of the rom file
  * \return char array containing the contents of the file.
  */
-static int8_t* get_file_contents(const char* fileName)
+static uint8_t* get_file_contents(const char* fileName)
 {
 	FILE* ifp;
-	int8_t* buffer;
+	uint8_t* buffer;
 	size_t result;
 	int bufferLen;
 
@@ -104,7 +124,7 @@ static int8_t* get_file_contents(const char* fileName)
 	bufferLen = ftell(ifp);
 	rewind(ifp);
 	
-	buffer = (int8_t*) malloc(bufferLen * sizeof(int8_t));
+	buffer = (uint8_t*) malloc(bufferLen * sizeof(uint8_t));
 	if (buffer == NULL)
 	{
 		err = MEM_ERR;
@@ -125,6 +145,14 @@ static int8_t* get_file_contents(const char* fileName)
 	return buffer;
 }	
 
+/**
+ * Gets the rom size of the cartidge.
+ *
+ * \param rom_size_code Code stored in cartidge at 0x148, indicating the rom
+ *        size and number of rom banks.
+ * \param rom_size Pointer to store the rom size into.
+ * \param rom_banks Pointer to store the number of rom banks into.
+ */
 static void get_rom_size(int8_t rom_size_code, int *rom_size, int *rom_banks)
 {
 	int KB = 1024;
@@ -182,6 +210,14 @@ static void get_rom_size(int8_t rom_size_code, int *rom_size, int *rom_banks)
 	}
 }
 
+/**
+ * Gets the ram size of the cartidge.
+ *
+ * \param ram_size_code Code stored in cartidge at 0x149, indicating the ram
+ *        size and number of ram banks.
+ * \param ram_size Pointer to store the ram size into.
+ * \param ram_banks Pointer to store the number of ram banks into.
+ */
 static void get_ram_size(int8_t ram_size_code, int *ram_size, int *ram_banks)
 {
 	int KB = 1024;
@@ -212,10 +248,11 @@ static void get_ram_size(int8_t ram_size_code, int *ram_size, int *ram_banks)
 
 /**
  * Get the title of the game from the file data.
- * \param fileData contents of the rom file.
+ * 
+ * \param file_data contents of the rom file.
  * \return the title of the game.
  */
-static char *get_game_title(int8_t *file_data)
+static char *get_game_title(uint8_t *file_data)
 {
 	// title location in the data starts a 0x0134 and ends 
 	// at 0x0142.
@@ -245,11 +282,12 @@ static char *get_game_title(int8_t *file_data)
 
 /**
  * Gets the license code of game.
- * \param SGB flag to see if the game has super gameboy support.
- * \param CGB flad to see if the game is a gameboy color game.
- * \param fileData contents of the rom file.
+ * 
+ * \param SGB Flag to see if the game has super gameboy support.
+ * \param CGB Flag to see if the game is a gameboy color game.
+ * \param file_data Contents of the rom file.
  */
-static char *get_license_code(bool SGB, bool CGB, int8_t *file_data)
+static char *get_license_code(bool SGB, bool CGB, uint8_t *file_data)
 {
 	char* license;
 	if(SGB || CGB)
@@ -281,6 +319,13 @@ static char *get_license_code(bool SGB, bool CGB, int8_t *file_data)
 	return license;
 }
 
+/**
+ * Gets the cartidge read and write based on the rom type.
+ * 
+ * \param rom Rom Type.
+ * \param read function pointer to store the read function.
+ * \param write function pointer to store the write function.
+ */
 static void get_read_write(enum rom_type rom, read_data *read, write_data *write)
 {
 	switch(rom)
@@ -312,7 +357,7 @@ static void get_read_write(enum rom_type rom, read_data *read, write_data *write
 
 struct gb_cartidge *load_cartidge(const char *filename)
 {
-	int8_t *fileData;
+	uint8_t *fileData;
 	int romSize, romBanks, ramSize, ramBanks, romVersion;
 	bool isCGB, isSGB, isJap;
 	enum rom_type romType;
@@ -394,19 +439,19 @@ struct gb_cartidge *load_cartidge(const char *filename)
 	return cartidge;
 }
 
-int8_t cartidge_read(struct gb_cartidge* cartidge, int memAddr)
+uint8_t cartidge_read(struct gb_cartidge* cartidge, int memAddr)
 {
 	return cartidge->read(cartidge->data, memAddr);
 }
 
-void cartidge_write(struct gb_cartidge *cartidge, int memAddr, int8_t write_data)
+void cartidge_write(struct gb_cartidge *cartidge, int memAddr, uint8_t write_data)
 {
 	cartidge->write(cartidge->data, memAddr, write_data);
 }
 
 /**
  * Converts a RomType into a string and prints it.
- * \param romType rom type to print.
+ * \param rom rom type to print.
  */
 static void print_rom_type(enum rom_type rom)
 {

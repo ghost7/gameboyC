@@ -5,13 +5,13 @@ uint8_t currRomBank = 1;
 uint8_t currRamBank = 1;
 int romBanking = 1;
 
-int8_t ROM_memoryRead(int8_t *game_data, int mem_addr)
+uint8_t ROM_memoryRead(uint8_t *game_data, int mem_addr)
 {
 	// TODO implement
 	return game_data[mem_addr];
 }
 
-int8_t MBC1_memoryRead(int8_t *game_data, int mem_addr)
+uint8_t MBC1_memoryRead(uint8_t *game_data, int mem_addr)
 {
 	// TODO implement
 	/*
@@ -29,30 +29,30 @@ int8_t MBC1_memoryRead(int8_t *game_data, int mem_addr)
 	return -1;
 }
 
-int8_t MBC2_memoryRead(int8_t *game_data, int mem_addr)
+uint8_t MBC2_memoryRead(uint8_t *game_data, int mem_addr)
 {
 	// TODO implement
 	return -1;
 }
 
-int8_t MBC3_memoryRead(int8_t *game_data, int mem_addr)
+uint8_t MBC3_memoryRead(uint8_t *game_data, int mem_addr)
 {
 	// TODO implement
 	return -1;
 }
 
-int8_t MBC5_memoryRead(int8_t *game_data, int mem_addr)
+uint8_t MBC5_memoryRead(uint8_t *game_data, int mem_addr)
 {
 	// TODO implement
 	return -1;
 }
 
-void ROM_memoryWrite(int8_t *game_data, int mem_addr, int8_t write_data)
+void ROM_memoryWrite(uint8_t *game_data, int mem_addr, uint8_t write_data)
 {
 	// no write in ROM, nothing to do here?
 }
 
-void MBC1_memoryWrite(int8_t *game_data, int mem_addr, int8_t write_data)
+void MBC1_memoryWrite(uint8_t *game_data, int mem_addr, uint8_t write_data)
 {
 	// TODO implement
 	/* 
@@ -81,17 +81,17 @@ void MBC1_memoryWrite(int8_t *game_data, int mem_addr, int8_t write_data)
 	}*/
 }
 
-void MBC2_memoryWrite(int8_t *game_data, int mem_addr, int8_t write_data)
+void MBC2_memoryWrite(uint8_t *game_data, int mem_addr, uint8_t write_data)
 {
 	// TODO implement
 }
 
-void MBC3_memoryWrite(int8_t *game_data, int mem_addr, int8_t write_data)
+void MBC3_memoryWrite(uint8_t *game_data, int mem_addr, uint8_t write_data)
 {
 	// TODO implement
 }
 
-void MBC5_memoryWrite(int8_t *game_data, int mem_addr, int8_t write_data)
+void MBC5_memoryWrite(uint8_t *game_data, int mem_addr, uint8_t write_data)
 {
 	// TODO implement
 }

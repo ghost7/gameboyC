@@ -70,7 +70,6 @@ protected:
      */
     void CheckFlags();
 
-private:
     /**
      * Test flags.
      */

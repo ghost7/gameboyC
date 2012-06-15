@@ -37,17 +37,27 @@ uint16_t MicroOpTestBase::GetMemoryAddress()
     return rand() % (MEM_SIZE - 0xFF);
 }
 
-uint16_t MicroOpTestBase::LoadMemoryReg(int8_t *highReg, int8_t *lowReg)
+uint8_t MicroOpTestBase::GetRandomNumber()
+{
+    return rand() % 0xFF;
+}
+
+uint16_t MicroOpTestBase::LoadMemoryReg(uint8_t *highReg, uint8_t *lowReg)
 {
     uint16_t memoryAddress = GetMemoryAddress();
-    *highReg = (memoryAddress >> 8) & 0xFF;
-    *lowReg = (memoryAddress) & 0xFF;
+    Set16BitRegister(highReg, lowReg, memoryAddress);
     return memoryAddress;
 }
 
-int16_t MicroOpTestBase::Get16BitRegister(int8_t highReg, int8_t lowReg)
+uint16_t MicroOpTestBase::Get16BitRegister(uint8_t highReg, uint8_t lowReg)
 {
     return ((highReg << 8) & 0xFF00) | (lowReg & 0xFF);
+}
+
+void MicroOpTestBase::Set16BitRegister(uint8_t *highReg, uint8_t *lowReg, uint16_t value)
+{
+    *highReg = (value >> 8) & 0xFF;
+    *lowReg = value & 0xFF;
 }
 
 void MicroOpTestBase::SetImmValue(uint8_t value)

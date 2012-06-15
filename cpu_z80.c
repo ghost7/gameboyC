@@ -5,15 +5,12 @@
 #include "registers.h"
 
 static int cbPrefix();
-static int getFRegister();
+static uint8_t getFRegister();
 static void setFRegister(int8_t value);
-static int8_t registerF;
+static uint8_t registerF;
 static struct z80Reg registers;
 static struct z80Flags flags;
 
-/**
- * Initialize registers to their default values.
- */
 void initCpu()
 {
 	registers.A = 0x01;
@@ -30,7 +27,6 @@ void initCpu()
     // TODO initialize once i have a memory read and write.
     // initialize_micro_ops(&registers, &flags, memoryRead, memoryWrite); 
 }
-
 
 int checkInterrupts()
 {
@@ -67,9 +63,6 @@ int checkInterrupts()
 	return ticks;
 }
 
-/**
- * Execute the next instruction.
- */
 int cpuStep()
 {
 	int ticks = checkInterrupts();
@@ -833,12 +826,12 @@ static int cbPrefix()
 	int lowInst = inst & 0xF;
 
 	// value that is being used
-	int8_t* reg = 0;
+	uint8_t* reg = 0;
 
 	// flag if (HL) is being used
 	int isInd = 0;
 	int HL = 0;
-	int8_t hlMem = 0;
+	uint8_t hlMem = 0;
 	int memWrite = 1;
 
 	// find out which value is going to be used
@@ -977,7 +970,7 @@ static int cbPrefix()
 	return ticks;
 }
 
-static int getFRegister()
+static uint8_t getFRegister()
 {
 	// F register: ZNHC0000
 	return (flags.Z << 7 | flags.N << 6 | flags.H << 5 | flags.C << 4) & 0xF0;

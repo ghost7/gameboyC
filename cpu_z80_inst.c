@@ -19,27 +19,27 @@ void initialize_micro_ops(struct z80Reg *z80Registers, struct z80Flags *z80Flags
  *  8-bit load commands     * 
  ****************************/
 
-int loadReg8(int8_t* src, int8_t* dest)
+int loadReg8(uint8_t* src, uint8_t* dest)
 {
 	*dest = *src;
 	return 4;
 }
 
-int loadImmReg8(int8_t* reg)
+int loadImmReg8(uint8_t* reg)
 {
 	*reg = memoryRead(registers->PC++);
 	return 8;
 }
 
-int loadReg8HL(int8_t* reg)
+int loadReg8HL(uint8_t* reg)
 {
 	int memAddr = ((registers->H & 0xFF) << 8 | (registers->L & 0xFF));
-	int8_t ind = memoryRead(memAddr);
+	uint8_t ind = memoryRead(memAddr);
 	*reg = ind;
 	return 8;
 }
 
-int storeReg8HL(int8_t reg)
+int storeReg8HL(uint8_t reg)
 {
 	int memAddr = ((registers->H & 0xFF) << 8 | (registers->L & 0xFF));
 	memoryWrite(memAddr, reg);
@@ -54,7 +54,7 @@ int storeHLImm()
 	return 12;
 }
 
-int loadA(int8_t reg1, int8_t reg2)
+int loadA(uint8_t reg1, uint8_t reg2)
 {
 	int memAddr = (reg1 & 0xFF) << 8 | (reg2 & 0xFF);
 	registers->A = memoryRead(memAddr);
@@ -69,7 +69,7 @@ int loadAInd()
 	return 16;
 }
 
-int storeA(int8_t reg1, int8_t reg2)
+int storeA(uint8_t reg1, uint8_t reg2)
 {
 	int memAddr = (reg1 & 0xFF) << 8 | (reg2 & 0xFF);
 	memoryWrite(memAddr, registers->A);
@@ -78,8 +78,8 @@ int storeA(int8_t reg1, int8_t reg2)
 
 int storeAInd()
 {
-	int8_t low = memoryRead(registers->PC++);
-	int8_t high = memoryRead(registers->PC++);
+	uint8_t low = memoryRead(registers->PC++);
+	uint8_t high = memoryRead(registers->PC++);
 	storeA(high, low);
 	return 16;
 }
@@ -158,7 +158,7 @@ int loadDecrement()
  *  16-bit load commands    * 
  ****************************/
 
-int loadReg16(int8_t* reg1, int8_t* reg2)
+int loadReg16(uint8_t* reg1, uint8_t* reg2)
 {
 	*reg2 = memoryRead(registers->PC++);
 	*reg1 = memoryRead(registers->PC++);
@@ -180,7 +180,7 @@ int loadHLToSP()
 	return 8;
 }
 
-int pushToStack(int8_t reg1, int8_t reg2)
+int pushToStack(uint8_t reg1, uint8_t reg2)
 {
 	registers->SP--;
 	memoryWrite(registers->SP, reg1);
@@ -189,7 +189,7 @@ int pushToStack(int8_t reg1, int8_t reg2)
 	return 16;
 }
 
-int popFromStack(int8_t* reg1, int8_t* reg2)
+int popFromStack(uint8_t* reg1, uint8_t* reg2)
 {
 	*reg2 = memoryRead(registers->SP);
 	registers->SP++;
@@ -202,18 +202,17 @@ int popFromStack(int8_t* reg1, int8_t* reg2)
  *  8-bit arithmetic/logical commands    * 
  *****************************************/
 
-static int add8SetFlags(int8_t op1, int8_t op2)
+static int add8SetFlags(uint8_t op1, uint8_t op2)
 {
-	int8_t result = op1 + op2;
-	flags->C = (op1 > 0 && op2 > 0 && result < 0) ||
-               (op1 < 0 && op2 < 0 && result > 0);
-	flags->Z = result == 0;
+	int result = (op1 & 0xFF) + (op2 & 0xFF);
+    flags->C = result > 255;
+    flags->Z = (result & 0xFF) == 0;
 	flags->H = (op1 & 0xF) + (op2 & 0xF) > 0xF;
 	flags->N = 0;
 	return result;
 }
 
-int addReg(int8_t reg)
+int addReg(uint8_t reg)
 {
 	registers->A = add8SetFlags(registers->A, reg);
 	return 4;
@@ -221,7 +220,7 @@ int addReg(int8_t reg)
 
 int addImm()
 {
-	int8_t imm = memoryRead(registers->PC++);
+	uint8_t imm = memoryRead(registers->PC++);
 	registers->A = add8SetFlags(registers->A, imm);
 	return 8;
 }
@@ -229,12 +228,12 @@ int addImm()
 int addHLInd()
 {
 	int memAddr = ((registers->H & 0xFF) << 8) | (registers->L & 0xFF);
-	int8_t ind = memoryRead(memAddr);
+	uint8_t ind = memoryRead(memAddr);
 	registers->A = add8SetFlags(registers->A, ind);
 	return 8;
 }
 
-int adcReg(int8_t reg)
+int adcReg(uint8_t reg)
 {
 	registers->A = add8SetFlags(registers->A, reg + flags->C);
 	return 4;
@@ -242,7 +241,7 @@ int adcReg(int8_t reg)
 
 int adcImm()
 {
-	int8_t imm = memoryRead(registers->PC++);
+	uint8_t imm = memoryRead(registers->PC++);
 	registers->A = add8SetFlags(registers->A, imm + flags->C);
 	return 8;
 }
@@ -250,22 +249,22 @@ int adcImm()
 int adcHLInd()
 {
 	int memAddr = ((registers->H & 0xFF) << 8) | (registers->L & 0xFF);
-	int8_t ind = memoryRead(memAddr);
+	uint8_t ind = memoryRead(memAddr);
 	registers->A = add8SetFlags(registers->A, ind + flags->C);
 	return 8;
 }
 
-static int sub8SetFlags(int8_t op1, int8_t op2)
+static int sub8SetFlags(uint8_t op1, uint8_t op2)
 {
 	int result = (op1 & 0xFF) - (op2 & 0xFF);
-	flags->C = (result > 255 || result < 0);
+	flags->C = result < 0;
 	flags->Z = ((result & 0xFF) == 0);
-	flags->H = (op1 & 0xF) < (op2 & 0xF);
+	flags->H = (op1 & 0xF) - (op2 & 0xF) < 0;
 	flags->N = 1;
 	return result;
 }
 
-int subReg(int8_t reg)
+int subReg(uint8_t reg)
 {
 	registers->A = sub8SetFlags(registers->A, reg);
 	return 4;
@@ -281,12 +280,12 @@ int subImm()
 int subHLInd()
 {
 	int memAddr = ((registers->H & 0xFF) << 8) | (registers->L & 0xFF);
-	int8_t ind = memoryRead(memAddr);
+	uint8_t ind = memoryRead(memAddr);
 	registers->A = sub8SetFlags(registers->A, ind);
 	return 8;
 }
 
-int sbcReg(int8_t reg)
+int sbcReg(uint8_t reg)
 {
 	registers->A = sub8SetFlags(registers->A, reg + flags->C);
 	return 4;
@@ -302,14 +301,14 @@ int sbcImm()
 int sbcHLInd()
 {
 	int memAddr = registers->H << 8 | registers->L;
-	int8_t ind = memoryRead(memAddr);
+	uint8_t ind = memoryRead(memAddr);
 	registers->A = sub8SetFlags(registers->A, ind + flags->C);
 	return 8;
 }
 
-static int8_t and8SetFlags(int8_t op1, int8_t op2)
+static uint8_t and8SetFlags(uint8_t op1, uint8_t op2)
 {
-	int8_t result = (op1 & op2);
+	uint8_t result = (op1 & op2);
 	flags->C = 0;
 	flags->H = 1;
 	flags->Z = (result == 0);
@@ -317,7 +316,7 @@ static int8_t and8SetFlags(int8_t op1, int8_t op2)
 	return result;
 }
 
-int andReg(int8_t reg)
+int andReg(uint8_t reg)
 {
 	registers->A = and8SetFlags(registers->A, reg);
 	return 4;
@@ -333,14 +332,14 @@ int andImm()
 int andHLInd()
 {
 	int16_t memAddr = ((registers->H & 0xFF) << 8) | (registers->L & 0xFF);
-	int8_t ind = memoryRead(memAddr);
+	uint8_t ind = memoryRead(memAddr);
 	registers->A = and8SetFlags(registers->A, ind);
 	return 8;
 }
 
-static int8_t xor8SetFlags(int op1, int op2)
+static uint8_t xor8SetFlags(int op1, int op2)
 {
-	int8_t result = (op1 ^ op2);
+	uint8_t result = (op1 ^ op2);
 	flags->Z = (result == 0);
 	flags->C = 0;
 	flags->H = 0;
@@ -348,7 +347,7 @@ static int8_t xor8SetFlags(int op1, int op2)
 	return result;
 }
 
-int xorReg(int8_t reg)
+int xorReg(uint8_t reg)
 {
 	registers->A = xor8SetFlags(registers->A, reg);
 	return 4;
@@ -356,7 +355,7 @@ int xorReg(int8_t reg)
 
 int xorImm()
 {
-	int8_t imm = memoryRead(registers->PC++);
+	uint8_t imm = memoryRead(registers->PC++);
 	registers->A = xor8SetFlags(registers->A, imm);
 	return 8;
 }
@@ -364,14 +363,14 @@ int xorImm()
 int xorHLInd()
 {
 	int16_t memAddr = ((registers->H & 0xFF) << 8) | (registers->L & 0xFF);
-	int8_t ind = memoryRead(memAddr);
+	uint8_t ind = memoryRead(memAddr);
 	registers->A = xor8SetFlags(registers->A, ind);
 	return 8;
 }
 
-static int8_t or8SetFlags(int op1, int op2)
+static uint8_t or8SetFlags(int op1, int op2)
 {
-	int8_t result = (op1 | op2);
+	uint8_t result = (op1 | op2);
 	flags->Z = (result == 0);
 	flags->C = 0;
 	flags->H = 0;
@@ -379,7 +378,7 @@ static int8_t or8SetFlags(int op1, int op2)
 	return result;
 }
 
-int orReg(int8_t reg)
+int orReg(uint8_t reg)
 {
 	registers->A = or8SetFlags(registers->A, reg);
 	return 4;
@@ -387,7 +386,7 @@ int orReg(int8_t reg)
 
 int orImm()
 {
-	int8_t imm = memoryRead(registers->PC++);
+	uint8_t imm = memoryRead(registers->PC++);
 	registers->A = or8SetFlags(registers->A, imm);
 	return 8;
 }
@@ -395,12 +394,12 @@ int orImm()
 int orHLInd()
 {
 	int16_t memAddr = ((registers->H & 0xFF) << 8) | (registers->L & 0xFF);
-	int8_t ind = memoryRead(memAddr);
+	uint8_t ind = memoryRead(memAddr);
 	registers->A = or8SetFlags(registers->A, ind);
 	return 8;
 }
 
-int compareReg(int8_t reg)
+int compareReg(uint8_t reg)
 {
 	sub8SetFlags(registers->A, reg);
 	return 4;
@@ -408,7 +407,7 @@ int compareReg(int8_t reg)
 
 int compareImm()
 {
-	int8_t imm = memoryRead(registers->PC++);
+	uint8_t imm = memoryRead(registers->PC++);
 	sub8SetFlags(registers->A, imm);
 	return 8;
 }
@@ -416,12 +415,12 @@ int compareImm()
 int compareHLInd()
 {
 	int16_t memAddr = ((registers->H & 0xFF) << 8) | (registers->L & 0xFF);
-	int8_t ind = memoryRead(memAddr);
+	uint8_t ind = memoryRead(memAddr);
 	sub8SetFlags(registers->A, ind);
 	return 8;
 }
 
-int incReg8(int8_t* reg)
+int incReg8(uint8_t* reg)
 {
 	flags->H = (*reg & 0xF) + 1 > 0xF;
 	*reg += 1;
@@ -433,7 +432,7 @@ int incReg8(int8_t* reg)
 int incHLInd()
 {
 	int16_t memAddr = ((registers->H & 0xFF) << 8) | (registers->L & 0xFF);
-	int8_t ind = memoryRead(memAddr);
+	uint8_t ind = memoryRead(memAddr);
 	flags->H = (ind & 0xF) + 1 > 0xF;
 	ind += 1;
 	flags->Z = (ind == 0);
@@ -442,9 +441,9 @@ int incHLInd()
 	return 12;
 }
 
-int decReg8(int8_t* reg)
+int decReg8(uint8_t* reg)
 {
-	flags->H = (*reg & 0xF) < 1;
+	flags->H = (*reg & 0xF) - 1 < 0;
 	*reg -= 1;
 	flags->Z = (*reg == 0);
 	flags->N = 1;
@@ -454,7 +453,7 @@ int decReg8(int8_t* reg)
 int decHLInd()
 {
 	int16_t memAddr = ((registers->H & 0xFF) << 8) | (registers->L & 0xFF);
-	int8_t ind = memoryRead(memAddr);
+	uint8_t ind = memoryRead(memAddr);
 	flags->H = (ind & 0xF) < 1;
 	ind -= 1;
 	flags->Z = (ind == 0);
@@ -567,34 +566,34 @@ int complementA()
  * 16-bit arithmetic/logical commands * 
  **************************************/
 
-static int16_t add16SetFlags(int16_t op1, int16_t op2)
+static int16_t add16SetFlags(uint16_t op1, uint16_t op2)
 {
 	int result = (op1 & 0xFFFF) + (op2 & 0xFFFF);
 	flags->N = 0;
 	flags->C = (result > 0xFFFF);
-	flags->H = (op1 & 0xFFF) + (op2 + 0xFFF) > 0xFFF;
+	flags->H = (op1 & 0xFFF) + (op2 & 0xFFF) > 0xFFF;
 	return result;
 }
 
-int addReg16(int8_t reg1, int8_t reg2)
+int addReg16(uint8_t reg1, uint8_t reg2)
 {
-	int16_t reg16 = (reg1 << 8 | reg2) & 0xFFFF;
-	int16_t HL = ((registers->H & 0xFF) << 8) | (registers->L & 0xFF);
+	uint16_t reg16 = (reg1 << 8 | reg2) & 0xFFFF;
+	uint16_t HL = ((registers->H & 0xFF) << 8) | (registers->L & 0xFF);
 	HL = add16SetFlags(HL, reg16);
 	registers->H = (HL >> 8) & 0xFF;
 	registers->L = HL & 0xFF;
 	return 8;
 }
 
-int incReg16(int8_t* reg1, int8_t* reg2)
+int incReg16(uint8_t* reg1, uint8_t* reg2)
 {
-	int16_t regPair = ((*reg1 & 0xFF) << 8 | (*reg2 & 0xFF)) + 1;
+	uint16_t regPair = ((*reg1 & 0xFF) << 8 | (*reg2 & 0xFF)) + 1;
 	*reg1 = (regPair >> 8) & 0xFF;
 	*reg2 = regPair & 0xFF;
 	return 8;
 }
 
-int decReg16(int8_t* reg1, int8_t* reg2)
+int decReg16(uint8_t* reg1, uint8_t* reg2)
 {
 	int16_t regPair = ((*reg1 & 0xFF) << 8 | (*reg2 & 0xFF)) - 1;
 	*reg1 = (regPair >> 8) & 0xFF;
@@ -604,7 +603,7 @@ int decReg16(int8_t* reg1, int8_t* reg2)
 
 int addToSP()
 {
-	int8_t imm = memoryRead(registers->PC++);
+	uint8_t imm = memoryRead(registers->PC++);
 	int result = (imm & 0xFF) + (registers->SP & 0xFFFF);
 	flags->Z = 0;
 	flags->N = 0;
@@ -617,7 +616,7 @@ int addToSP()
 int addSPToHL()
 {
 	int HL = ((registers->H & 0xFF) << 8) | (registers->L & 0xFF);
-	int8_t imm = memoryRead(registers->PC++);
+	uint8_t imm = memoryRead(registers->PC++);
 	HL = (registers->SP & 0xFFFF) + (imm & 0xFF);
 	flags->Z = 0;
 	flags->N = 0;
@@ -672,7 +671,7 @@ int rotateARight()
 	return 4;
 }
 
-int rotateRegLeftC(int8_t* reg)
+int rotateRegLeftC(uint8_t* reg)
 {
 	int sevenBit = (*reg >> 7) & 0x1;
 	*reg = (*reg << 1) | sevenBit;
@@ -683,7 +682,7 @@ int rotateRegLeftC(int8_t* reg)
 	return 8;
 }
 
-int rotateRegLeft(int8_t* reg)
+int rotateRegLeft(uint8_t* reg)
 {
 	int sevenBit = (*reg >> 7) & 0x1;
 	*reg = (*reg << 1) | flags->C;
@@ -694,7 +693,7 @@ int rotateRegLeft(int8_t* reg)
 	return 8;
 }
 
-int rotateRegRightC(int8_t* reg)
+int rotateRegRightC(uint8_t* reg)
 {
 	int zeroBit = *reg & 0x1;
 	*reg = (*reg >> 1) | (zeroBit << 7);
@@ -705,7 +704,7 @@ int rotateRegRightC(int8_t* reg)
 	return 8;
 }
 
-int rotateRegRight(int8_t* reg)
+int rotateRegRight(uint8_t* reg)
 {
 	int zeroBit = *reg & 0x1;
 	*reg = (*reg >> 1) | (flags->C << 7);
@@ -716,7 +715,7 @@ int rotateRegRight(int8_t* reg)
 	return 8;
 }
 
-int shiftRegLeftA(int8_t* reg)
+int shiftRegLeftA(uint8_t* reg)
 {
 	int sevenBit = (*reg >> 7) & 0x1;
 	*reg = *reg << 1;
@@ -727,7 +726,7 @@ int shiftRegLeftA(int8_t* reg)
 	return 8;
 }
 
-int swapReg(int8_t* reg)
+int swapReg(uint8_t* reg)
 {
 	*reg = ((*reg >> 4) & 0xF0) | (*reg << 4);
 	flags->Z = (*reg == 0);
@@ -737,7 +736,7 @@ int swapReg(int8_t* reg)
 	return 8;
 }
 
-int shiftRegRightA(int8_t* reg)
+int shiftRegRightA(uint8_t* reg)
 {
 	int sevenBit = (*reg >> 7) & 0x1;
 	*reg = *reg >> 1;
@@ -748,7 +747,7 @@ int shiftRegRightA(int8_t* reg)
 	return 8;
 }
 
-int shiftRegRightL(int8_t* reg)
+int shiftRegRightL(uint8_t* reg)
 {
 	int sevenBit = (*reg >> 7) & 0x1;
 	*reg = (*reg >> 1) & 0x7F;
@@ -763,7 +762,7 @@ int shiftRegRightL(int8_t* reg)
  * Single bit operations              * 
  **************************************/
 
-int testRegBit(int8_t* reg, int n)
+int testRegBit(uint8_t* reg, int n)
 {
 	int bit = (*reg >> n) & 0x1;
 	flags->Z = (bit == 0);
@@ -772,14 +771,14 @@ int testRegBit(int8_t* reg, int n)
 	return 8;
 }
 
-int setRegBit(int8_t* reg, int n)
+int setRegBit(uint8_t* reg, int n)
 {
 	int newBit = 1 << n;
 	*reg |= newBit;
 	return 8;
 }
 
-int resetRegBit(int8_t* reg, int n)
+int resetRegBit(uint8_t* reg, int n)
 {
 	int newBit = (1 << n) ^ 0xFF;
 	*reg &= newBit;
@@ -838,8 +837,8 @@ int enableInterrupts()
 
 int jump()
 {
-	int8_t jumpLow = memoryRead(registers->PC++);
-	int8_t jumpHigh = memoryRead(registers->PC++);
+	uint8_t jumpLow = memoryRead(registers->PC++);
+	uint8_t jumpHigh = memoryRead(registers->PC++);
 	int jumpAddr = ((jumpHigh & 0xFF) << 8) | (jumpLow & 0xFF);
 	registers->PC = jumpAddr;
 	return 16;
@@ -864,7 +863,7 @@ int conditionalJump(int cond)
 
 int relativeJump()
 {
-	int8_t jumpOffset = memoryRead(registers->PC++);
+	uint8_t jumpOffset = memoryRead(registers->PC++);
 	registers->PC += jumpOffset;
 	return 12;
 }
@@ -902,7 +901,7 @@ int conditionalCall(int cond)
 
 int returnPC()
 {
-	int8_t pcHigh, pcLow;
+	uint8_t pcHigh, pcLow;
 	popFromStack(&pcLow, &pcHigh);
 	registers->PC = ((pcHigh & 0xFF) << 8) | (pcLow & 0xFF);
 	return 16;

@@ -1,5 +1,8 @@
 /**
- * Z80-Instruction Set
+ * \file cpu_z80_inst.h
+ * \brief Contains functions to execute the Z80 instruction set.
+ *
+ * All functions here return the number of CPU cycles the instruction takes.
  */
 
 #ifndef _Z80_INST_
@@ -11,121 +14,816 @@
 
 #include "registers.h"
 
-/* Memory Read */
+/**
+ * Memory read function.
+ * 
+ * \param address Memory address to read from.
+ */
 typedef uint8_t (*mem_read)(uint16_t address);
-/* Memory Write */
+
+/**
+ * Memory write function.
+ *
+ * \param address Memory address to write to.
+ * \param data Data to write.
+ */
 typedef void (*mem_write)(uint16_t address, uint8_t data);
 
 /**
  * Initializies the z80 instruction set, must be called before executing any
  * instruction
+ *
+ * \param z80registers Z80 registers used as part of the CPU.
+ * \param z80flags Z80 flags used as part of the CPU.
+ * \param read memory read function.
+ * \param write memory write function.
  */
 void initialize_micro_ops(struct z80Reg *z80registers, struct z80Flags *z80flags,
                           mem_read read, mem_write write);
 
-// 8-bit load commands
-int loadReg8(int8_t* src, int8_t* dest);      // ld r, r      r = r
-int loadImmReg8(int8_t* reg);                 // ld r, n      r = n
-int loadReg8HL(int8_t* reg);                  // ld r, (HL)   r = (HL)
-int storeReg8HL(int8_t reg);                  // ld (HL), r   (HL) = r
-int storeHLImm();                             // ld (HL), n   (HL) = n
-int loadA(int8_t reg1, int8_t reg2);          // ld A, (rr)   A = (rr)
-int loadAInd();                               // ld A, (nn)   A = (nn)
-int storeA(int8_t reg1, int8_t reg2);         // ld (rr), A   (rr) = A
-int storeAInd();                              // ld (nn), A   (nn) = A
-int readIOPortN();                            // ld A, (FF00 + n)
-int writeIOPortN();                           // ld (FF00 + n), A
-int readIOPortC();                            // ld A, (FF00 + C)
-int writeIOPortC();                           // ld (FF00 + C), A
-int storeIncrement();                         // ldi (HL), A   (HL) = A, HL = HL + 1
-int loadIncrement();                          // ldi A, (HL)   A = (HL), HL = HL + 1
-int storeDecrement();                         // ldd (HL), A   (HL) = A, HL = HL - 1
-int loadDecrement();                          // ldd A, (HL)   A = (HL), HL = HL - 1
+/**
+ * \name 8-bit load
+ * All 8-bit load commands.
+ */
+///@{
+/**
+ * \brief ld r, r --> r = r
+ * 
+ * Loads a 8-bit register from another 8-bit register
+ *
+ * \param src Source register
+ * \param dest Destination register.
+ */
+int loadReg8(uint8_t* src, uint8_t* dest);
 
-// 16-bit load commands
-int loadReg16(int8_t* reg1, int8_t* reg2);    // ld rr, nn
-int loadSPImm();                              // ld SP, nn
-int loadHLToSP();                             // ld SP, HL
-int pushToStack(int8_t reg1, int8_t reg2);    // push          SP = SP - 2, (SP) = rr
-int popFromStack(int8_t* reg1, int8_t* reg2); // pop           SP = SP + 2, rr = (SP)
+/**
+ * \brief ld r, n --> r = n
+ *
+ * Loads the immediate value into a register.
+ *
+ * \param reg Register to load into.
+ */
+int loadImmReg8(uint8_t* reg);
 
-// 8-bit arithmetic/logical commands
-int addReg(int8_t reg);                       // add A, r      A = A + r
-int addImm();                                 // add A, n      A = A + n
-int addHLInd();                               // add A, (HL)   A = A + (HL)
-int adcReg(int8_t reg);                       // adc A, r      A = A + r + cy
-int adcImm();                                 // adc A, n      A = A + n + cy
-int adcHLInd();                               // adc A, HL     A = A + (HL) + cy
-int subReg(int8_t reg);                       // sub r         A = A - r
-int subImm();                                 // sub n         A = A - n
-int subHLInd();                               // sub (HL)      A = A - (HL)
-int sbcReg(int8_t reg);                       // sbc A, r      A = A - r - cy
-int sbcImm();                                 // sbc A, n      A = A - n - cy
-int sbcHLIndA();                              // sbc A, (HL)   A = A - (HL) - cy
-int andReg(int8_t reg);                       // and r         A = A & r
-int andImm();                                 // and n         A = A & n
-int andHLInd();                               // and (HL)      A = A & (HL)
-int xorReg(int8_t reg);                       // xor r         A = A ^ r
-int xorImm();                                 // xor n         A = A ^ n
-int xorHLInd();                               // xor (HL)      A = A ^ (HL)
-int orReg(int8_t reg);                        // or r          A = A | r
-int orImm();                                  // or n          A = A | n
-int orHLInd();                                // or (HL)       A = A | (HL)
-int compareReg(int8_t reg);                   // cp r          compare A - r
-int compareImm();                             // cp n          compare A - n
-int compareHLInd();                           // cp (HL)       compare A - (HL)
-int incReg8(int8_t* reg);                     // inc r         r = r + 1
-int incHLInd();                               // inc (HL)      (HL) = (HL) + 1
-int decReg8(int8_t* reg);                     // dec r         r = r - 1
-int decHLInd();                               // dec (HL)      (HL) = (HL) - 1
-int decimalyAdjustA();                        // daa
-int complementA();                            // cpl           A = A ^ 0xFF
+/**
+ * \brief ld r, (HL) --> r = (HL)
+ *
+ * Load a register with the value stored in the memory address stored
+ * in the register pair HL.
+ *
+ * \param reg Register to load into.
+ */
+int loadReg8HL(uint8_t* reg);
 
-// 16-bit arithmetic/logical commands
-int addReg16(int8_t reg1, int8_t reg2);       // add HL, rr    HL = HL + rr
-int incReg16(int8_t* reg1, int8_t* reg2);     // inc rr        rr = rr + 1
-int decReg16(int8_t* reg1, int8_t* reg2);     // dec rr        rr = rr - 1	
-int addToSP();                                // add SP, dd    SP =  SP +/- dd
-int addSPToHL();                              // ld HL, SP+dd  HL = SP +/- dd
+/**
+ * \brief ld (HL), r --> (HL) = r
+ *
+ * Store a register value into the memory address stored in the register
+ * pair HL.
+ * \param reg Register to store.
+ */
+int storeReg8HL(uint8_t reg);
 
-// rotate and shift commands
-int rotateALeftC();                           // rlca
-int rotateALeft();                            // rla
-int rotateARightC();                          // rrca
-int rotateARight();                           // rra
-int rotateRegLeftC(int8_t* reg);              // rlc r
-int rotateRegLeft(int8_t* reg);               // rl r
-int rotateRegRightC(int8_t* reg);             // rrc r
-int rotateRegRight(int8_t* reg);              // rr r
-int shiftRegLeftA(int8_t* reg);               // sla r         shift left arithmetic
-int swapReg(int8_t* reg);                     // swap r        exchange low/high-nibble
-int shiftRegRightA(int8_t* reg);              // sra r         shift right arithmetic
-int shiftRegRightL(int8_t* reg);              // srl r         shift right logical
+/**
+ * \brief ld (HL), n --> (HL) = n
+ *
+ * Store, into the memory address stored in the register pair HL, and 
+ * an imediate value
+ */
+int storeHLImm();
 
-// single bit operations
-int testRegBit(int8_t* reg, int n);           // bit n, r      test bit n of r
-int setRegBit(int8_t* reg, int n);            // set n, r      set bit n of (HL)
-int resetRegBit(int8_t* reg, int n);          // res n, r      reset bit n of r
+/**
+ * \brief ld A, (rr) --> A = (rr)
+ *
+ * Load the A register with the contents of the memory address, stored
+ * in the given register pair.
+ *
+ * \param reg1 The upper 8 bits of the register pair.
+ * \param reg2 The lower 8 bits of the register pair.
+ */
+int loadA(uint8_t reg1, uint8_t reg2); 
 
-// cpu control commands
-int complementCarry();                        // ccf           cy = cy ^ 1
-int setCarry();                               // scf           cy = 1
-int halt();                                   // halt          halt until an interrupt occurs
-int stop();                                   // stop          low power standby mode
-int disableInterrupts();                      // di
-int enableInterrupts();                       // ei
+/**
+ * \brief ld A, (nn) --> A = (nn).
+ *
+ * Load the imediate value into the A register.
+ */
+int loadAInd(); 
 
-// jump commands
-int jump();                                   // jp nn         jump to nn, PC = nn
-int jumpHL();                                 // jp HL         jump to HL, PC = HL
-int conditionalJump(int cond);                // jp f, nn
-int relativeJump();                           // jr PC+dd      relative jump to nn (PC=PC+/-7bit)
-int conditionalRelativeJump(int cond);        // jr f, PC+dd
-int call();                                   // call nn       call to nn, SP = SP - 2, (SP) = PC, PC = nn
-int conditionalCall(int cond);                // call f, nn
-int returnPC();                               // ret           return, PC = (SP), SP = SP + 2
-int conditionalReturnPC(int cond);            // ret f
-int returnPCI();                              // reti          return and enable interrupts
-int sysCall(int address);                     // rst           call to 00, 08, 10, 18, 20, 28, 30, 38
+/**
+ * \brief ld (rr), A --> (rr) = A
+ *  
+ * Store the A register value into the memory address, stored in the given
+ * register pair.
+ *
+ * \param reg1 The upper 8-bits of the register pair.
+ * \param reg2 The lower 8-bits of the register pair.
+ */
+int storeA(uint8_t reg1, uint8_t reg2); 
+
+/**
+ * \brief ld (nn), A --> (nn) = A
+ *
+ * Stores the A register value into the memory address, stored in the 
+ * immediate value.
+ */
+int storeAInd();
+
+/**
+ * \brief ld A, (FF00 + n) --> A = (FF00 + n)
+ *
+ * Stores the value of an IO port into A. The number of the port is determined
+ * from the immediate value.
+ */
+int readIOPortN(); 
+
+/**
+ * \brief ld (FF00 + n), A --> (FF00 + n) = A
+ *
+ * Stores the A register value to an IO port. The number of the port is 
+ * determined from the immediate value.
+ */
+int writeIOPortN();
+
+/**
+ * \brief ld A, (FF00 + C) --> (FF00 + flags.C) = A
+ *
+ * Stores the value of an IO port into A. The number of the port is determined
+ * from the carry flag.
+ */
+int readIOPortC();
+
+/**
+ * \brief ld (FF00 + C), A --> (FF00 + flags.C) = A
+ *
+ * Stores the A register value to an IO port. The number of the port is 
+ * determined from the carry flag.
+ */
+int writeIOPortC();
+
+/**
+ * \brief ldi (HL), A --> (HL) = A, HL = HL + 1
+ *
+ * Stores the A register value into the memory address stored in the HL 
+ * register pair, then increments the value of the HL register pair.
+ */
+int storeIncrement();
+
+/**
+ * \brief ldi A, (HL) --> A = (HL), HL = HL + 1
+ *
+ * Loads the A register with the value in the memory address, stored in the
+ * HL register pair, then increments the HL register pair.
+ */
+int loadIncrement();
+
+/**
+ * \brief ldd (HL), A --> (HL) = A, HL = HL - 1
+ *
+ * Stores the A register value into the memory address stored in the HL 
+ * register pair, then decrements the value of the HL register pair.
+ */
+int storeDecrement();
+
+/**
+ * \brief ldd A, (HL) --> A = (HL), HL = HL - 1
+ *
+ * Loads the A register with the value in the memory address, stored in the
+ * HL register pair, then decrements the HL register pair.
+ */
+int loadDecrement();
+///@}
+
+/**
+ * @name 16-bit load.
+ * All 16-bit load commands.
+ */
+///@{
+/**
+ * \brief ld rr, nn --> rr = nn
+ * 
+ * Load a 16-bit register with the immediate value.
+ *
+ * \param reg1 The upper bits if the register.
+ * \param reg2 The lower bits of the register.
+ */
+int loadReg16(uint8_t* reg1, uint8_t* reg2);
+
+/**
+ * \brief ld SP, nn --> SP = nn
+ *
+ * Load the immediate value into SP.
+ */
+int loadSPImm(); 
+
+/**
+ * \brief ld SP, HL --> SP = HL
+ *
+ * Load the value of the register pair HL into SP.
+ */
+int loadHLToSP();
+
+/**
+ * \brief push rr --> SP = SP - 2, (SP) = rr
+ *
+ * Load a register pair into SP
+ *
+ * \param reg1 Upper 8 bits of the register pair.
+ * \param reg2 Lower 8 bits of the register pair.
+ */
+int pushToStack(uint8_t reg1, uint8_t reg2);
+
+/**
+ * \brief pop rr --> SP = SP + 2, rr = (SP)
+ *
+ * Pop a 16-bit value from the stack and load the value into a register pair.
+ * 
+ * \param reg1 Upper 8 bits of the register pair.
+ * \param reg2 Lower 8 bits of the register pair
+ */
+int popFromStack(uint8_t* reg1, uint8_t* reg2);
+///@}
+
+
+/** 
+ * \name 8-bit arithmetic/logical
+ * All 8-bit arithmetic/logical commands
+ */
+///@{
+/**
+ * \brief add A, r --> A = A + r
+ *
+ * Add a register value to the A register.
+ *
+ * \param reg The register value to add.
+ */
+int addReg(uint8_t reg); 
+
+/**
+ * \brief add A, n --> A = A + n
+ *
+ * Add the immediate value to the a regiter.
+ */
+int addImm(); 
+
+/**
+ * \brief add A, (HL) --> A = A + (HL)
+ *
+ * Add the contents of the memory address, stored in the register pair HL, 
+ * to the A register.
+ */
+int addHLInd(); 
+
+/**
+ * \brief adc A, r --> A = A + r + cy
+ *
+ * Add a register value as well as the carry flag to the A register.
+ *
+ * \param reg The register value to add.
+ */
+int adcReg(uint8_t reg);
+
+/**
+ * \brief adc A, n --> A = A + n + cy
+ *
+ * Add the immediate value as well as the carry flag to the A register.
+ */
+int adcImm(); 
+
+/**
+ * \brief adc A, HL --> A = A + (HL) + cy
+ *
+ * Add the contents of the memory address, stored in the register pair HL, 
+ * as well as the carry flag to the A register.
+ */
+int adcHLInd(); 
+
+/**
+ * \brief sub r --> A = A - r
+ *
+ * Subtract a register value from the A register.
+ *
+ * \param reg Register value to subtract.
+ */
+int subReg(uint8_t reg); 
+
+/**
+ * \brief sub n --> A = A - n
+ *
+ * Subtract the immediate value from the A register.
+ */
+int subImm(); 
+
+/**
+ * \brief sub (HL) --> A = A - (HL)
+ *
+ * Subtract the contents of memory address stored in the register pair HL, 
+ * from the A register.
+ */
+int subHLInd(); 
+
+/**
+ * \brief sbc A, r --> A = A - r - cy
+ *
+ * Subtract a register value and the carry flag from the A register.
+ */
+int sbcReg(uint8_t reg);
+
+/**
+ * \brief sbc A, n --> A = A - n - cy
+ *
+ * Subtract the immediate value and the carry value from the A register.
+ */
+int sbcImm();
+
+/**
+ * \brief sbc A, (HL) --> A = A - (HL) - cy
+ *
+ * Subtract the contents of the memory address, stored in the register pair HL, 
+ * and the carry flag from the A register.
+ */
+int sbcHLInd();
+
+/**
+ * \brief and r --> A = A & r
+ *
+ * Perform a bitwise and between a register value and the A register.
+ */
+int andReg(uint8_t reg);
+
+/**
+ * \brief and n --> A = A & n
+ *
+ * Perform a bitwise and between the immediat value and the A register.
+ */
+int andImm();
+
+/**
+ * \brief and (HL) --> A = A & (HL)
+ *
+ * Perform a bitwise and between the contents of the memory address, stored in 
+ * the register pair HL, and the A register.
+ */
+int andHLInd();
+
+/**
+ * \brief xor r --> A = A ^ r
+ *
+ * Perform a bitwise xor beteen a register value and the A register.
+ */
+int xorReg(uint8_t reg);
+
+/**
+ * \brief xor n --> A = A ^ n
+ *
+ * Perform a bitwise xor between the immediate value and the A register.
+ */
+int xorImm();
+
+/**
+ * \brief xor (HL) --> A = A ^ (HL)
+ *
+ * Perform a bitwise xor between the contents of the memory address, stored in
+ * the register pair HL, and the A register.
+ */
+int xorHLInd();
+
+/**
+ * \brief or r --> A = A | r
+ *
+ * Perform a bitwise or beteen a register value and the A register. 
+ */
+int orReg(uint8_t reg);
+
+/**
+ * \brief or n --> A = A | n
+ *
+ * Perform a bitwise or between the immediate value and the A register.
+ */
+int orImm();
+
+/**
+ * \brief or (HL) --> A = A | (HL)
+ *
+ * Perform a bitwise or between the contents of the memory address, stored in
+ * the register pair HL, and the A register.
+ */
+int orHLInd();
+
+/**
+ * \brief cp r --> compare A - r
+ *
+ * Compare a register value to the A register. This will set flags as if a 
+ * subtraction has occurred, but will not modify the value of the A register.
+ */
+int compareReg(uint8_t reg);
+
+/**
+ * \brief cp n --> compare A - n
+ *
+ * Compare the immediate to the A register. This will set flags as if a 
+ * subtraction has occurred, but will not modify the value of the A register.
+ */
+int compareImm();
+
+/**
+ * \brief cp (HL) --> compare A - (HL)
+ *
+ * Compare the contentes of the memory address, stored in the register pair HL,
+ * to the A register. This will set flags as if a subtraction has occurred, but
+ * will not modify the value of the A register.
+ */
+int compareHLInd();
+
+/**
+ * \brief inc r --> r = r + 1
+ *
+ * Increment a register value by 1.
+ *
+ * \param reg Register to increment.
+ */
+int incReg8(uint8_t* reg);
+
+/**
+ * \brief inc (HL) --> (HL) = (HL) + 1
+ *
+ * Increment the contents of the memory address stored in the register pair HL
+ * by 1.
+ */
+int incHLInd();
+
+/**
+ * \brief dec r --> r = r - 1
+ *
+ * Decrement a register value by 1.
+ *
+ * \param reg Register to decrement.
+ */
+int decReg8(uint8_t* reg);
+
+/**
+ * \brief dec (HL) --> (HL) = (HL) - 1
+ *
+ * Decrement the contents of the memory address stored in the register pair HL
+ * by 1.
+ */
+int decHLInd();
+
+/**
+ * \brief daa
+ *
+ * Decimally Adjust the register A. The adjustment is determined by the CPU flags.
+ */
+int decimalyAdjustA();
+
+/**
+ * \brief cpl --> A = A ^ 0xFF
+ *
+ * Complement the register A, perform an xor between the value 0xFF and the 
+ * A register.
+ */
+int complementA();
+///@}
+
+/**
+ * \name 16-bit arithmetic/logical
+ * All 16-bit arithmetic/logical commands
+ */
+///@{
+/**
+ * \brief add HL, rr --> HL = HL + rr
+ *
+ * Add a register pair to the registerh pair HL.
+ *
+ * \param reg1 The upper eight bits of the register pair.
+ * \param reg2 The lower eight bits of the register pair.
+ */
+int addReg16(uint8_t reg1, uint8_t reg2);
+
+/**
+ * \brief inc rr --> rr = rr + 1
+ *
+ * Increment a register pair by 1.
+ *
+ * \param reg1 The upper eight bits of a register pair.
+ * \param reg2 The lower eight bits of a register pair.
+ */
+int incReg16(uint8_t* reg1, uint8_t* reg2);
+
+/**
+ * \brief dec rr --> rr = rr - 1
+ *
+ * Decrement a register pair by 1.
+ * 
+ * \param reg1 Upper eight bits of the register pair.
+ * \param reg2 Lower eight bits of the register pair.
+ */
+int decReg16(uint8_t* reg1, uint8_t* reg2);
+
+/**
+ * \brief add SP, dd --> SP =  SP +/- dd
+ *
+ * Add the immediate value to SP.
+ */
+int addToSP();
+
+/**
+ * \brief ld HL, SP+dd --> HL = SP +/- dd
+ *
+ * Add the immediate value to SP, then load SP into the register pair HL.
+ */
+int addSPToHL();
+///@}
+
+/** 
+ * \name Rotate and shift
+ * All Rotate and shift commands.
+ */
+///@{
+/**
+ * \brief rlca
+ *
+ * Rotates the A register to the left one place. The 7th bit is put back into 
+ * the 0 position. The 7th bit also goes to the carry flag.
+ */
+int rotateALeftC();
+
+/**
+ * \brief rla
+ *
+ * The bits in the A register are all rotated left, the 7th bit goes
+ * to the carry flag and the carry flag goes to bit 0. 
+ */
+int rotateALeft();
+
+/**
+ * \brief rrca
+ *
+ * Rotates the A register to the right one place. The 0 bit is put into the 
+ * 7th position. The 0 bit also goes to the carry flag.
+ */
+int rotateARightC();
+
+/**
+ * \brief rra
+ *
+ * The A register is shifted right by one, the 0 bit goes to the carry
+ * flag, and the carry flag goes to bit 7.
+ */
+int rotateARight();
+
+/**
+ * \brief rlc r
+ *
+ * Rotates a register to the left one place. The 7th bit is put back into 
+ * the 0 position. The 7th bit also goes to the carry flag.
+ *
+ * \param reg Register to rotate.
+ */
+int rotateRegLeftC(uint8_t* reg);
+
+/**
+ * \brief rl r
+ *
+ * The bits in a register are all rotated left, the 7th bit goes
+ * to the carry flag and the carry flag goes to bit 0.
+ *
+ * \param reg Register to rotate.
+ */
+int rotateRegLeft(uint8_t* reg);
+
+/**
+ * \brief rrc r
+ *
+ * Rotates a register to the right one place. The 0 bit is put into the 
+ * 7th position. The 0 bit also goes to the carry flag.
+ *
+ * \param reg Register to rotate.
+ */
+int rotateRegRightC(uint8_t* reg);
+
+/**
+ * \brief rr r
+ *
+ * A register is shifted right by one, the 0 bit goes to the carry
+ * flag, and the carry flag goes to bit 7.
+ *
+ * \param reg Register to shift.
+ */
+int rotateRegRight(uint8_t* reg);
+
+/**
+ * \brief sla r --> shift left arithmetic
+ *
+ * Shifts a register left on place. The 7th bit goes into the carry flag.
+ * The 0 bit has 0 shifted in.
+ *
+ * \param reg Register to shift.
+ */
+int shiftRegLeftA(uint8_t* reg);
+
+/**
+ * \brief swap r --> exchange low/high-nibble
+ * 
+ *
+ */
+int swapReg(uint8_t* reg);
+
+/**
+ * \brief sra r --> shift right arithmetic
+ *
+ * Shifts a register right on place. The 0 bit goes into the carry flag.
+ * The 7th bit stays the same.
+ * 
+ * \param reg Register to shift.
+ */
+int shiftRegRightA(uint8_t* reg);
+
+/**
+ * \brief srl r --> shift right logical
+ *
+ * Shifts a register right on place. The 0 bit goes into the carry flag.
+ * The 7th bit goes to 0.
+ * 
+ * \param reg Register to shift.  
+ */
+int shiftRegRightL(uint8_t* reg);
+///@}
+
+/**
+ * \name Single bit
+ * All single bit operations.
+ */
+///@{
+/**
+ * \brief bit n, r --> test bit n of r
+ *
+ * Tests if bit n of a register is set.
+ *
+ * \param reg Register to test.
+ * \param n Bit position.
+ */
+int testRegBit(uint8_t* reg, int n);
+
+/**
+ * \brief set n, r --> set bit n of (HL)
+ *
+ * Sets bit n of a register.
+ * 
+ * \param reg Register to set.
+ * \param n Bit position.
+ */
+int setRegBit(uint8_t* reg, int n);
+
+/**
+ * \brief res n, r --> reset bit n of r
+ *
+ * Clears bit n of a register.
+ *
+ * \param reg Register to clear
+ * \param n Bit position.
+ */
+int resetRegBit(uint8_t* reg, int n);
+///@}
+
+/**
+ * \name Cpu control
+ * All cpu control commands.
+ */
+///@{
+/**
+ * \brief ccf --> cy = cy ^ 1
+ *
+ *
+ */
+int complementCarry();
+
+/**
+ * \brief scf --> cy = 1
+ *
+ *
+ */
+int setCarry();
+
+/**
+ * \brief halt
+ *
+ * Halt until an interrupt occurs.
+ */
+int halt();
+
+/**
+ * \brief stop
+ *
+ * Low power standby mode.
+ */
+int stop();
+
+/**
+ * \brief di
+ *
+ * Disable all interrupts.
+ */
+int disableInterrupts();
+
+/**
+ * \brief ei
+ *
+ * Enable all interrupts.
+ */
+int enableInterrupts();
+///@}
+
+/**
+ * \name Jump
+ * All jump commands.
+ */
+///@{
+/**
+ * \brief jp nn --> jump to nn, PC = nn
+ *
+ * Jump to the immediate value. 
+ */
+int jump();
+
+/**
+ * \brief jp HL --> jump to HL, PC = HL
+ *
+ * Jump to the value stored in the register pair HL.
+ */
+int jumpHL();
+
+/**
+ * \brief jp f, nn
+ *
+ * Jump to the immediate value if the condition is true.
+ *
+ * \param cond 1 if true, 0 if false. Should be a CPU flag.
+ */
+int conditionalJump(int cond);
+
+/**
+ * \brief jr PC+dd --> relative jump to nn (PC=PC+/-7bit)
+ *
+ * Jump by the immediate value.
+ */
+int relativeJump();
+
+/**
+ * \brief jr f, PC+dd
+ *
+ * Jump by the immediate value if the condition is true.
+ *
+ * \param cond 1 if true, 0 if false. Should be a CPU flag.
+ */
+int conditionalRelativeJump(int cond);
+
+/**
+ * \brief call nn --> SP = SP - 2, (SP) = PC, PC = nn
+ *
+ * Jump to the immediate value after pushing the current PC to the stack.
+ */
+int call();
+
+/**
+ * \brief call f, nn
+ *
+ * Jump to the immediate value after pushing the current PC to the stack, only 
+ * if the condition is true.
+ *
+ * \param cond 1 if true, 0 if false. Should be a CPU flag.
+ */
+int conditionalCall(int cond);
+
+/**
+ * \brief ret --> PC = (SP), SP = SP + 2
+ *
+ * Return to an address stored on the stack.
+ */
+int returnPC();
+
+/**
+ * \brief ret f
+ *
+ * Return to an address stored on the stack, only if the condition is true.
+ *
+ * \param cond 1 if true, 0 if false. Should be a CPU flag.
+ */
+int conditionalReturnPC(int cond);
+
+/**
+ * \brief reti
+ *
+ * Return and enable interrupts
+ */
+int returnPCI();
+
+/**
+ * \brief rst --> call to 00, 08, 10, 18, 20, 28, 30, 38
+ *
+ * System call to preset locations.
+ */
+int sysCall(int address);
+///@}
 
 #endif
