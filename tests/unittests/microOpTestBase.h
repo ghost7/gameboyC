@@ -2,8 +2,22 @@
 #define __MICRO_OP_TEST_BASE__
 
 #include "../include/gtest/gtest.h"
-#include "../../cpu_z80_inst.h"
-#include "../../registers.h"
+#include "../../MemoryBase.h"
+#include "../../Z80InstructionSet.h"
+
+#define MEM_SIZE 0xFFFF
+
+class MemoryEmulator : public MemoryBase
+{
+public:
+    uint8_t memoryRead(uint16_t memAddr);
+    void memoryWrite(uint16_t memAddr, uint8_t data);
+
+    void clearMemory();
+    MemoryEmulator();
+private:
+    uint8_t memory[MEM_SIZE];
+};
 
 /**
  * Base class for MicroOP tests.
@@ -38,7 +52,7 @@ protected:
      * \param lowReg the lower 8 bits of the register.
      * \return the memory address stored into the register.
      */
-    uint16_t LoadMemoryReg(uint8_t *highReg, uint8_t *lowReg);
+    uint16_t LoadMemoryReg(RegisterPair *regPair);
     
     /**
      * Get a 16-bit value from a regiter.
@@ -90,9 +104,13 @@ protected:
     uint8_t GetMemory(uint16_t memoryAddress);
     
     /* Test Registers */
-    z80Reg registers;
+    Z80Registers registers;
     /* Test Flags */
-    z80Flags flags;
+    Z80Flags *flags;
+
+    Z80InstructionSet *instSet;
+
+    MemoryEmulator memory;
 };
 
 #endif

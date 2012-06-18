@@ -33,12 +33,6 @@ protected:
      * Sets the test half-carry flag.
      */
     void SetHTestFlag();
-
-    /**
-     * Sets all the test flags to the specified value.
-     * \param newTestFlags new value of the test flags.
-     */
-    void SetAllFlags(struct z80Flags newTestFlags);
     
     /**
      * Clears the test carry flag.
@@ -73,7 +67,7 @@ protected:
     /**
      * Test flags.
      */
-    struct z80Flags testFlags;
+    struct Z80Flags *testFlags;
 };
 
 #endif

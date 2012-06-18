@@ -1,10 +1,10 @@
-CC=gcc
+CC=g++
 CFLAGS=-Wall -Werror -g 
 LFLAGS=
 LDLIBS=
 
-OBJS=mbc.o cartidge.o cpu_z80_inst.o cpu_z80.o gameboy.o
-HEADERS=mbc.h cartidge.h cpu_z80_inst.h cpu_z80.h
+OBJS=Z80InstructionSet.o gameboy.o
+HEADERS=Z80InstructionSet.h
 
 all: gameboy
 

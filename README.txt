@@ -5,3 +5,6 @@ make directory.
 
 Added a lot of documentation. Using the Doxyfile, the doxygen tool can generate 
 html and latex documentation for easier viewing.
+
+Changed project to use C++. Started refactoring the code. Completed refactoring
+of the Z80InstructionSet implementation.

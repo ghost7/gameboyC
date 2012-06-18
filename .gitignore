@@ -10,3 +10,4 @@ sixteenBitLoadTests
 mathFlagsTests
 eightBitMathTests
 microOpTests
+registerTests

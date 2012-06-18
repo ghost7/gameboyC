@@ -17,9 +17,9 @@ TEST_F(MathFlagsTest, Add8FlagTest)
     {
         for (int j = 0; j < 0xFF; j++)
         {
-            registers.A = i;
-            registers.B = j;
-            addReg(registers.B);
+            registers.AF.hi = i;
+            registers.BC.hi = j;
+            instSet->addReg(registers.BC.hi);
             ClearAllFlags();
             if (i + j > 0xFF)
             {
@@ -47,9 +47,9 @@ TEST_F(MathFlagsTest, Sub8FlagTest)
     {
         for (int j = 0; j < 0xFF; j++)
         {
-            registers.A = i;
-            registers.B = j;
-            subReg(registers.B);
+            registers.AF.hi = i;
+            registers.BC.hi = j;
+            instSet->subReg(registers.BC.hi);
             ClearAllFlags();
             if (i - j < 0)
             {
@@ -78,9 +78,9 @@ TEST_F(MathFlagsTest, And8FlagTest)
     {
         for (int j = 0; j < 0xFF; j++)
         {
-            registers.A = i;
-            registers.B = j;
-            andReg(registers.B);
+            registers.AF.hi = i;
+            registers.BC.hi = j;
+            instSet->andReg(registers.BC.hi);
             ClearAllFlags();
             if ((i & j) == 0)
             {
@@ -101,9 +101,9 @@ TEST_F(MathFlagsTest, Xor8FlagTest)
     {
         for (int j = 0; j < 0xFF; j++)
         {
-            registers.A = i;
-            registers.B = j;
-            xorReg(registers.B);
+            registers.AF.hi = i;
+            registers.BC.hi = j;
+            instSet->xorReg(registers.BC.hi);
             ClearAllFlags();
             if ((i ^ j) == 0)
             {
@@ -123,9 +123,9 @@ TEST_F(MathFlagsTest, Or8FlagTest)
     {
         for (int j = 0; j < 0xFF; j++)
         {
-            registers.A = i;
-            registers.B = j;
-            orReg(registers.B);
+            registers.AF.hi = i;
+            registers.BC.hi = j;
+            instSet->orReg(registers.BC.hi);
             ClearAllFlags();
             if ((i | j) == 0)
             {
@@ -145,9 +145,9 @@ TEST_F(MathFlagsTest, CompareFlagTest)
     {
         for (int j = 0; j < 0xFF; j++)
         {
-            registers.A = i;
-            registers.B = j;
-            compareReg(registers.B);
+            registers.AF.hi = i;
+            registers.BC.hi = j;
+            instSet->compareReg(registers.BC.hi);
             ClearAllFlags();
             if (i - j < 0)
             {
@@ -174,8 +174,8 @@ TEST_F(MathFlagsTest, Inc8FlagTest)
 {
     for (int i = 0; i < 0xFF; i++)
     {
-        registers.A = i;
-        incReg8(&registers.A);
+        registers.AF.hi = i;
+        instSet->incReg8(&registers.AF.hi);
         ClearAllFlags();
         if ((uint8_t)(i + 1) == 0)
         {
@@ -196,8 +196,8 @@ TEST_F(MathFlagsTest, Dec8FlagTest)
 {
     for (int i = 0; i < 0xFF; i++)
     {
-        registers.A = i;
-        decReg8(&registers.A);
+        registers.AF.hi = i;
+        instSet->decReg8(&registers.AF.hi);
         ClearAllFlags();
         if ((uint8_t)(i - 1) == 0)
         {
@@ -222,11 +222,11 @@ TEST_F(MathFlagsTest, Add16FlagTest)
         for (int j = 0; j < 0xFF; j++)
         {
             ClearAllFlags();
-            testFlags.Z = flags.Z;
+            testFlags->Z = flags->Z;
             
-            Set16BitRegister(&registers.H, &registers.L, i);
-            Set16BitRegister(&registers.B, &registers.C, j);
-            addReg16(registers.B, registers.C);
+            registers.HL.val = i;
+            registers.BC.val = j;
+            instSet->addReg16(registers.BC);
             if (i + j > 0xFFFF)
             {
                 SetCTestFlag();

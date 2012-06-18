@@ -19,50 +19,50 @@ protected:
 
 TEST_F(EightBitLoadTest, LoadReg8Test)
 {
-    registers.B = 16;
-    loadReg8(&registers.B, &registers.C);
-    ASSERT_EQ(registers.B, registers.C);
+    registers.BC.hi = 16;
+    instSet->loadReg8(&registers.BC.hi, &registers.BC.lo);
+    ASSERT_EQ(registers.BC.hi, registers.BC.lo);
 }
 
 TEST_F(EightBitLoadTest, LoadReg8ImmTest)
 {
     uint8_t imm = 20;
     SetImmValue(imm);
-    loadImmReg8(&registers.B);
-    ASSERT_EQ(imm, registers.B);
+    instSet->loadImmReg8(&registers.BC.hi);
+    ASSERT_EQ(imm, registers.BC.hi);
 }
 
 TEST_F(EightBitLoadTest, LoadReg8HLTest)
 {
-    uint16_t memoryAddress = LoadMemoryReg(&registers.H, &registers.L);
+    uint16_t memoryAddress = LoadMemoryReg(&registers.HL);
     SetMemory(memoryAddress, 20);
-    loadReg8HL(&registers.B);
-    ASSERT_EQ(registers.B, GetMemory(memoryAddress));
+    instSet->loadReg8HL(&registers.BC.hi);
+    ASSERT_EQ(registers.BC.hi, GetMemory(memoryAddress));
 }
 
 TEST_F(EightBitLoadTest, StoreReg8HLTest)
 {
-    uint16_t memoryAddress = LoadMemoryReg(&registers.H, &registers.L);
-    registers.B = 60;
-    storeReg8HL(registers.B);
-    ASSERT_EQ(registers.B, GetMemory(memoryAddress));
+    uint16_t memoryAddress = LoadMemoryReg(&registers.HL);
+    registers.BC.hi = 60;
+    instSet->storeReg8HL(registers.BC.hi);
+    ASSERT_EQ(registers.BC.hi, GetMemory(memoryAddress));
 }
 
 TEST_F(EightBitLoadTest, StoreHLImmTest)
 {
-    uint16_t memoryAddress = LoadMemoryReg(&registers.H, &registers.L);
+    uint16_t memoryAddress = LoadMemoryReg(&registers.HL);
     uint8_t imm = 20;
     SetImmValue(imm);
-    storeHLImm();
+    instSet->storeHLImm();
     ASSERT_EQ(imm, GetMemory(memoryAddress));
 }
 
 TEST_F(EightBitLoadTest, LoadATest)
 {
-    uint16_t memoryAddress = LoadMemoryReg(&registers.B, &registers.C);
+    uint16_t memoryAddress = LoadMemoryReg(&registers.BC);
     SetMemory(memoryAddress, 20);
-    loadA(registers.B, registers.C);
-    ASSERT_EQ(GetMemory(memoryAddress), registers.A);
+    instSet->loadA(registers.BC);
+    ASSERT_EQ(GetMemory(memoryAddress), registers.AF.hi);
 }
 
 TEST_F(EightBitLoadTest, LoadAIndTest)
@@ -71,16 +71,16 @@ TEST_F(EightBitLoadTest, LoadAIndTest)
     uint16_t imm = memoryAddress;
     SetMemory(memoryAddress, 20);
     SetImm16Value(imm);
-    loadAInd();
-    ASSERT_EQ(GetMemory(memoryAddress), registers.A);
+    instSet->loadAInd();
+    ASSERT_EQ(GetMemory(memoryAddress), registers.AF.hi);
 }
 
 TEST_F(EightBitLoadTest, StoreATest)
 {
-    uint16_t memoryAddress = LoadMemoryReg(&registers.B, &registers.C);
-    registers.A = 20;
-    storeA(registers.B, registers.C);
-    ASSERT_EQ(registers.A, GetMemory(memoryAddress));
+    uint16_t memoryAddress = LoadMemoryReg(&registers.BC);
+    registers.AF.hi = 20;
+    instSet->storeA(registers.BC);
+    ASSERT_EQ(registers.AF.hi, GetMemory(memoryAddress));
 }
 
 TEST_F(EightBitLoadTest, StoreAIndTest)
@@ -88,9 +88,9 @@ TEST_F(EightBitLoadTest, StoreAIndTest)
     uint16_t memoryAddress = GetMemoryAddress();
     uint16_t imm = memoryAddress;
     SetImm16Value(imm); 
-    registers.A = 20;
-    storeAInd();
-    ASSERT_EQ(registers.A, GetMemory(memoryAddress));
+    registers.AF.hi = 20;
+    instSet->storeAInd();
+    ASSERT_EQ(registers.AF.hi, GetMemory(memoryAddress));
 }
 
 TEST_F(EightBitLoadTest, ReadIOPortNTest)
@@ -99,90 +99,90 @@ TEST_F(EightBitLoadTest, ReadIOPortNTest)
     uint16_t iOPort = GetIOPort(n);
     SetMemory(iOPort, 20);
     SetImmValue(n);
-    readIOPortN();
-    ASSERT_EQ(GetMemory(iOPort), registers.A);
+    instSet->readIOPortN();
+    ASSERT_EQ(GetMemory(iOPort), registers.AF.hi);
 }
 
 TEST_F(EightBitLoadTest, WriteIOPortNTest)
 {
     uint8_t n = 10;
     uint16_t iOPort = GetIOPort(n);
-    registers.A = 20;
+    registers.AF.hi = 20;
     SetImmValue(n);
-    writeIOPortN();
-    ASSERT_EQ(registers.A, GetMemory(iOPort));
+    instSet->writeIOPortN();
+    ASSERT_EQ(registers.AF.hi, GetMemory(iOPort));
 }
 
 TEST_F(EightBitLoadTest, ReadIOPortCTest)
 {
-    registers.C = 10;
-    uint16_t iOPort = GetIOPort(registers.C);
+    registers.BC.lo = 10;
+    uint16_t iOPort = GetIOPort(registers.BC.lo);
     SetMemory(iOPort, 20);
-    readIOPortC();
-    ASSERT_EQ(GetMemory(iOPort), registers.A);
+    instSet->readIOPortC();
+    ASSERT_EQ(GetMemory(iOPort), registers.AF.hi);
 }
 
 TEST_F(EightBitLoadTest, WriteIOPortCTest)
 {
-    registers.C = 10;
-    uint16_t iOPort = GetIOPort(registers.C);
-    registers.A = 20;
-    writeIOPortC();
-    ASSERT_EQ(registers.A, GetMemory(iOPort));
+    registers.BC.lo = 10;
+    uint16_t iOPort = GetIOPort(registers.BC.lo);
+    registers.AF.hi = 20;
+    instSet->writeIOPortC();
+    ASSERT_EQ(registers.AF.hi, GetMemory(iOPort));
 }
 
 TEST_F(EightBitLoadTest, StoreIncrementTest)
 {
-    uint16_t memoryAddress = LoadMemoryReg(&registers.H, &registers.L);
-    uint16_t HL = Get16BitRegister(registers.H, registers.L);
-    registers.A = 20;
-    storeIncrement();
+    uint16_t memoryAddress = LoadMemoryReg(&registers.HL); 
+    uint16_t HL = registers.HL.val;
+    registers.AF.hi = 20;
+    instSet->storeIncrement();
 
-    // verify the store.
-    ASSERT_EQ(registers.A, GetMemory(memoryAddress));
+    // verify the instSet->store.
+    ASSERT_EQ(registers.AF.hi, GetMemory(memoryAddress));
     // verify the increment.
-    uint16_t HLPlus1 = Get16BitRegister(registers.H, registers.L);
+    uint16_t HLPlus1 = registers.HL.val;
     ASSERT_EQ(HL + 1, HLPlus1);
 }
 
 TEST_F(EightBitLoadTest, LoadIncrementTest)
 {
-    uint16_t memoryAddress = LoadMemoryReg(&registers.H, &registers.L);
-    uint16_t HL = Get16BitRegister(registers.H, registers.L);
+    uint16_t memoryAddress = LoadMemoryReg(&registers.HL); 
+    uint16_t HL = registers.HL.val;
     SetMemory(memoryAddress, 20);
-    loadIncrement();
+    instSet->loadIncrement();
 
-    // verify the store.
-    ASSERT_EQ(GetMemory(memoryAddress), registers.A);
+    // verify the instSet->store.
+    ASSERT_EQ(GetMemory(memoryAddress), registers.AF.hi);
     // verify the increment.
-    uint16_t HLPlus1 = Get16BitRegister(registers.H, registers.L);
+    uint16_t HLPlus1 = registers.HL.val;
     ASSERT_EQ(HL + 1, HLPlus1);
 }
 
 TEST_F(EightBitLoadTest, StoreDecrementTest)
 {
-    uint16_t memoryAddress = LoadMemoryReg(&registers.H, &registers.L);
-    uint16_t HL = Get16BitRegister(registers.H, registers.L);
-    registers.A = 20;
-    storeDecrement();
+    uint16_t memoryAddress = LoadMemoryReg(&registers.HL);
+    uint16_t HL = registers.HL.val; 
+    registers.AF.hi = 20;
+    instSet->storeDecrement();
 
-    // verify the store.
-    ASSERT_EQ(registers.A, GetMemory(memoryAddress));
+    // verify the instSet->store.
+    ASSERT_EQ(registers.AF.hi, GetMemory(memoryAddress));
     // verify the increment.
-    uint16_t HLMinus1 = Get16BitRegister(registers.H, registers.L);
+    uint16_t HLMinus1 = registers.HL.val;
     ASSERT_EQ(HL - 1, HLMinus1);
 }
 
 TEST_F(EightBitLoadTest, LoadDecrementTest)
 {
-    uint16_t memoryAddress = LoadMemoryReg(&registers.H, &registers.L);
-    uint16_t HL = Get16BitRegister(registers.H, registers.L);
+    uint16_t memoryAddress = LoadMemoryReg(&registers.HL); 
+    uint16_t HL = registers.HL.val;
     SetMemory(memoryAddress, 20);
-    loadDecrement();
+    instSet->loadDecrement();
 
-    // verify the store.
-    ASSERT_EQ(GetMemory(memoryAddress), registers.A);
+    // verify the instSet->store.
+    ASSERT_EQ(GetMemory(memoryAddress), registers.AF.hi);
     // verify the increment.
-    uint16_t HLMinus1 = Get16BitRegister(registers.H, registers.L);
+    uint16_t HLMinus1 = registers.HL.val;
     ASSERT_EQ(HL - 1, HLMinus1);
 }

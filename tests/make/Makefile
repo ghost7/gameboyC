@@ -75,11 +75,20 @@ gtest_main.a : gtest-all.o gtest_main.o
 # Micro op tests.
 
 MICRO_OP_HEADERS = $(TEST_DIR)/microOpTestBase.h\
-                   $(USER_DIR)/cpu_z80_inst.h $(USER_DIR)/registers.h 
+                   $(USER_DIR)/Z80InstructionSet.h $(USER_DIR)/Z80.h 
 FLAG_OP_HEADERS = $(MICRO_OP_HEADERS) $(TEST_DIR)/flagOpTestBase.h
+
+MICRO_OP_OBJS = microOpTestBase.o Z80InstructionSet.o
+FLAG_OP_OBJS = ${MICRO_OP_OBJS} flagOpTestBase.o
+
+Z80InstructionSet.o : $(USER_DIR)/Z80InstructionSet.cpp $(USER_DIR)/Z80InstructionSet.h $(USER_DIR)/Z80.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/Z80InstructionSet.cpp
 
 cpu_z80_inst.o : $(USER_DIR)/cpu_z80_inst.c $(USER_DIR)/cpu_z80_inst.h $(USER_DIR)/registers.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/cpu_z80_inst.c
+
+registerTests.o : $(TEST_DIR)/registerTests.cc ${USER_DIR}/Z80.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/registerTests.cc
 
 microOpTestBase.o : $(TEST_DIR)/microOpTestBase.cc  $(MICRO_OP_HEADERS) $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/microOpTestBase.cc
@@ -99,17 +108,20 @@ mathFlagsTests.o : $(TEST_DIR)/mathFlagsTests.cc  $(FLAG_OP_HEADERS) $(GTEST_HEA
 eightBitMathTests.o : $(TEST_DIR)/eightBitMathTests.cc  $(MICRO_OP_HEADERS) $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/eightBitMathTests.cc
 
-microOpTests : microOpTestBase.o flagOpTestBase.o cpu_z80_inst.o $(MICRO_OP_TEST_OBJ) gtest_main.a
+registerTests : registerTests.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
-sixteenBitLoadTests : microOpTestBase.o cpu_z80_inst.o sixteenBitLoadTests.o gtest_main.a
+microOpTests : ${FLAG_OP_OBJS} $(MICRO_OP_TEST_OBJ) gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
-eightBitLoadTests : microOpTestBase.o cpu_z80_inst.o eightBitLoadTests.o gtest_main.a
+sixteenBitLoadTests : ${MICRO_OP_OBJS} sixteenBitLoadTests.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
-mathFlagsTests : microOpTestBase.o flagOpTestBase.o cpu_z80_inst.o mathFlagsTests.o gtest_main.a
+eightBitLoadTests : ${MICRO_OP_OBJS} eightBitLoadTests.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
-eightBitMathTests : microOpTestBase.o cpu_z80_inst.o eightBitMathTests.o gtest_main.a
+mathFlagsTests : ${FLAG_OP_OBJS} mathFlagsTests.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+eightBitMathTests : ${MICRO_OP_OBJS} eightBitMathTests.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
