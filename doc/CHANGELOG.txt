@@ -1,0 +1,34 @@
+###############################################################################
+# CHANGELOG for gameboyC
+#
+
+Build 2012-06-19
+-> Decision to rewrite Code base in C++ instead of C
+
+-> Z80InstructionSet.h:
+   updated with class outline and functions representing individual Z80
+   instructions
+
+-> tests/unitests/eightBitLoadTests.cc:
+   needs to be updated
+
+-> tests/unitests/eightBitMathTests.cc:
+   needs to be updated
+
+-> tests/unitests/flagOpTestBase.h & tests/unitests/flagOpTestBase.cc:
+   needs to be updated
+
+-> tests/unitests/mathFlagsTests.cc:
+   needs to be updated
+
+-> tests/unitests/microOpTestBase.h & tests/unitests/microOpTestBase.cc:
+   needs to be updated
+
+-> tests/unitests/registerTests.cc:
+   needs to be updated
+
+-> tests/unitests/sixteenBitLoadTests.cc:
+   needs to be updated
+
+* Starting here as changes were undocumented before this point.
+
