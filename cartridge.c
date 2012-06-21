@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "cartidge.h"
+#include "cartridge.h"
 #include "mbc.h"
 
 /**

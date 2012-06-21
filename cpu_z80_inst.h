@@ -15,6 +15,16 @@
 #include "registers.h"
 
 /**
+ * The type of a memory address.
+ */
+typedef uint16_t addr_t;
+
+/**
+ * The type of data in reference by an address.
+ */
+typedef uint8_t data_t;
+
+/**
  * Memory read function.
  * 
  * \param address Memory address to read from.

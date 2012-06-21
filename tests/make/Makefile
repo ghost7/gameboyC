@@ -25,14 +25,18 @@ TEST_DIR = ../unittests
 CPPFLAGS += -I$(GTEST_DIR)/include
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g -Wall -Wextra
+CXXFLAGS += -g -Wall -Wextra -std=c++0x
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = microOpTests 
+TESTS = microOpTests memoryTests
 
 MICRO_OP_TESTS = eightBitLoadTests sixteenBitLoadTests mathFlagsTests eightBitMathTests
 MICRO_OP_TEST_OBJ = eightBitMathTests.o mathFlagsTests.o sixteenBitLoadTests.o eightBitLoadTests.o
+
+MEMORY_TESTS = allMbcMemoryTest noMbcMemoryTest mbc1MemoryTest memory mbc1Memory mbc2Memory mbc3Memory mbc5Memory 
+#MEMORY_TESTS_OBJ = allMbcMemoryTest.o noMbcMemoryTest.o mbc1MemoryTest.o memory.o mbc1Memory.o mbc2Memory.o mbc3Memory.o mbc5Memory.o 
+MEMORY_TESTS_OBJ = allMbcMemoryTest.o mbc1MemoryTest.o memory.o mbc1Memory.o mbc2Memory.o mbc3Memory.o mbc5Memory.o 
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -44,6 +48,8 @@ GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
 all : $(TESTS)
 
 micro_ops : $(MICRO_OP_TESTS)
+
+memory: $(MEMORY_TESTS)
 
 clean :
 	rm -f $(TESTS) $(MICRO_OP_TESTS) gtest.a gtest_main.a *.o
@@ -112,4 +118,36 @@ mathFlagsTests : microOpTestBase.o flagOpTestBase.o cpu_z80_inst.o mathFlagsTest
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
 eightBitMathTests : microOpTestBase.o cpu_z80_inst.o eightBitMathTests.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+
+# Memory tests
+
+MEMORY_HEADERS = $(TEST_DIR)/memory/memoryTestBase.h $(USER_DIR)/memoryHeaders.h
+
+memory.o : $(MEMORY_HEADERS) $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/memory.cc
+
+mbc1Memory.o : $(MEMORY_HEADERS) $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/mbc1Memory.cc
+
+mbc2Memory.o : $(MEMORY_HEADERS) $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/mbc2Memory.cc
+
+mbc3Memory.o : $(MEMORY_HEADERS) $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/mbc3Memory.cc
+
+mbc5Memory.o : $(MEMORY_HEADERS) $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/mbc5Memory.cc
+
+allMbcMemoryTest.o : $(MEMORY_HEADERS) $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/memory/allMbcMemoryTest.cc
+
+noMbcMemoryTest.o : $(MEMORY_HEADERS) $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/memory/noMbcMemoryTest.cc
+
+mbc1MemoryTest.o : $(MEMORY_HEADERS) $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/memory/mbc1MemoryTest.cc
+
+memoryTests : $(MEMORY_TESTS_OBJ) gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@

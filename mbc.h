@@ -11,7 +11,7 @@
 #define _MBC_H_
 
 #include <stdint.h>
-#include "cartidge.h"
+#include "cartridge.h"
 
 /**
  * Cartidge read function.

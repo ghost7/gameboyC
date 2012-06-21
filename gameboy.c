@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "cartidge.h"
+#include "cartridge.h"
 
 static void usage()
 {
