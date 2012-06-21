@@ -12,6 +12,6 @@
 2012-06-19: (One Week)
 -> Finish writing test outlines for instruction set of Z80
 -> Finish writing test outlines for virtual memory of gameboy
--> Create a generic cmake for the source files
+-> Create a generic cmake for the source files...................done
 -> Update changelog
 

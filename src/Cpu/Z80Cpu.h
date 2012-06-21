@@ -5,6 +5,11 @@
 #include "MemoryBase.h"
 #include "Z80.h"
 
+/**
+ * \brief Z80 CPU implementation. TODO Implement...
+ *
+ * \ingroup CPU
+ */
 class Z80Cpu : CpuBase
 {
 public 

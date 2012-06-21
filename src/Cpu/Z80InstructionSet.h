@@ -1,12 +1,23 @@
 #ifndef _Z80_INSTRUCTION_SET_H_
 #define _Z80_INSTRUCTION_SET_H_
 
-#include "MemoryBase.h"
+#include "../Memory/MemoryBase.h"
 #include "Z80.h"
 
+/**
+ * \brief Contatins implementation for the Z80 instruction set.
+ *
+ * \ingroup CPU
+ */
 class Z80InstructionSet 
 {
 public :
+    /**
+     * \brief Initializes the Z80 instruction set.
+     *
+     * \param mem Memory used to read and write to.
+     * \param regs Z80 registers.
+     */
     Z80InstructionSet(MemoryBase *mem, Z80Registers *regs)
     {
         memory = mem;

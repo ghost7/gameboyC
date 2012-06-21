@@ -1,11 +1,11 @@
-#ifndef _CARTIDGE_BASE_H_
-#define _CARTIDGE_BASE_H_
-
-#include <stdint.h>
+#ifndef _ROM_TYPE_
+#define _ROM_TYPE_
 
 /**
- * \enum rom_type
- * \brief Represents the different possible rom types. 
+ * \enum RomType
+ * \brief Represents the different possible rom types.
+ *
+ * \ingroup cartridge
  */
 enum RomType
 {
@@ -25,9 +25,6 @@ enum RomType
 	MBC3 =                  0x11,
 	MBC3_RAM =              0x12,
 	MBC3_RAM_BATT =         0x13,
-//	MBC4 =                  0x15,
-//	MBC4_RAM =              0x16,
-//	MBC4_RAM_BATT =         0x17,
 	MBC5 =                  0x19,
 	MBC5_RAM =              0x1A,
 	MBC5_RAM_BATT =         0x1B,
@@ -38,35 +35,6 @@ enum RomType
 	BANDAI_TAMA5 =          0xFD,
 	HUC3 =                  0xFE,
 	HUC3_RAM_BATT =         0xFF
-};
-
-class CartidgeBase
-{
-public :
-    virtual void load(const char *filename);
-    uint8_t read(uint16_t memAddr) = 0;
-    void write(uint8_t memAddr, uint8_t data) = 0;
-    virtual char *getInfo();
-
-private : 
-    uint8_t *getFileContents(const char *filename);
-    void getRomSize();
-    void getRamSize();
-    char *getGameTitle();
-    char *getLicenseCode();
-
-    char *title;
-    char *license;
-    int romVersion;
-    bool isCGB;
-    bool isSGB;
-
-protected:
-    int romSize;
-    int romBanks;
-    int ramSize;
-    int ramBanks;
-    uint8_t *contents;
 };
 
 #endif

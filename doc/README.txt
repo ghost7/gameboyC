@@ -8,3 +8,13 @@ html and latex documentation for easier viewing.
 
 Changed project to use C++. Started refactoring the code. Completed refactoring
 of the Z80InstructionSet implementation.
+
+Now using cmake to generate build files. To build:
+From the root directory, 
+mkdir build
+cd build
+cmake ..
+make
+This will generate the make file. Any additional changes to the build process
+should be made to the CMakeLists.txt file in the root directory. Note tests are
+not yet built using cmake.
