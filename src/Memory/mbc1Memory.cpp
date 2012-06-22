@@ -69,17 +69,17 @@ void Mbc1Memory::write( addr_t addr, data_t val ) {
     // OR
     // select RAM bank
     else if( 0x4000 <= addr && addr <= 0x5FFF ) {
-        if( bankMode == BankingMode::ROM_BANKING_MODE )
+        if( bankMode == ROM_BANKING_MODE )
             romBank = ((val & 0x03) << 5) | (romBank & 0x1F);
-        else if( bankMode == BankingMode::RAM_BANKING_MODE )
+        else if( bankMode == RAM_BANKING_MODE )
             ramBank = val & 0x03;
     }
     // select banking mode
     else if( 0x6000 <= addr && addr <= 0x7FFF ) {
         if( (val & 0x01) == 1 )
-            bankMode = BankingMode::RAM_BANKING_MODE;
+            bankMode = RAM_BANKING_MODE;
         else
-            bankMode = BankingMode::ROM_BANKING_MODE;
+            bankMode = ROM_BANKING_MODE;
     }
     // external RAM
     else if( 0xA000 <= addr && addr <= 0xBFFF && eRamEnabled )

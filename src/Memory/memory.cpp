@@ -203,8 +203,7 @@ int Memory::getRamSize() {
  */
 MemoryInterface* loadCartridge( string cartName ) {
     fstream cartFile;
-    cartFile.open( cartName , 
-        ios::out|ios::in|ios::binary|ios::ate );
+    cartFile.open( cartName.c_str() , ios::out|ios::in|ios::binary|ios::ate );
     if( !cartFile.is_open() )
         return NULL;
 

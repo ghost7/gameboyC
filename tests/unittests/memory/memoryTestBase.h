@@ -2,7 +2,7 @@
 #define __MEMORY_TEST_BASE_H_
 
 #include "../../include/gtest/gtest.h"
-#include "../../../memoryHeaders.h"
+#include "../../../src/Memory/memoryHeaders.h"
 
 // call these macros from inside a TEST
 #define ASSERT_RO( addr ) data_t start = mem->read( addr ); \

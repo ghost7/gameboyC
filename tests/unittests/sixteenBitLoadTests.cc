@@ -12,8 +12,8 @@ TEST_F(SixteenBitLoadTest, LoadReg16Test)
 {
     uint16_t imm = 20;
     SetImm16Value(imm);
-    loadReg16(&registers.B, &registers.C);
-    int16_t BC = Get16BitRegister(registers.B, registers.C);
+    instSet->loadReg16(&registers.BC);
+    int16_t BC = registers.BC.val;
     ASSERT_EQ(imm, BC);
 }
 
@@ -21,25 +21,22 @@ TEST_F(SixteenBitLoadTest, LoadSPImmTest)
 {
     uint16_t imm = 20;
     SetImm16Value(imm);
-    loadSPImm();
-    ASSERT_EQ(imm, registers.SP);
+    instSet->loadSPImm();
+    ASSERT_EQ(imm, registers.SP.val);
 }
 
 TEST_F(SixteenBitLoadTest, LoadHLToSP)
 {
-    LoadMemoryReg(&registers.H, &registers.L);
-    loadHLToSP();
-    int16_t HL = Get16BitRegister(registers.H, registers.L);
-    ASSERT_EQ(HL, registers.SP);
+    LoadMemoryReg(&registers.HL);
+    instSet->loadHLToSP();
+    ASSERT_EQ(registers.HL.val, registers.SP.val);
 }
 
 TEST_F(SixteenBitLoadTest, PushPopTests)
 {
     registers.SP = GetMemoryAddress();
-    registers.B = 100;
-    registers.C = 50;
-    pushToStack(registers.B, registers.C);
-    popFromStack(&registers.D, &registers.E);
-    ASSERT_EQ(registers.B, registers.D);
-    ASSERT_EQ(registers.C, registers.E);
+    registers.BC.val = GetMemoryAddress(); 
+    instSet->pushToStack(registers.BC);
+    instSet->popFromStack(&registers.DE);
+    ASSERT_EQ(registers.BC.val, registers.DE.val);
 }

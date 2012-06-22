@@ -5,8 +5,10 @@
 .~
 latex/
 html/
+build/
 eightBitLoadTests
 sixteenBitLoadTests
 mathFlagsTests
 eightBitMathTests
 microOpTests
+registerTests
