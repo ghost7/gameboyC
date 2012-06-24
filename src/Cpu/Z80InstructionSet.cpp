@@ -12,14 +12,14 @@ int Z80InstructionSet::loadReg8(uint8_t* src, uint8_t* dest)
 
 int Z80InstructionSet::loadImmReg8(uint8_t* reg)
 {
-	*reg = memory->memoryRead(registers->PC.val++);
+	*reg = memory->read(registers->PC.val++);
 	return 8;
 }
 
 int Z80InstructionSet::loadReg8HL(uint8_t* reg)
 {
 	uint16_t memAddr = registers->HL.val; 
-	uint8_t ind = memory->memoryRead(memAddr);
+	uint8_t ind = memory->read(memAddr);
 	*reg = ind;
 	return 8;
 }
@@ -27,29 +27,29 @@ int Z80InstructionSet::loadReg8HL(uint8_t* reg)
 int Z80InstructionSet::storeReg8HL(uint8_t reg)
 {
 	uint16_t memAddr = registers->HL.val; 
-	memory->memoryWrite(memAddr, reg);
+	memory->write(memAddr, reg);
 	return 8;
 }
 
 int Z80InstructionSet::storeHLImm()
 {
     uint16_t memAddr = registers->HL.val;
-	uint8_t imm = memory->memoryRead(registers->PC.val++);
-	memory->memoryWrite(memAddr, imm);
+	uint8_t imm = memory->read(registers->PC.val++);
+	memory->write(memAddr, imm);
 	return 12;
 }
 
 int Z80InstructionSet::loadA(RegisterPair regPair)
 {
 	uint16_t memAddr = regPair.val;
-	registers->AF.hi = memory->memoryRead(memAddr);
+	registers->AF.hi = memory->read(memAddr);
 	return 8;
 }
 
 int Z80InstructionSet::loadAInd()
 {
-	uint8_t low = memory->memoryRead(registers->PC.val++);
-	uint8_t high = memory->memoryRead(registers->PC.val++);
+	uint8_t low = memory->read(registers->PC.val++);
+	uint8_t high = memory->read(registers->PC.val++);
     RegisterPair test(high, low);
 	loadA(RegisterPair(high, low));
 	return 16;
@@ -58,72 +58,72 @@ int Z80InstructionSet::loadAInd()
 int Z80InstructionSet::storeA(RegisterPair regPair)
 {
 	uint16_t memAddr = regPair.val;
-    memory->memoryWrite(memAddr, registers->AF.hi);
+    memory->write(memAddr, registers->AF.hi);
 	return 8;
 }
 
 int Z80InstructionSet::storeAInd()
 {
-	uint8_t low = memory->memoryRead(registers->PC.val++);
-	uint8_t high = memory->memoryRead(registers->PC.val++);
+	uint8_t low = memory->read(registers->PC.val++);
+	uint8_t high = memory->read(registers->PC.val++);
 	storeA(RegisterPair(high, low));
 	return 16;
 }
 
 int Z80InstructionSet::readIOPortN()
 {
-	uint8_t n = memory->memoryRead(registers->PC.val++);
+	uint8_t n = memory->read(registers->PC.val++);
 	uint16_t memAddr = 0xFF00 + n;
-	registers->AF.hi = memory->memoryRead(memAddr);
+	registers->AF.hi = memory->read(memAddr);
 	return 12;
 }
 
 int Z80InstructionSet::writeIOPortN()
 {
-	uint8_t n = memory->memoryRead(registers->PC.val++);
+	uint8_t n = memory->read(registers->PC.val++);
 	uint16_t memAddr = 0xFF00 + n;
-	memory->memoryWrite(memAddr, registers->AF.hi);
+	memory->write(memAddr, registers->AF.hi);
 	return 12;
 }
 
 int Z80InstructionSet::readIOPortC()
 {
 	uint16_t memAddr = 0xFF00 + registers->BC.lo;
-	registers->AF.hi = memory->memoryRead(memAddr);
+	registers->AF.hi = memory->read(memAddr);
 	return 8;
 }
 
 int Z80InstructionSet::writeIOPortC()
 {
 	uint16_t memAddr = 0xFF00 + registers->BC.lo;
-	memory->memoryWrite(memAddr, registers->AF.hi);
+	memory->write(memAddr, registers->AF.hi);
 	return 8;
 }
 
 int Z80InstructionSet::storeIncrement()
 {
-	memory->memoryWrite(registers->HL.val, registers->AF.hi);
+	memory->write(registers->HL.val, registers->AF.hi);
 	registers->HL.val++;
 	return 8;
 }
 
 int Z80InstructionSet::loadIncrement()
 {
-	registers->AF.hi = memory->memoryRead(registers->HL.val);
+	registers->AF.hi = memory->read(registers->HL.val);
 	registers->HL.val++;
 	return 8;
 }
 
 int Z80InstructionSet::storeDecrement()
 {
-	memory->memoryWrite(registers->HL.val, registers->AF.hi);
+	memory->write(registers->HL.val, registers->AF.hi);
 	registers->HL.val--;
 	return 8;
 }
 
 int Z80InstructionSet::loadDecrement()
 {
-	registers->AF.hi = memory->memoryRead(registers->HL.val);
+	registers->AF.hi = memory->read(registers->HL.val);
 	registers->HL.val--;
 	return 8;
 }
@@ -134,15 +134,15 @@ int Z80InstructionSet::loadDecrement()
 
 int Z80InstructionSet::loadReg16(RegisterPair *regPair)
 {
-	regPair->lo = memory->memoryRead(registers->PC.val++);
-	regPair->hi = memory->memoryRead(registers->PC.val++);
+	regPair->lo = memory->read(registers->PC.val++);
+	regPair->hi = memory->read(registers->PC.val++);
 	return 12;
 }
 
 int Z80InstructionSet::loadSPImm()
 {
-	registers->SP.lo = memory->memoryRead(registers->PC.val++);
-	registers->SP.hi = memory->memoryRead(registers->PC.val++);
+	registers->SP.lo = memory->read(registers->PC.val++);
+	registers->SP.hi = memory->read(registers->PC.val++);
 	return 12;
 }
 
@@ -155,17 +155,17 @@ int Z80InstructionSet::loadHLToSP()
 int Z80InstructionSet::pushToStack(RegisterPair regPair)
 {
 	registers->SP.val--;
-	memory->memoryWrite(registers->SP.val, regPair.lo);
+	memory->write(registers->SP.val, regPair.lo);
 	registers->SP.val--;
-	memory->memoryWrite(registers->SP.val, regPair.hi);
+	memory->write(registers->SP.val, regPair.hi);
 	return 16;
 }
 
 int Z80InstructionSet::popFromStack(RegisterPair *regPair)
 {
-	regPair->hi = memory->memoryRead(registers->SP.val);
+	regPair->hi = memory->read(registers->SP.val);
 	registers->SP.val++;
-	regPair->lo = memory->memoryRead(registers->SP.val);
+	regPair->lo = memory->read(registers->SP.val);
 	registers->SP.val++;
 	return 16;
 }
@@ -192,7 +192,7 @@ int Z80InstructionSet::addReg(uint8_t reg)
 
 int Z80InstructionSet::addImm()
 {
-	uint8_t imm = memory->memoryRead(registers->PC.val++);
+	uint8_t imm = memory->read(registers->PC.val++);
 	registers->AF.hi = add8SetFlags(registers->AF.hi, imm);
 	return 8;
 }
@@ -200,7 +200,7 @@ int Z80InstructionSet::addImm()
 int Z80InstructionSet::addHLInd()
 {
 	uint16_t memAddr = registers->HL.val;
-	uint8_t ind = memory->memoryRead(memAddr);
+	uint8_t ind = memory->read(memAddr);
 	registers->AF.hi = add8SetFlags(registers->AF.hi, ind);
 	return 8;
 }
@@ -213,7 +213,7 @@ int Z80InstructionSet::adcReg(uint8_t reg)
 
 int Z80InstructionSet::adcImm()
 {
-	uint8_t imm = memory->memoryRead(registers->PC.val++);
+	uint8_t imm = memory->read(registers->PC.val++);
 	registers->AF.hi = add8SetFlags(registers->AF.hi, imm + flags->C);
 	return 8;
 }
@@ -221,7 +221,7 @@ int Z80InstructionSet::adcImm()
 int Z80InstructionSet::adcHLInd()
 {
 	uint16_t memAddr = registers->HL.val;
-	uint8_t ind = memory->memoryRead(memAddr);
+	uint8_t ind = memory->read(memAddr);
 	registers->AF.hi = add8SetFlags(registers->AF.hi, ind + flags->C);
 	return 8;
 }
@@ -244,7 +244,7 @@ int Z80InstructionSet::subReg(uint8_t reg)
 
 int Z80InstructionSet::subImm()
 {
-	int imm = memory->memoryRead(registers->PC.val++);
+	int imm = memory->read(registers->PC.val++);
 	registers->AF.hi = sub8SetFlags(registers->AF.hi, imm);
 	return 8;
 }
@@ -252,7 +252,7 @@ int Z80InstructionSet::subImm()
 int Z80InstructionSet::subHLInd()
 {
 	uint16_t memAddr = registers->HL.val;
-	uint8_t ind = memory->memoryRead(memAddr);
+	uint8_t ind = memory->read(memAddr);
 	registers->AF.hi = sub8SetFlags(registers->AF.hi, ind);
 	return 8;
 }
@@ -265,7 +265,7 @@ int Z80InstructionSet::sbcReg(uint8_t reg)
 
 int Z80InstructionSet::sbcImm()
 {
-	uint8_t imm = memory->memoryRead(registers->PC.val++);
+	uint8_t imm = memory->read(registers->PC.val++);
 	registers->AF.hi = sub8SetFlags(registers->AF.hi, imm + flags->C);
 	return 8;
 }
@@ -273,7 +273,7 @@ int Z80InstructionSet::sbcImm()
 int Z80InstructionSet::sbcHLInd()
 {
 	uint16_t memAddr = registers->HL.val;
-	uint8_t ind = memory->memoryRead(memAddr);
+	uint8_t ind = memory->read(memAddr);
 	registers->AF.hi = sub8SetFlags(registers->AF.hi, ind + flags->C);
 	return 8;
 }
@@ -296,7 +296,7 @@ int Z80InstructionSet::andReg(uint8_t reg)
 
 int Z80InstructionSet::andImm()
 {
-	uint8_t imm = memory->memoryRead(registers->PC.val++);
+	uint8_t imm = memory->read(registers->PC.val++);
 	registers->AF.hi = and8SetFlags(registers->AF.hi, imm);
 	return 8;
 }
@@ -304,7 +304,7 @@ int Z80InstructionSet::andImm()
 int Z80InstructionSet::andHLInd()
 {
 	uint16_t memAddr = registers->HL.val;
-	uint8_t ind = memory->memoryRead(memAddr);
+	uint8_t ind = memory->read(memAddr);
 	registers->AF.hi = and8SetFlags(registers->AF.hi, ind);
 	return 8;
 }
@@ -327,7 +327,7 @@ int Z80InstructionSet::xorReg(uint8_t reg)
 
 int Z80InstructionSet::xorImm()
 {
-	uint8_t imm = memory->memoryRead(registers->PC.val++);
+	uint8_t imm = memory->read(registers->PC.val++);
 	registers->AF.hi = xor8SetFlags(registers->AF.hi, imm);
 	return 8;
 }
@@ -335,7 +335,7 @@ int Z80InstructionSet::xorImm()
 int Z80InstructionSet::xorHLInd()
 {
 	int16_t memAddr = registers->HL.val;
-	uint8_t ind = memory->memoryRead(memAddr);
+	uint8_t ind = memory->read(memAddr);
 	registers->AF.hi = xor8SetFlags(registers->AF.hi, ind);
 	return 8;
 }
@@ -358,7 +358,7 @@ int Z80InstructionSet::orReg(uint8_t reg)
 
 int Z80InstructionSet::orImm()
 {
-	uint8_t imm = memory->memoryRead(registers->PC.val++);
+	uint8_t imm = memory->read(registers->PC.val++);
 	registers->AF.hi = or8SetFlags(registers->AF.hi, imm);
 	return 8;
 }
@@ -366,7 +366,7 @@ int Z80InstructionSet::orImm()
 int Z80InstructionSet::orHLInd()
 {
 	int16_t memAddr = registers->HL.val;
-	uint8_t ind = memory->memoryRead(memAddr);
+	uint8_t ind = memory->read(memAddr);
 	registers->AF.hi = or8SetFlags(registers->AF.hi, ind);
 	return 8;
 }
@@ -379,7 +379,7 @@ int Z80InstructionSet::compareReg(uint8_t reg)
 
 int Z80InstructionSet::compareImm()
 {
-	uint8_t imm = memory->memoryRead(registers->PC.val++);
+	uint8_t imm = memory->read(registers->PC.val++);
 	sub8SetFlags(registers->AF.hi, imm);
 	return 8;
 }
@@ -387,7 +387,7 @@ int Z80InstructionSet::compareImm()
 int Z80InstructionSet::compareHLInd()
 {
 	int16_t memAddr = registers->HL.val;
-	uint8_t ind = memory->memoryRead(memAddr);
+	uint8_t ind = memory->read(memAddr);
 	sub8SetFlags(registers->AF.hi, ind);
 	return 8;
 }
@@ -404,12 +404,12 @@ int Z80InstructionSet::incReg8(uint8_t* reg)
 int Z80InstructionSet::incHLInd()
 {
 	int16_t memAddr = registers->HL.val;
-	uint8_t ind = memory->memoryRead(memAddr);
+	uint8_t ind = memory->read(memAddr);
 	flags->H = (ind & 0xF) + 1 > 0xF;
 	ind += 1;
 	flags->Z = (ind == 0);
 	flags->N = 0;
-	memory->memoryWrite(memAddr, ind);
+	memory->write(memAddr, ind);
 	return 12;
 }
 
@@ -425,12 +425,12 @@ int Z80InstructionSet::decReg8(uint8_t* reg)
 int Z80InstructionSet::decHLInd()
 {
 	int16_t memAddr = registers->HL.val;
-	uint8_t ind = memory->memoryRead(memAddr);
+	uint8_t ind = memory->read(memAddr);
 	flags->H = (ind & 0xF) < 1;
 	ind -= 1;
 	flags->Z = (ind == 0);
 	flags->N = 1;
-	memory->memoryWrite(memAddr, ind);
+	memory->write(memAddr, ind);
 	return 12;
 }
 
@@ -577,15 +577,16 @@ uint16_t Z80InstructionSet::addToSp(int8_t value)
 
 int Z80InstructionSet::addImmToSP()
 {
-	uint8_t imm = memory->memoryRead(registers->PC.val++);
+	uint8_t imm = memory->read(registers->PC.val++);
     registers->SP.val = addToSp(imm);	
 	return 16;
 }
 
 int Z80InstructionSet::addSPToHL()
 {
-	uint8_t imm = memory->memoryRead(registers->PC.val++);
+	uint8_t imm = memory->read(registers->PC.val++);
 	registers->SP.val = addToSp(imm);
+    registers->HL.val = registers->SP.val;
 	return 12;
 }
 
@@ -690,7 +691,7 @@ int Z80InstructionSet::shiftRegLeftA(uint8_t* reg)
 
 int Z80InstructionSet::swapReg(uint8_t* reg)
 {
-	*reg = ((*reg >> 4) & 0xF0) | (*reg << 4);
+	*reg = ((*reg >> 4) & 0x0f) | (*reg << 4);
 	flags->Z = (*reg == 0);
 	flags->C = 0;
 	flags->N = 0;
@@ -700,9 +701,12 @@ int Z80InstructionSet::swapReg(uint8_t* reg)
 
 int Z80InstructionSet::shiftRegRightA(uint8_t* reg)
 {
-	int sevenBit = (*reg >> 7) & 0x1;
+    int zeroBit = *reg & 0x1;
+    int sevenBit = *reg & 0x80;
 	*reg = *reg >> 1;
-	flags->C = sevenBit;
+    // Keep the 7th bit the same.
+    *reg |= sevenBit;
+	flags->C = zeroBit;
 	flags->Z = (*reg == 0);
 	flags->N = 0;
 	flags->H = 0;
@@ -711,9 +715,11 @@ int Z80InstructionSet::shiftRegRightA(uint8_t* reg)
 
 int Z80InstructionSet::shiftRegRightL(uint8_t* reg)
 {
-	int sevenBit = (*reg >> 7) & 0x1;
-	*reg = (*reg >> 1) & 0x7F;
-	flags->C = sevenBit;
+	int zeroBit = *reg & 0x1;
+	*reg = *reg >> 1;
+    // zero out the 7th bit.
+    *reg &= 0x7F;
+	flags->C = zeroBit;
 	flags->Z = (*reg == 0);
 	flags->N = 0;
 	flags->H = 0;
@@ -779,15 +785,15 @@ int Z80InstructionSet::stop()
 	return -1;
 }
 
-int Z80InstructionSet::disableInterrupts()
+int Z80InstructionSet::disableInterrupts(bool *ime)
 {
-	// intMasEnable = 0;
+	*ime = false;
 	return 4;
 }
 
-int Z80InstructionSet::enableInterrupts()
+int Z80InstructionSet::enableInterrupts(bool *ime)
 {
-	// intMasEnable = 1;
+	*ime = true;
 	return 4;
 }
 
@@ -797,8 +803,8 @@ int Z80InstructionSet::enableInterrupts()
 
 int Z80InstructionSet::jump()
 {
-	uint8_t jumpLow = memory->memoryRead(registers->PC.val++);
-	uint8_t jumpHigh = memory->memoryRead(registers->PC.val++);
+	uint8_t jumpLow = memory->read(registers->PC.val++);
+	uint8_t jumpHigh = memory->read(registers->PC.val++);
 	RegisterPair jumpAddr(jumpHigh, jumpLow);
 	registers->PC = jumpAddr;
 	return 16;
@@ -822,7 +828,7 @@ int Z80InstructionSet::conditionalJump(int cond)
 
 int Z80InstructionSet::relativeJump()
 {
-	uint8_t jumpOffset = memory->memoryRead(registers->PC.val++);
+	uint8_t jumpOffset = memory->read(registers->PC.val++);
 	registers->PC.val += jumpOffset;
 	return 12;
 }
@@ -839,9 +845,7 @@ int Z80InstructionSet::conditionalRelativeJump(int cond)
 
 int Z80InstructionSet::call()
 {
-	registers->PC.val+=2;
 	pushToStack(registers->PC.val);
-	registers->PC.val-=2;
 	jump();
 	return 24;
 }
@@ -872,14 +876,15 @@ int Z80InstructionSet::conditionalReturnPC(int cond)
 	return 8;
 }
 
-int Z80InstructionSet::returnPCI()
+int Z80InstructionSet::returnPCI(bool *ime)
 {
-	enableInterrupts();
+	enableInterrupts(ime);
 	return returnPC();
 }
 
 int Z80InstructionSet::sysCall(int address)
 {
 	pushToStack(registers->PC);
+    registers->PC.val = address;
 	return 16;
 }

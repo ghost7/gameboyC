@@ -5,19 +5,19 @@ MemoryEmulator::MemoryEmulator()
     clearMemory();
 }
 
-uint8_t MemoryEmulator::memoryRead(uint16_t memAddr)
+uint8_t MemoryEmulator::read(addr_t memAddr)
 {
     return memory[memAddr];
 }
 
-void MemoryEmulator::memoryWrite(uint16_t memAddr, uint8_t data)
+void MemoryEmulator::write(addr_t memAddr, data_t data)
 {
     memory[memAddr] = data;
 }
 
 void MemoryEmulator::clearMemory()
 {
-    memset(memory, 0, sizeof(uint8_t) * MEM_SIZE);
+    memset(memory, 0, sizeof(data_t) * MEM_SIZE);
 }
 
 void MicroOpTestBase::SetUp()
@@ -29,6 +29,11 @@ void MicroOpTestBase::SetUp()
 
     instSet = new Z80InstructionSet(&memory, &registers);
     flags = registers.getFlags();
+}
+
+void MicroOpTestBase::TearDown()
+{
+    delete instSet;
 }
 
 uint16_t MicroOpTestBase::GetMemoryAddress()
@@ -62,24 +67,24 @@ void MicroOpTestBase::Set16BitRegister(uint8_t *highReg, uint8_t *lowReg, uint16
 void MicroOpTestBase::SetImmValue(uint8_t value)
 {
     uint16_t memoryAddress = GetMemoryAddress();
-    memory.memoryWrite(memoryAddress, value);
+    memory.write(memoryAddress, value);
     registers.PC = memoryAddress;
 }
 
 void MicroOpTestBase::SetImm16Value(uint16_t value)
 {
     uint16_t memoryAddress = GetMemoryAddress();
-    memory.memoryWrite(memoryAddress, value & 0xFF);
-    memory.memoryWrite(memoryAddress + 1, (value >> 8) & 0xFF);
+    memory.write(memoryAddress, value & 0xFF);
+    memory.write(memoryAddress + 1, (value >> 8) & 0xFF);
     registers.PC.val = memoryAddress;
 }
 
-void MicroOpTestBase::SetMemory(uint16_t memoryAddress, uint8_t data)
+void MicroOpTestBase::SetMemory(addr_t memoryAddress, data_t data)
 {
-    memory.memoryWrite(memoryAddress, data);
+    memory.write(memoryAddress, data);
 }
 
-uint8_t MicroOpTestBase::GetMemory(uint16_t memoryAddress)
+uint8_t MicroOpTestBase::GetMemory(addr_t memoryAddress)
 {
-    return memory.memoryRead(memoryAddress);
+    return memory.read(memoryAddress);
 }

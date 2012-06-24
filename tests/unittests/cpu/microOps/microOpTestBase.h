@@ -2,21 +2,21 @@
 #define __MICRO_OP_TEST_BASE__
 
 #include "../include/gtest/gtest.h"
-#include "../../MemoryBase.h"
-#include "../../Z80InstructionSet.h"
+#include "../../src/Memory/memoryInterface.h"
+#include "../../src/Cpu/Z80InstructionSet.h"
 
 #define MEM_SIZE 0xFFFF
 
-class MemoryEmulator : public MemoryBase
+class MemoryEmulator : public MemoryInterface
 {
 public:
-    uint8_t memoryRead(uint16_t memAddr);
-    void memoryWrite(uint16_t memAddr, uint8_t data);
+    uint8_t read(addr_t memAddr);
+    void write(addr_t memAddr, data_t data);
 
     void clearMemory();
     MemoryEmulator();
 private:
-    uint8_t memory[MEM_SIZE];
+    data_t memory[MEM_SIZE];
 };
 
 /**
@@ -29,6 +29,11 @@ protected:
      * Test set up.
      */
     virtual void SetUp();
+
+    /**
+     * Test clean up.
+     */
+    virtual void TearDown();
     
     /**
      * Gets a random memory address.

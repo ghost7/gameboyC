@@ -9,10 +9,7 @@
 
 using namespace std;
 
-
 const int KB_SIZE = 0x400;
-typedef uint8_t data_t;
-typedef uint16_t addr_t;
 
 enum BankingMode {
     ROM_BANKING_MODE = 0x00,

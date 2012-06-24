@@ -18,3 +18,6 @@ make
 This will generate the make file. Any additional changes to the build process
 should be made to the CMakeLists.txt file in the root directory. Note tests are
 not yet built using cmake.
+
+Added microOpTests and registerTests to cmake. See CMakeLists.txt in the test/
+directory.

@@ -32,7 +32,7 @@ CXXFLAGS += -g -Wall -Wextra -std=c++0x
 TESTS = memoryTests #microOpTests 
 
 MICRO_OP_TESTS = eightBitLoadTests sixteenBitLoadTests mathFlagsTests eightBitMathTests
-MICRO_OP_TEST_OBJ = eightBitMathTests.o mathFlagsTests.o sixteenBitLoadTests.o eightBitLoadTests.o
+MICRO_OP_TEST_OBJ = singleBitTests.o sixteenBitMathTests.o eightBitMathTests.o mathFlagsTests.o sixteenBitLoadTests.o eightBitLoadTests.o
 
 MEMORY_TESTS = allMbcMemoryTest noMbcMemoryTest mbc1MemoryTest memory mbc1Memory mbc2Memory mbc3Memory mbc5Memory 
 #MEMORY_TESTS_OBJ = allMbcMemoryTest.o noMbcMemoryTest.o mbc1MemoryTest.o memory.o mbc1Memory.o mbc2Memory.o mbc3Memory.o mbc5Memory.o 
@@ -81,17 +81,14 @@ gtest_main.a : gtest-all.o gtest_main.o
 # Micro op tests.
 
 MICRO_OP_HEADERS = $(TEST_DIR)/microOpTestBase.h\
-                   $(USER_DIR)/Z80InstructionSet.h $(USER_DIR)/Z80.h 
+                   $(USER_DIR)/Cpu/Z80InstructionSet.h $(USER_DIR)/Cpu/Z80.h 
 FLAG_OP_HEADERS = $(MICRO_OP_HEADERS) $(TEST_DIR)/flagOpTestBase.h
 
 MICRO_OP_OBJS = microOpTestBase.o Z80InstructionSet.o
 FLAG_OP_OBJS = ${MICRO_OP_OBJS} flagOpTestBase.o
 
-Z80InstructionSet.o : $(USER_DIR)/Z80InstructionSet.cpp $(USER_DIR)/Z80InstructionSet.h $(USER_DIR)/Z80.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/Z80InstructionSet.cpp
-
-cpu_z80_inst.o : $(USER_DIR)/cpu_z80_inst.c $(USER_DIR)/cpu_z80_inst.h $(USER_DIR)/registers.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/cpu_z80_inst.c
+Z80InstructionSet.o : $(USER_DIR)/Cpu/Z80InstructionSet.cpp $(USER_DIR)/Cpu/Z80InstructionSet.h $(USER_DIR)/Cpu/Z80.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/Cpu/Z80InstructionSet.cpp
 
 registerTests.o : $(TEST_DIR)/registerTests.cc ${USER_DIR}/Z80.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/registerTests.cc
@@ -114,6 +111,15 @@ mathFlagsTests.o : $(TEST_DIR)/mathFlagsTests.cc  $(FLAG_OP_HEADERS) $(GTEST_HEA
 eightBitMathTests.o : $(TEST_DIR)/eightBitMathTests.cc  $(MICRO_OP_HEADERS) $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/eightBitMathTests.cc
 
+sixteenBitMathTests.o : $(TEST_DIR)/sixteenBitMathTests.cc  $(MICRO_OP_HEADERS) $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/sixteenBitMathTests.cc
+
+rotateAndShiftTests.o : $(TEST_DIR)/rotateAndShiftTests.cc  $(MICRO_OP_HEADERS) $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/rotateAndShiftTests.cc
+
+singleBitTests.o : $(TEST_DIR)/singleBitTests.cc  $(MICRO_OP_HEADERS) $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/singleBitTests.cc
+
 registerTests : registerTests.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
@@ -132,6 +138,14 @@ mathFlagsTests : ${FLAG_OP_OBJS} mathFlagsTests.o gtest_main.a
 eightBitMathTests : ${MICRO_OP_OBJS} eightBitMathTests.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
+sixteenBitMathTests: ${MICRO_OP_OBJS} sixteenBitMathTests.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+rotateAndShiftTests: ${MICRO_OP_OBJS} rotateAndShiftTests.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+singleBitTests: ${MICRO_OP_OBJS} singleBitTests.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
 # Memory tests
 

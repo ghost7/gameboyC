@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 
 project(Gameboy)
+enable_testing()
 
 set(SRCS src/gameboy.cpp
          src/Common/FileUtils.h
@@ -8,6 +9,7 @@ set(SRCS src/gameboy.cpp
          src/Cpu/CpuBase.h
          src/Cpu/Z80.h
          src/Cpu/Z80Cpu.h
+         src/Cpu/Z80Cpu.cpp
          src/Cpu/Z80InstructionSet.h
          src/Cpu/Z80InstructionSet.cpp
          src/Cartridge/CartridgeHeader.h
@@ -36,3 +38,5 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall")
 
 add_executable(gameboy ${SRCS})
+
+add_subdirectory(tests)

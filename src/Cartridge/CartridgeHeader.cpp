@@ -256,4 +256,3 @@ std::string CartridgeHeader::getRomTypeString(uint8_t *rawRom)
             return "Unknown";
 	}
 }
-

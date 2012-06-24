@@ -1,5 +1,5 @@
 #include "../include/gtest/gtest.h"
-#include "../../Z80.h"
+#include "../../src/Cpu/Z80.h"
 
 /**
  * Tests Z80 registers an flags.

@@ -1,7 +1,10 @@
 #ifndef _MEMORY_INTERFACE_H_
 #define _MEMORY_INTERFACE_H_
 
-#include "memoryHeaders.h"
+#include <stdint.h>
+
+typedef uint8_t data_t;
+typedef uint16_t addr_t;
 
 /**
  * @file memory.h

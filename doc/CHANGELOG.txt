@@ -49,3 +49,12 @@ Build 2012-06-20
 
 -> Added Cartridge-Loading logic
    see /src/Cartridge.
+
+Build 2012-06-23
+-> Z80Cpu.h & Z80Cpu.cpp
+   Cpu Implemetation ported to C++
+
+-> MicroOpTests and RegisterTests work with cmake now.
+
+-> rotateAndShiftTests.cc
+   Rotate and shift instructions have been tested.
