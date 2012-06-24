@@ -1,0 +1,19 @@
+There are 3 important classes that work together to provide a very simple, but
+powerful and extensible memory system.
+
+MemoryInterface - Defines an interface through which anything representing 
+    some subset of the address space interacts with other components.
+    The other two classes both implement this interface.
+
+Memory - The top layer; this class represents a fully implemented address
+    space without making any decisions as to what certain parts of memory 
+    should do. However it does rely on two ideas:
+        1) An instance of Memory for the gameboy (and this class) is tied
+           to a particular cartridge.
+        2) The functions of memory are defined for certain ranges of addresses.
+    Only a single instance of this class should be used.
+
+MemoryCustomizer - To implement functionality, extend this class and register
+    an instance of the subclass with the Memory object. One instance of 
+    such a subclass may implement all the functions for a certain address range
+    or multiple address ranges.

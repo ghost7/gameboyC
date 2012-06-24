@@ -1,7 +1,7 @@
 #ifndef _Z80_INSTRUCTION_SET_H_
 #define _Z80_INSTRUCTION_SET_H_
 
-#include "../Memory/MemoryBase.h"
+#include "../Memory/memoryInterface.h"
 #include "Z80.h"
 
 /**
@@ -18,7 +18,7 @@ public :
      * \param mem Memory used to read and write to.
      * \param regs Z80 registers.
      */
-    Z80InstructionSet(MemoryBase *mem, Z80Registers *regs)
+    Z80InstructionSet(MemoryInterface *mem, Z80Registers *regs)
     {
         memory = mem;
         registers = regs;
@@ -471,7 +471,7 @@ public :
     /**
      * \brief add HL, rr --> HL = HL + rr
      *
-     * Add a register pair to the registerh pair HL.
+     * Add a register pair to the register pair HL.
      *
      * \param regPair 16-bit register pair. 
      */
@@ -600,7 +600,7 @@ public :
     /**
      * \brief swap r --> exchange low/high-nibble
      * 
-     *
+     * \param reg Register to swap.
      */
     int swapReg(uint8_t* reg);
 
@@ -698,15 +698,17 @@ public :
      * \brief di
      *
      * Disable all interrupts.
+     * \param ime Interrupt Master Enable.
      */
-    int disableInterrupts();
+    int disableInterrupts(bool *ime);
 
     /**
      * \brief ei
      *
      * Enable all interrupts.
+     * \param ime Interrupt Master Enable.
      */
-    int enableInterrupts();
+    int enableInterrupts(bool *ime);
     ///@}
 
     /**
@@ -790,8 +792,9 @@ public :
      * \brief reti
      *
      * Return and enable interrupts
+     * \param ime Interrupt Master Enable.
      */
-    int returnPCI();
+    int returnPCI(bool *ime);
 
     /**
      * \brief rst --> call to 00, 08, 10, 18, 20, 28, 30, 38
@@ -801,7 +804,7 @@ public :
     int sysCall(int address);
     ///@}
 private : 
-    MemoryBase *memory;
+    MemoryInterface *memory;
     Z80Registers *registers;
     Z80Flags *flags;
     uint8_t add8SetFlags(uint8_t op1, uint8_t op2);

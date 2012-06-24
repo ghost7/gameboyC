@@ -19,16 +19,6 @@ public:
     virtual void init() = 0;
 
     /**
-     * Shuts down the CPU.
-     */
-    virtual void shutDown() = 0;
-
-    /**
-     * Runs the CPU.
-     */
-    virtual void run() = 0;
-
-    /**
      * Executes a single instruction.
      */
     virtual void step() = 0;
