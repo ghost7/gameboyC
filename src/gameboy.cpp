@@ -3,8 +3,10 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include "Common/FileUtils.h"
-#include "Cartridge/CartridgeHeader.h"
+#include "Memory/CartridgeHeader.h"
+#include "Memory/MemoryDefs.h"
+#include "Memory/Memory.h"
+#include "Memory/MemoryLoader.h"
 
 static void usage()
 {
@@ -19,10 +21,9 @@ int main(int argc, char **argv)
 		usage();
 	}
     
-    uint8_t *rawRom = readFileToBuffer(argv[1]);
-    CartridgeHeader header(rawRom);
+    Memory* mem = MemoryLoader::loadCartridge( argv[1] );
 
-    std::cout << header.desc << std::endl;
+    std::cout << mem->header->desc << std::endl;
 
 	return 0;
 }

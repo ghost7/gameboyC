@@ -2,22 +2,23 @@
 #define _FILE_UTIL_H_
 
 #include <stdint.h>
+#include <string>
 
 /**
  * Reads the contents of a file.
+ * It's the user's responsibility to free the returned pointer.
  *
- * \param fileName name of the file.
- * \param buffer pointer to store the contents of the file. Note this function
- *        will allocate memory for this buffer.
- * \return true if the file was successfully read in, false otherwise.
+ * @param fileName Name of the file.
+ * @param[out] length A pointer to which the length will be stored
+ * @return A pointer to the file or NULL if it couldn't be read
  */
-uint8_t *readFileToBuffer(const char *fileName);
+char* readFileToBuffer(const std::string fileName, size_t* length);
 
 /**
  * Gets the length of a file
  *
- * \param fileName The name of the file.
+ * @param fileName The name of the file.
  */
-size_t getFileLen(const char *fileName);
+size_t getFileLen(const std::string fileName);
 
 #endif

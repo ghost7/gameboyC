@@ -1,24 +1,38 @@
-#include <stdio.h>
+#include <iostream>
+#include <fstream>
 #include <sys/stat.h>
+#include <string>
+#include <stdio.h>
 
 #include "FileUtils.h"
 
-uint8_t *readFileToBuffer(const char *fileName)
+using namespace std;
+
+char* readFileToBuffer(const std::string fileName, size_t* length)
 {
-    FILE *fp = fopen(fileName, "r");
-    if (!fp)
+    fstream file;
+    file.open( fileName.c_str() , ios::in|ios::binary|ios::ate );
+    if( !file.is_open() ) {
+        // TODO: nice errors -- detect file existence
+        std::cout << "couldn't open the file" << std::endl;
         return NULL;
-    size_t len = getFileLen(fileName);
-    uint8_t *buffer = new uint8_t[len + 1];
-    buffer[fread(buffer, 1, len, fp)] = 0;
-    fclose(fp);
+    }
+
+    *length = file.tellg();
+
+    char* buffer = new char[*length];
+
+    file.seekg( 0, ios::beg );
+    file.read( buffer, (int)*length );
+    
+    file.close();
     return buffer;
 }
 
-size_t getFileLen(const char *fileName)
+size_t getFileLen(const std::string fileName)
 {
     struct stat64 buf;
-    if (stat64(fileName, &buf) == 0)
+    if (stat64(fileName.c_str(), &buf) == 0)
     {
         return buf.st_size;
     }

@@ -10,26 +10,30 @@ set(SRCS src/gameboy.cpp
          src/Cpu/Z80Cpu.h
          src/Cpu/Z80InstructionSet.h
          src/Cpu/Z80InstructionSet.cpp
-         src/Cartridge/CartridgeHeader.h
-         src/Cartridge/CartridgeHeader.cpp
-         src/Cartridge/CartridgeBase.h
-         src/Cartridge/CartridgeLoader.h
-         src/Cartridge/CartridgeLoader.cpp
-         src/Cartridge/RomCartridge.h
-         src/Cartridge/RomCartridge.cpp
-         src/Memory/mbc1Memory.cpp  
-         src/Memory/mbc2Memory.cpp  
-         src/Memory/mbc3Memory.cpp  
-         src/Memory/mbc5Memory.cpp  
-         src/Memory/MemoryBase.h  
-         src/Memory/memory.h         
-         src/Memory/memoryInterface.h 
-         src/Memory/mbc1Memory.h    
-         src/Memory/mbc2Memory.h    
-         src/Memory/mbc3Memory.h    
-         src/Memory/mbc5Memory.h    
-         src/Memory/memory.cpp    
-         src/Memory/memoryHeaders.h
+         src/Memory/CartridgeHeader.h
+         src/Memory/CartridgeHeader.cpp
+         src/Memory/MemoryLoader.h
+         src/Memory/MemoryLoader.cpp
+         #src/Memory/MemoryBase.h  
+         src/Memory/Memory.h         
+         src/Memory/MemoryInterface.h 
+         src/Memory/Memory.cpp    
+         src/Memory/MemoryDefs.h
+         src/Memory/MemoryCustomizer.h
+         src/Memory/MemoryCustomizer.cpp
+         src/Memory/Customizers/BasicMemory.cpp
+         src/Memory/Customizers/BasicMemory.h
+         src/Memory/Customizers/DefaultERam.cpp
+         src/Memory/Customizers/DefaultERam.h
+         src/Memory/Customizers/DefaultRom.cpp
+         src/Memory/Customizers/DefaultRom.h
+         src/Memory/Customizers/EchoRam.cpp
+         src/Memory/Customizers/EchoRam.h
+         src/Memory/Customizers/IOMemory.cpp
+         src/Memory/Customizers/IOMemory.h
+         src/Memory/Customizers/LazyMemory.h
+         src/Memory/Customizers/VRam.cpp
+         src/Memory/Customizers/VRam.h
     )
 
 set(CMAKE_BUILD_TYPE Debug)

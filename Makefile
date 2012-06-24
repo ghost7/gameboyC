@@ -111,78 +111,6 @@ gameboy/fast:
 	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/build
 .PHONY : gameboy/fast
 
-src/Cartridge/CartridgeHeader.o: src/Cartridge/CartridgeHeader.cpp.o
-.PHONY : src/Cartridge/CartridgeHeader.o
-
-# target to build an object file
-src/Cartridge/CartridgeHeader.cpp.o:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Cartridge/CartridgeHeader.cpp.o
-.PHONY : src/Cartridge/CartridgeHeader.cpp.o
-
-src/Cartridge/CartridgeHeader.i: src/Cartridge/CartridgeHeader.cpp.i
-.PHONY : src/Cartridge/CartridgeHeader.i
-
-# target to preprocess a source file
-src/Cartridge/CartridgeHeader.cpp.i:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Cartridge/CartridgeHeader.cpp.i
-.PHONY : src/Cartridge/CartridgeHeader.cpp.i
-
-src/Cartridge/CartridgeHeader.s: src/Cartridge/CartridgeHeader.cpp.s
-.PHONY : src/Cartridge/CartridgeHeader.s
-
-# target to generate assembly for a file
-src/Cartridge/CartridgeHeader.cpp.s:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Cartridge/CartridgeHeader.cpp.s
-.PHONY : src/Cartridge/CartridgeHeader.cpp.s
-
-src/Cartridge/CartridgeLoader.o: src/Cartridge/CartridgeLoader.cpp.o
-.PHONY : src/Cartridge/CartridgeLoader.o
-
-# target to build an object file
-src/Cartridge/CartridgeLoader.cpp.o:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Cartridge/CartridgeLoader.cpp.o
-.PHONY : src/Cartridge/CartridgeLoader.cpp.o
-
-src/Cartridge/CartridgeLoader.i: src/Cartridge/CartridgeLoader.cpp.i
-.PHONY : src/Cartridge/CartridgeLoader.i
-
-# target to preprocess a source file
-src/Cartridge/CartridgeLoader.cpp.i:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Cartridge/CartridgeLoader.cpp.i
-.PHONY : src/Cartridge/CartridgeLoader.cpp.i
-
-src/Cartridge/CartridgeLoader.s: src/Cartridge/CartridgeLoader.cpp.s
-.PHONY : src/Cartridge/CartridgeLoader.s
-
-# target to generate assembly for a file
-src/Cartridge/CartridgeLoader.cpp.s:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Cartridge/CartridgeLoader.cpp.s
-.PHONY : src/Cartridge/CartridgeLoader.cpp.s
-
-src/Cartridge/RomCartridge.o: src/Cartridge/RomCartridge.cpp.o
-.PHONY : src/Cartridge/RomCartridge.o
-
-# target to build an object file
-src/Cartridge/RomCartridge.cpp.o:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Cartridge/RomCartridge.cpp.o
-.PHONY : src/Cartridge/RomCartridge.cpp.o
-
-src/Cartridge/RomCartridge.i: src/Cartridge/RomCartridge.cpp.i
-.PHONY : src/Cartridge/RomCartridge.i
-
-# target to preprocess a source file
-src/Cartridge/RomCartridge.cpp.i:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Cartridge/RomCartridge.cpp.i
-.PHONY : src/Cartridge/RomCartridge.cpp.i
-
-src/Cartridge/RomCartridge.s: src/Cartridge/RomCartridge.cpp.s
-.PHONY : src/Cartridge/RomCartridge.s
-
-# target to generate assembly for a file
-src/Cartridge/RomCartridge.cpp.s:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Cartridge/RomCartridge.cpp.s
-.PHONY : src/Cartridge/RomCartridge.cpp.s
-
 src/Common/FileUtils.o: src/Common/FileUtils.cpp.o
 .PHONY : src/Common/FileUtils.o
 
@@ -231,125 +159,245 @@ src/Cpu/Z80InstructionSet.cpp.s:
 	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Cpu/Z80InstructionSet.cpp.s
 .PHONY : src/Cpu/Z80InstructionSet.cpp.s
 
-src/Memory/mbc1Memory.o: src/Memory/mbc1Memory.cpp.o
-.PHONY : src/Memory/mbc1Memory.o
+src/Memory/CartridgeHeader.o: src/Memory/CartridgeHeader.cpp.o
+.PHONY : src/Memory/CartridgeHeader.o
 
 # target to build an object file
-src/Memory/mbc1Memory.cpp.o:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/mbc1Memory.cpp.o
-.PHONY : src/Memory/mbc1Memory.cpp.o
+src/Memory/CartridgeHeader.cpp.o:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/CartridgeHeader.cpp.o
+.PHONY : src/Memory/CartridgeHeader.cpp.o
 
-src/Memory/mbc1Memory.i: src/Memory/mbc1Memory.cpp.i
-.PHONY : src/Memory/mbc1Memory.i
+src/Memory/CartridgeHeader.i: src/Memory/CartridgeHeader.cpp.i
+.PHONY : src/Memory/CartridgeHeader.i
 
 # target to preprocess a source file
-src/Memory/mbc1Memory.cpp.i:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/mbc1Memory.cpp.i
-.PHONY : src/Memory/mbc1Memory.cpp.i
+src/Memory/CartridgeHeader.cpp.i:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/CartridgeHeader.cpp.i
+.PHONY : src/Memory/CartridgeHeader.cpp.i
 
-src/Memory/mbc1Memory.s: src/Memory/mbc1Memory.cpp.s
-.PHONY : src/Memory/mbc1Memory.s
+src/Memory/CartridgeHeader.s: src/Memory/CartridgeHeader.cpp.s
+.PHONY : src/Memory/CartridgeHeader.s
 
 # target to generate assembly for a file
-src/Memory/mbc1Memory.cpp.s:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/mbc1Memory.cpp.s
-.PHONY : src/Memory/mbc1Memory.cpp.s
+src/Memory/CartridgeHeader.cpp.s:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/CartridgeHeader.cpp.s
+.PHONY : src/Memory/CartridgeHeader.cpp.s
 
-src/Memory/mbc2Memory.o: src/Memory/mbc2Memory.cpp.o
-.PHONY : src/Memory/mbc2Memory.o
+src/Memory/Customizers/BasicMemory.o: src/Memory/Customizers/BasicMemory.cpp.o
+.PHONY : src/Memory/Customizers/BasicMemory.o
 
 # target to build an object file
-src/Memory/mbc2Memory.cpp.o:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/mbc2Memory.cpp.o
-.PHONY : src/Memory/mbc2Memory.cpp.o
+src/Memory/Customizers/BasicMemory.cpp.o:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/BasicMemory.cpp.o
+.PHONY : src/Memory/Customizers/BasicMemory.cpp.o
 
-src/Memory/mbc2Memory.i: src/Memory/mbc2Memory.cpp.i
-.PHONY : src/Memory/mbc2Memory.i
+src/Memory/Customizers/BasicMemory.i: src/Memory/Customizers/BasicMemory.cpp.i
+.PHONY : src/Memory/Customizers/BasicMemory.i
 
 # target to preprocess a source file
-src/Memory/mbc2Memory.cpp.i:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/mbc2Memory.cpp.i
-.PHONY : src/Memory/mbc2Memory.cpp.i
+src/Memory/Customizers/BasicMemory.cpp.i:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/BasicMemory.cpp.i
+.PHONY : src/Memory/Customizers/BasicMemory.cpp.i
 
-src/Memory/mbc2Memory.s: src/Memory/mbc2Memory.cpp.s
-.PHONY : src/Memory/mbc2Memory.s
+src/Memory/Customizers/BasicMemory.s: src/Memory/Customizers/BasicMemory.cpp.s
+.PHONY : src/Memory/Customizers/BasicMemory.s
 
 # target to generate assembly for a file
-src/Memory/mbc2Memory.cpp.s:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/mbc2Memory.cpp.s
-.PHONY : src/Memory/mbc2Memory.cpp.s
+src/Memory/Customizers/BasicMemory.cpp.s:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/BasicMemory.cpp.s
+.PHONY : src/Memory/Customizers/BasicMemory.cpp.s
 
-src/Memory/mbc3Memory.o: src/Memory/mbc3Memory.cpp.o
-.PHONY : src/Memory/mbc3Memory.o
+src/Memory/Customizers/DefaultERam.o: src/Memory/Customizers/DefaultERam.cpp.o
+.PHONY : src/Memory/Customizers/DefaultERam.o
 
 # target to build an object file
-src/Memory/mbc3Memory.cpp.o:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/mbc3Memory.cpp.o
-.PHONY : src/Memory/mbc3Memory.cpp.o
+src/Memory/Customizers/DefaultERam.cpp.o:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/DefaultERam.cpp.o
+.PHONY : src/Memory/Customizers/DefaultERam.cpp.o
 
-src/Memory/mbc3Memory.i: src/Memory/mbc3Memory.cpp.i
-.PHONY : src/Memory/mbc3Memory.i
+src/Memory/Customizers/DefaultERam.i: src/Memory/Customizers/DefaultERam.cpp.i
+.PHONY : src/Memory/Customizers/DefaultERam.i
 
 # target to preprocess a source file
-src/Memory/mbc3Memory.cpp.i:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/mbc3Memory.cpp.i
-.PHONY : src/Memory/mbc3Memory.cpp.i
+src/Memory/Customizers/DefaultERam.cpp.i:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/DefaultERam.cpp.i
+.PHONY : src/Memory/Customizers/DefaultERam.cpp.i
 
-src/Memory/mbc3Memory.s: src/Memory/mbc3Memory.cpp.s
-.PHONY : src/Memory/mbc3Memory.s
+src/Memory/Customizers/DefaultERam.s: src/Memory/Customizers/DefaultERam.cpp.s
+.PHONY : src/Memory/Customizers/DefaultERam.s
 
 # target to generate assembly for a file
-src/Memory/mbc3Memory.cpp.s:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/mbc3Memory.cpp.s
-.PHONY : src/Memory/mbc3Memory.cpp.s
+src/Memory/Customizers/DefaultERam.cpp.s:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/DefaultERam.cpp.s
+.PHONY : src/Memory/Customizers/DefaultERam.cpp.s
 
-src/Memory/mbc5Memory.o: src/Memory/mbc5Memory.cpp.o
-.PHONY : src/Memory/mbc5Memory.o
+src/Memory/Customizers/DefaultRom.o: src/Memory/Customizers/DefaultRom.cpp.o
+.PHONY : src/Memory/Customizers/DefaultRom.o
 
 # target to build an object file
-src/Memory/mbc5Memory.cpp.o:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/mbc5Memory.cpp.o
-.PHONY : src/Memory/mbc5Memory.cpp.o
+src/Memory/Customizers/DefaultRom.cpp.o:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/DefaultRom.cpp.o
+.PHONY : src/Memory/Customizers/DefaultRom.cpp.o
 
-src/Memory/mbc5Memory.i: src/Memory/mbc5Memory.cpp.i
-.PHONY : src/Memory/mbc5Memory.i
+src/Memory/Customizers/DefaultRom.i: src/Memory/Customizers/DefaultRom.cpp.i
+.PHONY : src/Memory/Customizers/DefaultRom.i
 
 # target to preprocess a source file
-src/Memory/mbc5Memory.cpp.i:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/mbc5Memory.cpp.i
-.PHONY : src/Memory/mbc5Memory.cpp.i
+src/Memory/Customizers/DefaultRom.cpp.i:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/DefaultRom.cpp.i
+.PHONY : src/Memory/Customizers/DefaultRom.cpp.i
 
-src/Memory/mbc5Memory.s: src/Memory/mbc5Memory.cpp.s
-.PHONY : src/Memory/mbc5Memory.s
+src/Memory/Customizers/DefaultRom.s: src/Memory/Customizers/DefaultRom.cpp.s
+.PHONY : src/Memory/Customizers/DefaultRom.s
 
 # target to generate assembly for a file
-src/Memory/mbc5Memory.cpp.s:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/mbc5Memory.cpp.s
-.PHONY : src/Memory/mbc5Memory.cpp.s
+src/Memory/Customizers/DefaultRom.cpp.s:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/DefaultRom.cpp.s
+.PHONY : src/Memory/Customizers/DefaultRom.cpp.s
 
-src/Memory/memory.o: src/Memory/memory.cpp.o
-.PHONY : src/Memory/memory.o
+src/Memory/Customizers/EchoRam.o: src/Memory/Customizers/EchoRam.cpp.o
+.PHONY : src/Memory/Customizers/EchoRam.o
 
 # target to build an object file
-src/Memory/memory.cpp.o:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/memory.cpp.o
-.PHONY : src/Memory/memory.cpp.o
+src/Memory/Customizers/EchoRam.cpp.o:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/EchoRam.cpp.o
+.PHONY : src/Memory/Customizers/EchoRam.cpp.o
 
-src/Memory/memory.i: src/Memory/memory.cpp.i
-.PHONY : src/Memory/memory.i
+src/Memory/Customizers/EchoRam.i: src/Memory/Customizers/EchoRam.cpp.i
+.PHONY : src/Memory/Customizers/EchoRam.i
 
 # target to preprocess a source file
-src/Memory/memory.cpp.i:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/memory.cpp.i
-.PHONY : src/Memory/memory.cpp.i
+src/Memory/Customizers/EchoRam.cpp.i:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/EchoRam.cpp.i
+.PHONY : src/Memory/Customizers/EchoRam.cpp.i
 
-src/Memory/memory.s: src/Memory/memory.cpp.s
-.PHONY : src/Memory/memory.s
+src/Memory/Customizers/EchoRam.s: src/Memory/Customizers/EchoRam.cpp.s
+.PHONY : src/Memory/Customizers/EchoRam.s
 
 # target to generate assembly for a file
-src/Memory/memory.cpp.s:
-	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/memory.cpp.s
-.PHONY : src/Memory/memory.cpp.s
+src/Memory/Customizers/EchoRam.cpp.s:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/EchoRam.cpp.s
+.PHONY : src/Memory/Customizers/EchoRam.cpp.s
+
+src/Memory/Customizers/IOMemory.o: src/Memory/Customizers/IOMemory.cpp.o
+.PHONY : src/Memory/Customizers/IOMemory.o
+
+# target to build an object file
+src/Memory/Customizers/IOMemory.cpp.o:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/IOMemory.cpp.o
+.PHONY : src/Memory/Customizers/IOMemory.cpp.o
+
+src/Memory/Customizers/IOMemory.i: src/Memory/Customizers/IOMemory.cpp.i
+.PHONY : src/Memory/Customizers/IOMemory.i
+
+# target to preprocess a source file
+src/Memory/Customizers/IOMemory.cpp.i:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/IOMemory.cpp.i
+.PHONY : src/Memory/Customizers/IOMemory.cpp.i
+
+src/Memory/Customizers/IOMemory.s: src/Memory/Customizers/IOMemory.cpp.s
+.PHONY : src/Memory/Customizers/IOMemory.s
+
+# target to generate assembly for a file
+src/Memory/Customizers/IOMemory.cpp.s:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/IOMemory.cpp.s
+.PHONY : src/Memory/Customizers/IOMemory.cpp.s
+
+src/Memory/Customizers/VRam.o: src/Memory/Customizers/VRam.cpp.o
+.PHONY : src/Memory/Customizers/VRam.o
+
+# target to build an object file
+src/Memory/Customizers/VRam.cpp.o:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/VRam.cpp.o
+.PHONY : src/Memory/Customizers/VRam.cpp.o
+
+src/Memory/Customizers/VRam.i: src/Memory/Customizers/VRam.cpp.i
+.PHONY : src/Memory/Customizers/VRam.i
+
+# target to preprocess a source file
+src/Memory/Customizers/VRam.cpp.i:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/VRam.cpp.i
+.PHONY : src/Memory/Customizers/VRam.cpp.i
+
+src/Memory/Customizers/VRam.s: src/Memory/Customizers/VRam.cpp.s
+.PHONY : src/Memory/Customizers/VRam.s
+
+# target to generate assembly for a file
+src/Memory/Customizers/VRam.cpp.s:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Customizers/VRam.cpp.s
+.PHONY : src/Memory/Customizers/VRam.cpp.s
+
+src/Memory/Memory.o: src/Memory/Memory.cpp.o
+.PHONY : src/Memory/Memory.o
+
+# target to build an object file
+src/Memory/Memory.cpp.o:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Memory.cpp.o
+.PHONY : src/Memory/Memory.cpp.o
+
+src/Memory/Memory.i: src/Memory/Memory.cpp.i
+.PHONY : src/Memory/Memory.i
+
+# target to preprocess a source file
+src/Memory/Memory.cpp.i:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Memory.cpp.i
+.PHONY : src/Memory/Memory.cpp.i
+
+src/Memory/Memory.s: src/Memory/Memory.cpp.s
+.PHONY : src/Memory/Memory.s
+
+# target to generate assembly for a file
+src/Memory/Memory.cpp.s:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/Memory.cpp.s
+.PHONY : src/Memory/Memory.cpp.s
+
+src/Memory/MemoryCustomizer.o: src/Memory/MemoryCustomizer.cpp.o
+.PHONY : src/Memory/MemoryCustomizer.o
+
+# target to build an object file
+src/Memory/MemoryCustomizer.cpp.o:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/MemoryCustomizer.cpp.o
+.PHONY : src/Memory/MemoryCustomizer.cpp.o
+
+src/Memory/MemoryCustomizer.i: src/Memory/MemoryCustomizer.cpp.i
+.PHONY : src/Memory/MemoryCustomizer.i
+
+# target to preprocess a source file
+src/Memory/MemoryCustomizer.cpp.i:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/MemoryCustomizer.cpp.i
+.PHONY : src/Memory/MemoryCustomizer.cpp.i
+
+src/Memory/MemoryCustomizer.s: src/Memory/MemoryCustomizer.cpp.s
+.PHONY : src/Memory/MemoryCustomizer.s
+
+# target to generate assembly for a file
+src/Memory/MemoryCustomizer.cpp.s:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/MemoryCustomizer.cpp.s
+.PHONY : src/Memory/MemoryCustomizer.cpp.s
+
+src/Memory/MemoryLoader.o: src/Memory/MemoryLoader.cpp.o
+.PHONY : src/Memory/MemoryLoader.o
+
+# target to build an object file
+src/Memory/MemoryLoader.cpp.o:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/MemoryLoader.cpp.o
+.PHONY : src/Memory/MemoryLoader.cpp.o
+
+src/Memory/MemoryLoader.i: src/Memory/MemoryLoader.cpp.i
+.PHONY : src/Memory/MemoryLoader.i
+
+# target to preprocess a source file
+src/Memory/MemoryLoader.cpp.i:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/MemoryLoader.cpp.i
+.PHONY : src/Memory/MemoryLoader.cpp.i
+
+src/Memory/MemoryLoader.s: src/Memory/MemoryLoader.cpp.s
+.PHONY : src/Memory/MemoryLoader.s
+
+# target to generate assembly for a file
+src/Memory/MemoryLoader.cpp.s:
+	$(MAKE) -f CMakeFiles/gameboy.dir/build.make CMakeFiles/gameboy.dir/src/Memory/MemoryLoader.cpp.s
+.PHONY : src/Memory/MemoryLoader.cpp.s
 
 src/gameboy.o: src/gameboy.cpp.o
 .PHONY : src/gameboy.o
@@ -384,36 +432,42 @@ help:
 	@echo "... edit_cache"
 	@echo "... gameboy"
 	@echo "... rebuild_cache"
-	@echo "... src/Cartridge/CartridgeHeader.o"
-	@echo "... src/Cartridge/CartridgeHeader.i"
-	@echo "... src/Cartridge/CartridgeHeader.s"
-	@echo "... src/Cartridge/CartridgeLoader.o"
-	@echo "... src/Cartridge/CartridgeLoader.i"
-	@echo "... src/Cartridge/CartridgeLoader.s"
-	@echo "... src/Cartridge/RomCartridge.o"
-	@echo "... src/Cartridge/RomCartridge.i"
-	@echo "... src/Cartridge/RomCartridge.s"
 	@echo "... src/Common/FileUtils.o"
 	@echo "... src/Common/FileUtils.i"
 	@echo "... src/Common/FileUtils.s"
 	@echo "... src/Cpu/Z80InstructionSet.o"
 	@echo "... src/Cpu/Z80InstructionSet.i"
 	@echo "... src/Cpu/Z80InstructionSet.s"
-	@echo "... src/Memory/mbc1Memory.o"
-	@echo "... src/Memory/mbc1Memory.i"
-	@echo "... src/Memory/mbc1Memory.s"
-	@echo "... src/Memory/mbc2Memory.o"
-	@echo "... src/Memory/mbc2Memory.i"
-	@echo "... src/Memory/mbc2Memory.s"
-	@echo "... src/Memory/mbc3Memory.o"
-	@echo "... src/Memory/mbc3Memory.i"
-	@echo "... src/Memory/mbc3Memory.s"
-	@echo "... src/Memory/mbc5Memory.o"
-	@echo "... src/Memory/mbc5Memory.i"
-	@echo "... src/Memory/mbc5Memory.s"
-	@echo "... src/Memory/memory.o"
-	@echo "... src/Memory/memory.i"
-	@echo "... src/Memory/memory.s"
+	@echo "... src/Memory/CartridgeHeader.o"
+	@echo "... src/Memory/CartridgeHeader.i"
+	@echo "... src/Memory/CartridgeHeader.s"
+	@echo "... src/Memory/Customizers/BasicMemory.o"
+	@echo "... src/Memory/Customizers/BasicMemory.i"
+	@echo "... src/Memory/Customizers/BasicMemory.s"
+	@echo "... src/Memory/Customizers/DefaultERam.o"
+	@echo "... src/Memory/Customizers/DefaultERam.i"
+	@echo "... src/Memory/Customizers/DefaultERam.s"
+	@echo "... src/Memory/Customizers/DefaultRom.o"
+	@echo "... src/Memory/Customizers/DefaultRom.i"
+	@echo "... src/Memory/Customizers/DefaultRom.s"
+	@echo "... src/Memory/Customizers/EchoRam.o"
+	@echo "... src/Memory/Customizers/EchoRam.i"
+	@echo "... src/Memory/Customizers/EchoRam.s"
+	@echo "... src/Memory/Customizers/IOMemory.o"
+	@echo "... src/Memory/Customizers/IOMemory.i"
+	@echo "... src/Memory/Customizers/IOMemory.s"
+	@echo "... src/Memory/Customizers/VRam.o"
+	@echo "... src/Memory/Customizers/VRam.i"
+	@echo "... src/Memory/Customizers/VRam.s"
+	@echo "... src/Memory/Memory.o"
+	@echo "... src/Memory/Memory.i"
+	@echo "... src/Memory/Memory.s"
+	@echo "... src/Memory/MemoryCustomizer.o"
+	@echo "... src/Memory/MemoryCustomizer.i"
+	@echo "... src/Memory/MemoryCustomizer.s"
+	@echo "... src/Memory/MemoryLoader.o"
+	@echo "... src/Memory/MemoryLoader.i"
+	@echo "... src/Memory/MemoryLoader.s"
 	@echo "... src/gameboy.o"
 	@echo "... src/gameboy.i"
 	@echo "... src/gameboy.s"

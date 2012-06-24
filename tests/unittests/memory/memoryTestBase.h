@@ -2,7 +2,7 @@
 #define __MEMORY_TEST_BASE_H_
 
 #include "../../include/gtest/gtest.h"
-#include "../../../src/Memory/memoryHeaders.h"
+#include "../../../src/Memory/MemoryLoader.h"
 
 // call these macros from inside a TEST
 #define ASSERT_RO( addr ) data_t start = mem->read( addr ); \
@@ -27,7 +27,7 @@ protected:
         // TODO: setup? new
         // TODO: figure out how to specify which tests for the different controllers
         //mem = loadCartridge( "ROM_ONLY+0x0020KB_ROM+0x0000KB_RAM.gb" );
-        mem = loadCartridge( "MBC1+0x0100KB_ROM+0x0008KB_RAM.gb" );
+        mem = MemoryLoader::loadCartridge( "ROM+RAM+0x0020KB_ROM+0x0000KB_RAM.gb" );
     }
 
 };
