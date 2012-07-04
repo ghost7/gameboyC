@@ -4,9 +4,9 @@
 #include <stdint.h>
 
 /**
- * \brief 16-bit register pair.
+ * @brief 16-bit register pair.
  *
- * \ingroup CPU
+ * @ingroup CPU
  */
 union RegisterPair
 {   
@@ -20,15 +20,15 @@ union RegisterPair
     /**
      * Creates a RegisterPair from two 8-bit register values.
      *
-     * \param high Upper 8-bits of the RegisterPair.
-     * \param low Lower 8-bits of the RegisterPair.
+     * @param high Upper 8-bits of the RegisterPair.
+     * @param low Lower 8-bits of the RegisterPair.
      */
     RegisterPair(uint8_t high, uint8_t low) { hi = high; lo = low; }
     
     /**
      * Creates a RegisterPair with the specifed value.
      *
-     * \param value value to store in the register.
+     * @param value value to store in the register.
      */
     RegisterPair(uint16_t value) { val = value; }
     
@@ -39,9 +39,9 @@ union RegisterPair
 };
 
 /**
- * \brief Z80 Flag 8-bit register, with the format: ZNHC0000
+ * @brief Z80 Flag 8-bit register, with the format: ZNHC0000
  *
- * \ingroup CPU 
+ * @ingroup CPU 
  */
 struct Z80Flags
 {
@@ -53,9 +53,9 @@ struct Z80Flags
 };
 
 /**
- * \brief Z80 Registers.
+ * @brief Z80 Registers.
  *
- * \ingroup CPU
+ * @ingroup CPU
  */
 struct Z80Registers
 {
@@ -69,7 +69,7 @@ struct Z80Registers
     /**
      * Gets the Z80 flags, which are the lower 8 bits of the AF RegisterPair.
      *
-     * \return Z80 Flags associated to this set of registers.
+     * @return Z80 Flags associated to this set of registers.
      */
     Z80Flags *getFlags()
     {

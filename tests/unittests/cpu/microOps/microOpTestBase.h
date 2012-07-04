@@ -1,8 +1,8 @@
 #ifndef __MICRO_OP_TEST_BASE__
 #define __MICRO_OP_TEST_BASE__
 
-#include "../include/gtest/gtest.h"
-#include "../../src/Memory/memoryInterface.h"
+#include "../../../include/gtest/gtest.h"
+#include "../../src/Memory/MemoryInterface.h"
 #include "../../src/Cpu/Z80InstructionSet.h"
 
 #define MEM_SIZE 0xFFFF

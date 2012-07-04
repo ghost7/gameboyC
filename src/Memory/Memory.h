@@ -3,7 +3,6 @@
 
 #include "CartridgeHeader.h"
 #include "MemoryDefs.h"
-#include "Memory.h"
 #include "MemoryInterface.h"
 
 const int ADDRESSABLE_MEMORY_SIZE = 0x10000;

@@ -40,7 +40,6 @@ endif()
 # ${gtest_BINARY_DIR}.
 # Language "C" is required for find_package(Threads).
 project(gtest CXX C)
-cmake_minimum_required(VERSION 2.6.2)
 
 if (COMMAND set_up_hermetic_build)
   set_up_hermetic_build()
@@ -73,15 +72,5 @@ target_link_libraries(gtest_main gtest)
 
 ########################################################################
 
-# TODO try to see if you can write a cmake function that does this
-set(CPU_DIR ../../src/Cpu)
-set(MICRO_OP_SRCS ${CPU_DIR}/Z80InstructionSet.cpp)
-file(GLOB MICRO_TEST_HEADERS unittests/cpu/microOps/*.h)
-file(GLOB MICRO_TEST_SRCS unittests/cpu/microOps/*.cc)
-cxx_executable(microOpTests unittests/cpu/microOps gtest_main ${MICRO_OP_SRCS} ${MICRO_TEST_HEADERS} ${MICRO_TEST_SRCS})
-add_test(microOpTests ${CMAKE_CURRENT_BINARY_DIR}/microOpTests)
-
-file(GLOB REG_TEST_HEADERS unittests/cpu/microOps/*.h)
-file(GLOB REG_TEST_SRCS unittests/cpu/microOps/*.c)
-cxx_executable(registerTests unittests/cpu/microOps gtest_main ${REG_TEST_HEADERS} ${REG_TEST_SRCS})
-add_test(registerTests ${CMAKE_CURRENT_BINARY_DIR}/registerTests)
+# Add all unittests
+add_subdirectory(unittests)

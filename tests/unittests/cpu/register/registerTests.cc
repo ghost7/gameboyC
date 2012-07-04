@@ -1,4 +1,4 @@
-#include "../include/gtest/gtest.h"
+#include "../../../include/gtest/gtest.h"
 #include "../../src/Cpu/Z80.h"
 
 /**
