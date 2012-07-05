@@ -31,6 +31,23 @@ set(SRCS gameboy.cpp
          Memory/Customizers/LazyMemory.h
          Memory/Customizers/VRam.cpp
          Memory/Customizers/VRam.h
+         Window/GBSDLWindow.cpp
+         Window/GBSDLWindow.h
+         Window/GBWindow.h
     )
 
 add_executable(gameboy ${SRCS})
+
+find_package(SDL)
+if (NOT SDL_FOUND)
+    message(FATAL_ERROR "SDL not found")
+endif (NOT SDL_FOUND)
+
+include_directories(
+    ${SDL_INCLUDE_DIR}
+    ${INCLUDE_DIRECTORIES}
+    )
+  target_link_libraries(gameboy
+    ${SDL_LIBRARY}
+    ${TARGET_LINK_LIBRARIES}
+    )

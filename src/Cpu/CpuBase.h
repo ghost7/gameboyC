@@ -20,8 +20,10 @@ public:
 
     /**
      * Executes a single instruction.
+     *
+     * @return Number of cycles the step takes.
      */
-    virtual void step() = 0;
+    virtual int step() = 0;
 };
 
 #endif

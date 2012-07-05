@@ -7,23 +7,23 @@
 #include "Z80InstructionSet.h"
 
 /**
- * \brief Z80 CPU implementation. TODO Implement...
+ * @brief Z80 CPU implementation. 
  *
- * \ingroup CPU
+ * @ingroup CPU
  */
-class Z80Cpu : CpuBase
+class Z80Cpu : public ::CpuBase
 {
 public: 
     void init();
-    void step();
+    int step();
     
     /**
      * Creates the Z80 CPU.
      *
-     * \param mem Memory for reading and writing.
-     * \param bootStrap true if using a boot strap, false otherwise.
+     * @param mem Memory for reading and writing.
+     * @param bootStrap true if using a boot strap, false otherwise.
      */
-    Z80Cpu(MemoryInterface *mem, bool bootStrap) 
+    Z80Cpu(MemoryInterface *mem, bool bootStrap = false) 
     { 
         memory = mem;
         useBootStrap = bootStrap;
@@ -38,21 +38,12 @@ private:
     /**
      * Checks for any interrupts and makes a system call if necessarry.
      */
-    void checkForInterrupts();
-    /**
-     * Read the timer value from memory.
-     */
-    void readTimer();
-    /**
-     * Write the timer value from memory. If the timer value 
-     * is greater than 0xFF load the timer with the timer
-     * modulo value.
-     */
-    void writeTimer();
+    int checkForInterrupts();
+    void advanceTimer(int stepTime); 
     
-    void executeInstruction(data_t cpuInst);
+    int executeInstruction(data_t cpuInst);
 
-    void executeCBInstruction();
+    int executeCBInstruction();
 
     MemoryInterface *memory;
     Z80InstructionSet *instSet;
@@ -60,7 +51,6 @@ private:
     Z80Flags *flags;
     bool useBootStrap;
     bool intMasterEnable;
-    int timer;
 };
 
 #endif
