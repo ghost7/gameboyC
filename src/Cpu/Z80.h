@@ -45,11 +45,12 @@ union RegisterPair
  */
 struct Z80Flags
 {
-    const unsigned unused : 4;  //!< Lower 4-bits that should remain 0.
-    bool C : 1;                 //!< Carry flag.
-    bool H : 1;                 //!< Half Carry Flag.
-    bool N : 1;                 //!< Negation flag.
-    bool Z : 1;                 //!< Zero flag.
+    unsigned unused : 4;        //!< Lower 4-bits that should remain 0.
+    unsigned C : 1;             //!< Carry flag.
+    unsigned H : 1;             //!< Half Carry Flag.
+    unsigned N : 1;             //!< Negation flag.
+    unsigned Z : 1;             //!< Zero flag.
+    Z80Flags() { }
 };
 
 /**

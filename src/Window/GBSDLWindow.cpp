@@ -42,7 +42,7 @@ void GBSDLWindow::loop()
                     break;
             }
         }
-        int cycles = gbCpu->step();
+        // int cycles = gbCpu->step();
         // TODO advance LCD by "cycles"
         // TODO SDL_Flip(), only when necessary, have the LCD tell
         // when it is time to update the screen.

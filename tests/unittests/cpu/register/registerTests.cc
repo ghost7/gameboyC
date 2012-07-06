@@ -40,10 +40,10 @@ TEST_F(RegisterTest, RegisterPairTest)
  */
 TEST_F(RegisterTest, ZFlagTest)
 {
-    flags->Z = true;
-    ASSERT_EQ(0x80, registers.AF.lo);
-    flags->Z = false;
-    ASSERT_EQ(0x00, registers.AF.hi);
+    flags->Z = 1;
+	ASSERT_EQ(0x80, registers.AF.lo);
+    flags->Z = 0;
+	ASSERT_EQ(0x00, registers.AF.lo);
 }
 
 /**
@@ -52,10 +52,10 @@ TEST_F(RegisterTest, ZFlagTest)
  */
 TEST_F(RegisterTest, NFlagTest)
 {
-    flags->N = true;
+    flags->N = 1;
     ASSERT_EQ(0x40, registers.AF.lo);
-    flags->N = false;
-    ASSERT_EQ(0x00, registers.AF.hi);
+    flags->N = 0;
+    ASSERT_EQ(0x00, registers.AF.lo);
 }
 
 /**
@@ -64,10 +64,10 @@ TEST_F(RegisterTest, NFlagTest)
  */
 TEST_F(RegisterTest, HFlagTest)
 {
-    flags->H = true;
+    flags->H = 1;
     ASSERT_EQ(0x20, registers.AF.lo);
-    flags->H = false;
-    ASSERT_EQ(0x00, registers.AF.hi);
+    flags->H = 0;
+    ASSERT_EQ(0x00, registers.AF.lo);
 }
 
 /**
@@ -76,10 +76,10 @@ TEST_F(RegisterTest, HFlagTest)
  */
 TEST_F(RegisterTest, CFlagTest)
 {
-    flags->C = true;
+    flags->C = 1;
     ASSERT_EQ(0x10, registers.AF.lo);
-    flags->C = false;
-    ASSERT_EQ(0x00, registers.AF.hi);
+    flags->C = 0;
+    ASSERT_EQ(0x00, registers.AF.lo);
 }
 
 /**
@@ -88,15 +88,15 @@ TEST_F(RegisterTest, CFlagTest)
  */
 TEST_F(RegisterTest, AllFlagTest)
 {
-    flags->Z = true;
-    flags->N = true;
-    flags->H = true;
-    flags->C = true;
+    flags->Z = 1;
+    flags->N = 1;
+    flags->H = 1;
+    flags->C = 1;
     ASSERT_EQ(0xF0, registers.AF.lo);
 
-    flags->Z = false;
-    flags->N = false;
-    flags->H = false;
-    flags->C = false;
+    flags->Z = 0;
+    flags->N = 0;
+    flags->H = 0;
+    flags->C = 0;
     ASSERT_EQ(0x00, registers.AF.lo);
 }

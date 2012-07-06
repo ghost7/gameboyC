@@ -100,12 +100,12 @@ protected:
 
     void CheckCarryMSB(uint8_t value)
     {
-        ASSERT_EQ(GetMSB(value), flags->C);
+        ASSERT_EQ((unsigned)GetMSB(value), flags->C);
     }
 
     void CheckCarryLSB(uint8_t value)
     {
-        ASSERT_EQ(GetLSB(value), flags->C);
+        ASSERT_EQ((unsigned)GetLSB(value), flags->C);
     }
 };
 

@@ -58,6 +58,11 @@ include_directories(
 # Where Google Test's libraries can be found.
 link_directories(${gtest_BINARY_DIR}/src)
 
+# Work around to get the VC++11 compiler to compile gtest.
+IF(MSVC11)
+	add_definitions( -D_VARIADIC_MAX=10)
+ENDIF(MSVC11)
+
 ########################################################################
 #
 # Defines the gtest & gtest_main libraries.  User tests should link

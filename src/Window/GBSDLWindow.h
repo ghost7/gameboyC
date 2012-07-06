@@ -1,7 +1,7 @@
 #ifndef _GB_SDL_WINDOW_H_
 #define _GB_SDL_WINDOW_H_
 
-#include <SDL/SDL.h>
+#include "SDL.h"
 
 #include "GBWindow.h"
 
