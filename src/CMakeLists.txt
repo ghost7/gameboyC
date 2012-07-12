@@ -1,4 +1,5 @@
 set(SRCS gameboy.cpp
+         Common/DebugViewer.h
          Common/FileUtils.h
          Common/FileUtils.cpp
          Cpu/CpuBase.h
@@ -7,6 +8,14 @@ set(SRCS gameboy.cpp
          Cpu/Z80Cpu.cpp
          Cpu/Z80InstructionSet.h
          Cpu/Z80InstructionSet.cpp
+         Cpu/Debug/Z80BreakPoints.cpp
+         Cpu/Debug/Z80BreakPoints.h
+         Cpu/Debug/Z80CmdDebugViewer.cpp
+         Cpu/Debug/Z80CmdDebugViewer.h
+         Cpu/Debug/Z80Debugger.cpp
+         Cpu/Debug/Z80Debugger.h
+         Cpu/Debug/Z80InstructionMap.h
+         Cpu/Debug/Z80InstructionMap.cpp
          Memory/CartridgeHeader.h
          Memory/CartridgeHeader.cpp
          Memory/MemoryLoader.h
@@ -63,6 +72,19 @@ source_group(Cpu
 			 Cpu/Z80InstructionSet.h
 			 Cpu/Z80InstructionSet.cpp
 			)
+
+# Nested Debug folder in Cpu directory
+source_group(Cpu\\Debug
+			 FILES
+			 Cpu/Debug/Z80BreakPoints.cpp
+			 Cpu/Debug/Z80BreakPoints.h
+			 Cpu/Debug/Z80CmdDebugViewer.cpp
+			 Cpu/Debug/Z80CmdDebugViewer.h
+			 Cpu/Debug/Z80Debugger.cpp
+			 Cpu/Debug/Z80Debugger.h
+			 Cpu/Debug/Z80InstructionMap.cpp
+			 Cpu/Debug/Z80InstructionMap.h
+			 )
 			
 source_group(Memory 
 			 FILES
@@ -101,6 +123,7 @@ source_group(Window
 
 source_group(Common
 			 FILES
+			 Common/DebugViewer.h
 			 Common/FileUtils.h
 			 Common/FileUtils.cpp
 			)
