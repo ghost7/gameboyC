@@ -4,7 +4,7 @@
 #define TMA_ADDR 0xFF06
 #define IF_ADDR 0xFF0F
 #define IE_ADDR 0xFFFF
-#define stepTime_REQUEST 0x40
+#define TIMER_REQUEST 0x40
 
 void Z80Cpu::init()
 {
@@ -35,8 +35,8 @@ void Z80Cpu::advanceTimer(int stepTime)
         
         // request the stepTime interrupt.
         data_t intFlags = memory->read(IF_ADDR);
-        intFlags |= stepTime_REQUEST;
-        memory->write(IF_ADDR, stepTime_REQUEST);
+        intFlags |= TIMER_REQUEST;
+        memory->write(IF_ADDR, TIMER_REQUEST);
     }
 
     // write the stepTime back into memory.
@@ -91,7 +91,7 @@ int Z80Cpu::step()
     int stepTime = 0; 
     stepTime += checkForInterrupts();
     // Fetch the next instruction
-    data_t cpuInst = memory->read(registers.PC.val);
+    data_t cpuInst = memory->read(registers.PC.val++);
     // Execute the instruction
     stepTime += executeInstruction(cpuInst);
     
