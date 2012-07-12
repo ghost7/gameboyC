@@ -1,3 +1,4 @@
+#include "Debug/Z80CmdDebugViewer.h"
 #include "Z80Cpu.h"
 
 #define TIMA_ADDR 0XFF05
@@ -19,6 +20,10 @@ void Z80Cpu::init()
         registers.HL = 0x014D;
         registers.PC = 0x100;
     }
+   
+    // Attach debugger.    
+    debugViewer = new Z80CmdDebugViewer(&registers, memory);
+    debugViewer->show();
 }
 
 void Z80Cpu::advanceTimer(int stepTime)
@@ -96,6 +101,9 @@ int Z80Cpu::step()
     stepTime += executeInstruction(cpuInst);
     
     advanceTimer(stepTime);
+
+    debugViewer->update();
+
     return stepTime;
 }
 

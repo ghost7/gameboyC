@@ -2,6 +2,7 @@
 #define _Z80_CPU_H_
 
 #include "CpuBase.h"
+#include "../Common/DebugViewer.h"
 #include "../Memory/MemoryInterface.h"
 #include "Z80.h"
 #include "Z80InstructionSet.h"
@@ -51,6 +52,8 @@ private:
     Z80Flags *flags;
     bool useBootStrap;
     bool intMasterEnable;
+
+    DebugViewer *debugViewer;
 };
 
 #endif
