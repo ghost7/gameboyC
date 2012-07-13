@@ -16,34 +16,6 @@
 
 #define MEM_SIZE 0xFFFF
 
-class MemoryEmulator : public MemoryInterface
-{
-public:
-    uint8_t read(addr_t memAddr)
-    {
-        return memory[memAddr];
-    }
-    void write(addr_t memAddr, data_t data)
-    {
-        memory[memAddr] = data;
-    }
-    data_t *getMemoryLocation(addr_t addr)
-    {
-        return &memory[addr];
-    }
-
-    void clearMemory()
-    {
-        memset(memory, 0, MEM_SIZE);
-    }
-    MemoryEmulator()
-    {
-        clearMemory();
-    }
-private:
-    data_t memory[MEM_SIZE];
-};
-
 static void usage()
 {
 	fprintf(stderr, "Usage: gameboy <rom file>\n");
@@ -63,7 +35,7 @@ int main(int argc, char **argv)
     std::cout << mem->header->desc << std::endl;
     
     // Create Game Boy CPU.
-    CpuBase *cpu = new Z80Cpu(new MemoryEmulator());
+    CpuBase *cpu = new Z80Cpu(mem);
     cpu->init();
     
     // Create the window.

@@ -1,10 +1,18 @@
 #include "Z80Cpu.h"
 
-#define TIMA_ADDR 0XFF05
 #define TMA_ADDR 0xFF06
 #define IF_ADDR 0xFF0F
 #define IE_ADDR 0xFFFF
 #define TIMER_REQUEST 0x40
+
+Z80Cpu::Z80Cpu(Memory* mem, bool bootStrap) 
+{
+    memory = mem;
+    ioMemory = memory->getIOMemory();
+    useBootStrap = bootStrap;
+    flags = registers.getFlags();
+};
+
 
 void Z80Cpu::init()
 {
@@ -24,7 +32,7 @@ void Z80Cpu::init()
 void Z80Cpu::advanceTimer(int stepTime)
 {
     // Get the timer from memory.
-    int timer = memory->read(TIMA_ADDR);
+    int timer = ioMemory->TIMA; 
     // advance the timer.
     timer += stepTime;
 
@@ -40,7 +48,7 @@ void Z80Cpu::advanceTimer(int stepTime)
     }
 
     // write the stepTime back into memory.
-    memory->write(TIMA_ADDR, timer);
+    ioMemory->TIMA = timer;
 }
 
 int Z80Cpu::checkForInterrupts()
@@ -77,7 +85,7 @@ int Z80Cpu::checkForInterrupts()
                 break;
         }
         memory->write(IF_ADDR, register_IF);
-        memory->write(TIMA_ADDR, stepTime);
+        ioMemory->TIMA += stepTime;
         // disable any futher interrupts until the program 
         // re-enables them.
         intMasterEnable = false;
