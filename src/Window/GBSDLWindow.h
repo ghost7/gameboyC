@@ -15,7 +15,7 @@ public:
     GBSDLWindow() { initialized = false; }
     ~GBSDLWindow();
 
-    bool init(CpuBase *cpu);
+    bool init(CpuBase *cpu, LcdInterface *lcd);
     void loop();
     std::string getErrorMessage();
 private:
@@ -32,6 +32,9 @@ private:
 
     /* The Cpu */
     CpuBase *gbCpu;
+    
+    /* The LCD */
+    LcdInterface *gbLcd;
 
     /* Stores any error. */
     std::string error;

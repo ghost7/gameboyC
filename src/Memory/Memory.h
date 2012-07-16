@@ -6,6 +6,7 @@
 #include "MemoryInterface.h"
 
 #include "Customizers/IOMemory.h"
+#include "Customizers/DmgBoot.h"
 
 const int ADDRESSABLE_MEMORY_SIZE = 0x10000;
 
@@ -113,6 +114,8 @@ protected:
 
     // I/O Ports
     IOMemory* ioMem;
+
+    DmgBoot* dmg;
 };
 
 #endif

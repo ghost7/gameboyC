@@ -74,6 +74,8 @@ Memory::Memory( data_t* c, size_t cSize )  {
     // Regsiter Interrupt Enable 
     MemoryInterface* intEnable = new BasicMemory(0xFFFF, 0xFFFF);
     registerListener(IReg, intEnable);
+
+    dmg = new DmgBoot();
 }
 
 
@@ -89,9 +91,12 @@ Memory::~Memory() {
  * @param addr The address whose value is requested
  * @return The value at {@code addr}
  */
-data_t Memory::read( addr_t addr ) {
+data_t Memory::read( addr_t addr ) 
+{
+    if (dmg->isEnabled() && addr <= 0xFF)
+        return dmg->read(addr);
     // ROM
-    if( addr <= 0x1FFF )
+    else if( addr <= 0x1FFF )
         return readListeners[RomBank0_1]->read( addr );
     else if( 0x2000 <= addr && addr <= 0x3FFF )
         return readListeners[RomBank0_2]->read( addr );
@@ -139,9 +144,12 @@ data_t Memory::read( addr_t addr ) {
  * @param addr The address where {@code val} should be written
  * @param val The value to write
  */
-void Memory::write( addr_t addr, data_t val ) {
+void Memory::write( addr_t addr, data_t val ) 
+{
+    if (dmg->isEnabled() && addr <= 0xFF)
+        dmg->write(addr, val);
     // ROM
-    if( addr <= 0x1FFF )
+    else if( addr <= 0x1FFF )
         writeListeners[RomBank0_1]->write( addr, val );
     else if( 0x2000 <= addr && addr <= 0x3FFF )
         writeListeners[RomBank0_2]->write( addr, val );

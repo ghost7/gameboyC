@@ -1,3 +1,4 @@
+#include "../../Common/Config.h"
 #include "IOMemory.h"
 
 IOMemory::IOMemory() {

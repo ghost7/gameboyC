@@ -3,6 +3,7 @@
 
 #include <string>
 #include "../Cpu/CpuBase.h"
+#include "../Lcd/LcdInterface.h"
 
 /**
  * Window that will be displatyed for a Gameboy Game.
@@ -13,7 +14,7 @@ public:
     /**
      * Initialize the window with a cpu.
      */
-    virtual bool init(CpuBase *cpu) = 0;
+    virtual bool init(CpuBase *cpu, LcdInterface* lcd) = 0;
 
     /**
      * Window loop. Keeps the game running until the game exits, or 

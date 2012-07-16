@@ -1,3 +1,4 @@
+#include "../Common/Config.h"
 #include "Z80Cpu.h"
 
 #define TMA_ADDR 0xFF06
@@ -5,11 +6,10 @@
 #define IE_ADDR 0xFFFF
 #define TIMER_REQUEST 0x40
 
-Z80Cpu::Z80Cpu(Memory* mem, bool bootStrap) 
+Z80Cpu::Z80Cpu(Memory* mem) 
 {
     memory = mem;
     ioMemory = memory->getIOMemory();
-    useBootStrap = bootStrap;
     flags = registers.getFlags();
 };
 
@@ -19,7 +19,7 @@ void Z80Cpu::init()
     instSet = new Z80InstructionSet(memory, &registers);
     // Normally the register values are set by the boot strap program, 
     // but if there is no boot strap, set them here.
-    if (!useBootStrap)
+    if (!Config::DmgEnabled)
     {
         registers.AF = 0x01B0;
         registers.BC = 0x0013;
@@ -97,7 +97,7 @@ int Z80Cpu::checkForInterrupts()
 int Z80Cpu::step()
 {
     int stepTime = 0; 
-    stepTime += checkForInterrupts();
+    // stepTime += checkForInterrupts();
     // Fetch the next instruction
     data_t cpuInst = memory->read(registers.PC.val++);
     // Execute the instruction
@@ -310,136 +310,136 @@ int Z80Cpu::executeInstruction(data_t cpuInst)
             stepTime += instSet->loadReg8(&registers.BC.hi, &registers.BC.hi);
             break;
         case 0x41: // LD B, C
-            stepTime += instSet->loadReg8(&registers.BC.hi, &registers.BC.lo);
+            stepTime += instSet->loadReg8(&registers.BC.lo, &registers.BC.hi);
             break;
         case 0x42: // LD B, D
-            stepTime += instSet->loadReg8(&registers.BC.hi, &registers.DE.hi);
+            stepTime += instSet->loadReg8(&registers.DE.hi, &registers.BC.hi);
             break;
         case 0x43: // LD B, E
-            stepTime += instSet->loadReg8(&registers.BC.hi, &registers.DE.lo);
+            stepTime += instSet->loadReg8(&registers.DE.lo, &registers.BC.hi);
             break;
         case 0x44: // LD B, H
-            stepTime += instSet->loadReg8(&registers.BC.hi, &registers.HL.hi);
+            stepTime += instSet->loadReg8(&registers.HL.hi, &registers.BC.hi);
             break;
         case 0x45: // LD B, L
-            stepTime += instSet->loadReg8(&registers.BC.hi, &registers.HL.lo);
+            stepTime += instSet->loadReg8(&registers.HL.lo, &registers.BC.hi);
             break;
         case 0x46: // LD B, (HL)
             stepTime += instSet->loadReg8HL(&registers.BC.hi); 
             break;
         case 0x47: // LD B, A
-            stepTime += instSet->loadReg8(&registers.BC.hi, &registers.AF.hi);
+            stepTime += instSet->loadReg8(&registers.AF.hi, &registers.BC.hi);
             break;
         case 0x48: // LD C, B
-            stepTime += instSet->loadReg8(&registers.BC.lo, &registers.BC.hi);
+            stepTime += instSet->loadReg8(&registers.BC.hi, &registers.BC.lo);
             break;
         case 0x49: // LD C, C
             stepTime += instSet->loadReg8(&registers.BC.lo, &registers.BC.lo);
             break;
         case 0x4A: // LD C, D
-            stepTime += instSet->loadReg8(&registers.BC.lo, &registers.DE.hi);
+            stepTime += instSet->loadReg8( &registers.DE.hi, &registers.BC.lo);
             break;
         case 0x4B:// LD C, E
-            stepTime += instSet->loadReg8(&registers.BC.lo, &registers.DE.lo);
+            stepTime += instSet->loadReg8(&registers.DE.lo, &registers.BC.lo);
             break;
         case 0x4C: // LD C, H
-            stepTime += instSet->loadReg8(&registers.BC.lo, &registers.HL.hi);
+            stepTime += instSet->loadReg8(&registers.HL.hi, &registers.BC.lo);
             break;
         case 0x4D: // LD C, L
-            stepTime += instSet->loadReg8(&registers.BC.lo, &registers.HL.lo);
+            stepTime += instSet->loadReg8(&registers.HL.lo, &registers.BC.lo);
             break;
         case 0x4E: // LD C, (HL)
             stepTime += instSet->loadReg8HL(&registers.BC.lo); 
             break;
         case 0x4F: // LD C, A
-            stepTime += instSet->loadReg8(&registers.BC.lo, &registers.AF.hi);
+            stepTime += instSet->loadReg8(&registers.AF.hi, &registers.BC.lo);
             break;
         case 0x50: // LD D, B
-            stepTime += instSet->loadReg8(&registers.DE.hi, &registers.BC.hi);
+            stepTime += instSet->loadReg8(&registers.BC.hi, &registers.DE.hi);
             break;
         case 0x51: // LD D, C
-            stepTime += instSet->loadReg8(&registers.DE.hi, &registers.BC.lo);
+            stepTime += instSet->loadReg8(&registers.BC.lo, &registers.DE.hi);
             break;
         case 0x52: // LD D, D
             stepTime += instSet->loadReg8(&registers.DE.hi, &registers.DE.hi);
             break;
         case 0x53: // LD D, E
-            stepTime += instSet->loadReg8(&registers.DE.hi, &registers.DE.lo);
+            stepTime += instSet->loadReg8(&registers.DE.lo, &registers.DE.hi);
             break;
         case 0x54: // LD D, H
-            stepTime += instSet->loadReg8(&registers.DE.hi, &registers.HL.hi);
+            stepTime += instSet->loadReg8(&registers.HL.hi, &registers.DE.hi);
             break;
         case 0x55: // LD D, L
-            stepTime += instSet->loadReg8(&registers.DE.hi, &registers.HL.lo);
+            stepTime += instSet->loadReg8(&registers.HL.lo, &registers.DE.hi);
             break;
         case 0x56: // LD D, (HL)
             stepTime += instSet->loadReg8HL(&registers.DE.hi); 
             break;
         case 0x57: // LD D, A
-            stepTime += instSet->loadReg8(&registers.DE.hi, &registers.AF.hi);
+            stepTime += instSet->loadReg8(&registers.AF.hi, &registers.DE.hi);
             break;
         case 0x58: // LD E, B
-            stepTime += instSet->loadReg8(&registers.DE.lo, &registers.BC.hi);
+            stepTime += instSet->loadReg8(&registers.BC.hi, &registers.DE.lo);
             break;
         case 0x59: // LD E, C
-            stepTime += instSet->loadReg8(&registers.DE.lo, &registers.BC.lo);
+            stepTime += instSet->loadReg8(&registers.BC.lo, &registers.DE.lo);
             break;
         case 0x5A: // LD E, D
-            stepTime += instSet->loadReg8(&registers.DE.lo, &registers.DE.hi);
+            stepTime += instSet->loadReg8(&registers.DE.hi, &registers.DE.lo);
             break;
         case 0x5B: // LD E, E
             stepTime += instSet->loadReg8(&registers.DE.lo, &registers.DE.lo);
             break;
         case 0x5C: // LD E, H
-            stepTime += instSet->loadReg8(&registers.DE.lo, &registers.HL.hi);
+            stepTime += instSet->loadReg8(&registers.HL.hi, &registers.DE.lo);
             break;
         case 0x5D: // LD E, L
-            stepTime += instSet->loadReg8(&registers.DE.lo, &registers.HL.lo);
+            stepTime += instSet->loadReg8(&registers.HL.lo, &registers.DE.lo);
             break;
         case 0x5E: // LD E, (HL)
             stepTime += instSet->loadReg8HL(&registers.DE.lo); 
             break;
         case 0x5F: // LD E, A
-            stepTime += instSet->loadReg8(&registers.DE.lo, &registers.BC.hi);
+            stepTime += instSet->loadReg8( &registers.BC.hi, &registers.DE.lo);
             break;
         case 0x60: // LD H, B
-            stepTime += instSet->loadReg8(&registers.HL.hi, &registers.BC.hi);
+            stepTime += instSet->loadReg8(&registers.BC.hi, &registers.HL.hi);
             break;
         case 0x61: // LD H, C
-            stepTime += instSet->loadReg8(&registers.HL.hi, &registers.BC.lo);
+            stepTime += instSet->loadReg8(&registers.BC.lo, &registers.HL.hi);
             break;
         case 0x62: // LD H, D
-            stepTime += instSet->loadReg8(&registers.HL.hi, &registers.DE.hi);
+            stepTime += instSet->loadReg8(&registers.DE.hi, &registers.HL.hi);
             break;
         case 0x63: // LD H, E
-            stepTime += instSet->loadReg8(&registers.HL.hi, &registers.DE.lo);
+            stepTime += instSet->loadReg8(&registers.DE.lo, &registers.HL.hi);
             break;
         case 0x64: // LD H, H
             stepTime += instSet->loadReg8(&registers.HL.hi, &registers.HL.hi);
             break;
         case 0x65: // LD H, L
-            stepTime += instSet->loadReg8(&registers.HL.hi, &registers.HL.lo);
+            stepTime += instSet->loadReg8(&registers.HL.lo, &registers.HL.hi);
             break;
         case 0x66: // LD H, (HL)
             stepTime += instSet->loadReg8HL(&registers.HL.hi); 
             break;
         case 0x67: // LD H, A
-            stepTime += instSet->loadReg8(&registers.HL.hi, &registers.AF.hi);
+            stepTime += instSet->loadReg8(&registers.AF.hi, &registers.HL.hi);
             break;
         case 0x68: // LD L, B
-            stepTime += instSet->loadReg8(&registers.HL.lo, &registers.BC.hi);
+            stepTime += instSet->loadReg8(&registers.BC.hi, &registers.HL.lo);
             break;
         case 0x69: // LD L, C
-            stepTime += instSet->loadReg8(&registers.HL.lo, &registers.BC.lo);
+            stepTime += instSet->loadReg8(&registers.BC.lo, &registers.HL.lo);
             break;
         case 0x6A: // LD L, D
-            stepTime += instSet->loadReg8(&registers.HL.lo, &registers.DE.hi);
+            stepTime += instSet->loadReg8(&registers.DE.hi, &registers.HL.lo);
             break;
         case 0x6B: // LD L, E
-            stepTime += instSet->loadReg8(&registers.HL.lo, &registers.DE.lo);
+            stepTime += instSet->loadReg8(&registers.DE.lo, &registers.HL.lo);
             break;
         case 0x6C: // LD L, H
-            stepTime += instSet->loadReg8(&registers.HL.lo, &registers.HL.hi);
+            stepTime += instSet->loadReg8(&registers.HL.hi, &registers.HL.lo);
             break;
         case 0x6D: // LD L, L
             stepTime += instSet->loadReg8(&registers.HL.lo, &registers.HL.lo);
@@ -448,7 +448,7 @@ int Z80Cpu::executeInstruction(data_t cpuInst)
             stepTime += instSet->loadReg8HL(&registers.HL.lo); 
             break;
         case 0x6F: // LD L, A
-            stepTime += instSet->loadReg8(&registers.HL.lo, &registers.AF.hi);
+            stepTime += instSet->loadReg8(&registers.AF.hi, &registers.HL.lo);
             break;
         case 0x70: // LD (HL), B
             stepTime += instSet->storeReg8HL(registers.BC.hi); 
@@ -475,22 +475,22 @@ int Z80Cpu::executeInstruction(data_t cpuInst)
             stepTime += instSet->storeReg8HL(registers.AF.hi);
             break;
         case 0x78: // LD A, B
-            stepTime += instSet->loadReg8(&registers.AF.hi, &registers.BC.hi);
+            stepTime += instSet->loadReg8(&registers.BC.hi, &registers.AF.hi);
             break;
         case 0x79: // LD A, C
-            stepTime += instSet->loadReg8(&registers.AF.hi, &registers.BC.lo);
+            stepTime += instSet->loadReg8(&registers.BC.lo, &registers.AF.hi);
             break;
         case 0x7A: // LD A, D
-            stepTime += instSet->loadReg8(&registers.AF.hi, &registers.DE.hi);
+            stepTime += instSet->loadReg8(&registers.DE.hi, &registers.AF.hi);
             break;
         case 0x7B: // LD A, E
-            stepTime += instSet->loadReg8(&registers.AF.hi, &registers.DE.lo);
+            stepTime += instSet->loadReg8(&registers.DE.lo, &registers.AF.hi);
             break;
         case 0x7C: // LD A, H
-            stepTime += instSet->loadReg8(&registers.AF.hi, &registers.HL.hi);
+            stepTime += instSet->loadReg8(&registers.HL.hi, &registers.AF.hi);
             break;
         case 0x7D: // LD A, L
-            stepTime += instSet->loadReg8(&registers.AF.hi, &registers.HL.lo);
+            stepTime += instSet->loadReg8(&registers.HL.lo, &registers.AF.hi);
             break;
         case 0x7E: // LD A, (HL)
             stepTime += instSet->loadReg8HL(&registers.AF.hi); 

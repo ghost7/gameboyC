@@ -24,7 +24,7 @@ public:
      * @param mem Memory for reading and writing.
      * @param bootStrap true if using a boot strap, false otherwise.
      */
-    Z80Cpu(Memory *mem, bool bootStrap = false);
+    Z80Cpu(Memory *mem);
 
     Z80Registers *GetRegisters()
     {
@@ -44,10 +44,10 @@ private:
 
     Memory *memory;
     IOMemory *ioMemory;
+    
     Z80InstructionSet *instSet;
     Z80Registers registers;
     Z80Flags *flags;
-    bool useBootStrap;
     bool intMasterEnable;
 };
 
