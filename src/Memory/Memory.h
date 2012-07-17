@@ -5,6 +5,9 @@
 #include "MemoryDefs.h"
 #include "MemoryInterface.h"
 
+#include "Customizers/IOMemory.h"
+#include "Customizers/DmgBoot.h"
+
 const int ADDRESSABLE_MEMORY_SIZE = 0x10000;
 
 // number of elements in the AddressRange enum
@@ -54,7 +57,7 @@ public:
         // 0x6000-0x7FFF
         RomBanks_2,
         // 0x8000-0x9FFF
-        VRam,
+        VRAM,
         // 0xA000-0xBFFF
         ERam,
         // 0xC000-0xCFFF
@@ -62,7 +65,7 @@ public:
         // 0xD000-0xDFFF
         WRam1,
         // 0xE000-0xFDFF
-        EchoRam,
+        ECHORAM,
         // 0xFE00-0xFE9F
         Oam,
         // 0xFEA0-0xFEFF
@@ -94,7 +97,11 @@ public:
      */
     void registerReadListener( AddressRange range, MemoryInterface* mem );
     void registerWriteListener( AddressRange range, MemoryInterface* mem );
-
+   
+    /**
+     * Gets the I/O Ports, which are required for a lot of the Game Boy components.
+     */
+    IOMemory *getIOMemory();
 protected:
 
     // for now, I'll allocate enough space for all addresses to make things easy
@@ -104,6 +111,11 @@ protected:
     // the listeners for each address range
     MemoryInterface* readListeners[ADDRESS_RANGE_SIZE];
     MemoryInterface* writeListeners[ADDRESS_RANGE_SIZE];
+
+    // I/O Ports
+    IOMemory* ioMem;
+
+    DmgBoot* dmg;
 };
 
 #endif

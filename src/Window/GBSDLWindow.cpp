@@ -1,6 +1,6 @@
 #include "GBSDLWindow.h"
 
-bool GBSDLWindow::init(CpuBase *cpu)
+bool GBSDLWindow::init(CpuBase* cpu, LcdInterface* lcd)
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
@@ -19,6 +19,10 @@ bool GBSDLWindow::init(CpuBase *cpu)
     }
 
     gbCpu = cpu;
+
+    gbLcd = lcd;
+    gbLcd->init((uint32_t*)screen->pixels);
+    
     initialized = true;
     return true;
 }
@@ -43,9 +47,12 @@ void GBSDLWindow::loop()
             }
         }
         int cycles = gbCpu->step();
-        // TODO advance LCD by "cycles"
-        // TODO SDL_Flip(), only when necessary, have the LCD tell
-        // when it is time to update the screen.
+        gbLcd->step(cycles);
+        if (gbLcd->isDirty())
+        {
+            SDL_Flip(screen);
+            gbLcd->clean();
+        }
     }
 }
 

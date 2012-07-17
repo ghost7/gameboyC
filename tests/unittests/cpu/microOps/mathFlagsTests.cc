@@ -175,7 +175,8 @@ TEST_F(MathFlagsTest, Inc8FlagTest)
     for (int i = 0; i < 0xFF; i++)
     {
         registers.AF.hi = i;
-        instSet->incReg8(&registers.AF.hi);
+        Z80HalfRegisters hRegisters(registers);
+        instSet->incReg8(&hRegisters.A);
         ClearAllFlags();
         if ((uint8_t)(i + 1) == 0)
         {
@@ -197,7 +198,8 @@ TEST_F(MathFlagsTest, Dec8FlagTest)
     for (int i = 0; i < 0xFF; i++)
     {
         registers.AF.hi = i;
-        instSet->decReg8(&registers.AF.hi);
+        Z80HalfRegisters hRegisters(registers);
+        instSet->decReg8(&hRegisters.A);
         ClearAllFlags();
         if ((uint8_t)(i - 1) == 0)
         {
@@ -222,8 +224,9 @@ TEST_F(MathFlagsTest, Add16FlagTest)
         for (int j = 0; j < 0xFF; j++)
         {
             ClearAllFlags();
-            testFlags->Z = flags->Z;
-            
+            int Z = flags->Z;
+            testFlags->Z = Z;
+
             registers.HL.val = i;
             registers.BC.val = j;
             instSet->addReg16(registers.BC);
@@ -235,7 +238,7 @@ TEST_F(MathFlagsTest, Add16FlagTest)
             {
                 SetHTestFlag();
             }
-
+            
             ASSERT_NO_FATAL_FAILURE(CheckFlags()) << "16-bit: " << i << " + " << j;
         }
     }

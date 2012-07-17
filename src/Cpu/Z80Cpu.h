@@ -3,7 +3,8 @@
 
 #include "CpuBase.h"
 #include "../Common/DebugViewer.h"
-#include "../Memory/MemoryInterface.h"
+#include "../Memory/Memory.h"
+#include "../Memory/Customizers/IOMemory.h"
 #include "Z80.h"
 #include "Z80InstructionSet.h"
 
@@ -24,11 +25,7 @@ public:
      * @param mem Memory for reading and writing.
      * @param bootStrap true if using a boot strap, false otherwise.
      */
-    Z80Cpu(MemoryInterface *mem, bool bootStrap = false) 
-    { 
-        memory = mem;
-        useBootStrap = bootStrap;
-    };
+    Z80Cpu(Memory *mem);
 
     Z80Registers *GetRegisters()
     {
@@ -46,11 +43,12 @@ private:
 
     int executeCBInstruction();
 
-    MemoryInterface *memory;
+    Memory *memory;
+    IOMemory *ioMemory;
+    
     Z80InstructionSet *instSet;
     Z80Registers registers;
     Z80Flags *flags;
-    bool useBootStrap;
     bool intMasterEnable;
 
     DebugViewer *debugViewer;

@@ -31,19 +31,19 @@ char* readFileToBuffer(const std::string fileName, size_t* length)
 
 size_t getFileLen(const std::string fileName)
 {
-	bool success;
-	// Why does there have to be a '_' in windows?
-	// Is there a better way to do this?
+    bool success;
+    // Why does there have to be a '_' in windows?
+    // Is there a better way to do this?
 #ifdef _WIN32
-	struct _stat64 buf;
-	success = _stat64(fileName.c_str(), &buf) == 0;
+    struct _stat64 buf;
+    success = _stat64(fileName.c_str(), &buf) == 0;
 #else
-	struct stat64 buf;
-	success = stat64(fileName.c_str(), &buf) == 0;  
+    struct stat64 buf;
+    success = stat64(fileName.c_str(), &buf) == 0;  
 #endif
     if (success)
     {
         return buf.st_size;
     }
-	return 0;
+    return 0;
 }

@@ -38,6 +38,44 @@ Memory::Memory( data_t* c, size_t cSize )  {
     mem = new DefaultERam( this );
     registerWriteListener( RomBank0_1, mem );
     registerListener( ERam, mem );
+
+    // Register VRAM
+    MemoryInterface* vRam = new VRam(this);
+    registerListener(VRAM, vRam);
+
+    // Register Work Ram Bank 0
+    MemoryInterface* workRam0 = new BasicMemory(0xC000, 0xCFFF);
+    registerListener(WRam0, workRam0);
+
+    // Register Work Ram Bank 1
+    MemoryInterface* workRam1 = new BasicMemory(0xD000, 0xDFFF);
+    registerListener(WRam1, workRam1);
+
+    // Register Echo Ram
+    MemoryInterface* echoRam = new EchoRam(this);
+    registerListener(ECHORAM, echoRam);
+
+    // Register OAM Ram
+    MemoryInterface* oamRam = new BasicMemory(0xFE00, 0xFE9F);
+    registerListener(Oam, oamRam);
+
+    // Register Non-Usable memory
+    MemoryInterface* nonUsable = new LazyMemory();
+    registerListener(NonUseable, nonUsable);
+
+    // Register IOPorts
+    ioMem = new IOMemory();
+    registerListener(IOPorts, ioMem);
+    
+    // Register High-Speed ram.
+    MemoryInterface* hRam = new BasicMemory(0xFF80, 0xFFFE);
+    registerListener(HRam, hRam);
+
+    // Regsiter Interrupt Enable 
+    MemoryInterface* intEnable = new BasicMemory(0xFFFF, 0xFFFF);
+    registerListener(IReg, intEnable);
+
+    dmg = new DmgBoot();
 }
 
 
@@ -53,9 +91,12 @@ Memory::~Memory() {
  * @param addr The address whose value is requested
  * @return The value at {@code addr}
  */
-data_t Memory::read( addr_t addr ) {
+data_t Memory::read( addr_t addr ) 
+{
+    if (dmg->isEnabled() && addr <= 0xFF)
+        return dmg->read(addr);
     // ROM
-    if( addr <= 0x1FFF )
+    else if( addr <= 0x1FFF )
         return readListeners[RomBank0_1]->read( addr );
     else if( 0x2000 <= addr && addr <= 0x3FFF )
         return readListeners[RomBank0_2]->read( addr );
@@ -65,7 +106,7 @@ data_t Memory::read( addr_t addr ) {
         return readListeners[RomBanks_2]->read( addr );
     // VRAM
     else if( 0x8000 <= addr && addr <= 0x9FFF )
-        return readListeners[VRam]->read( addr );
+        return readListeners[VRAM]->read( addr );
     // external RAM
     else if( 0xA000 <= addr && addr <= 0xBFFF )
         return readListeners[ERam]->read( addr );
@@ -77,7 +118,7 @@ data_t Memory::read( addr_t addr ) {
         return readListeners[WRam1]->read( addr );
     // echo of internal RAM
     else if( 0xE000 <= addr && addr <= 0xFDFF )
-        return readListeners[EchoRam]->read( addr );
+        return readListeners[ECHORAM]->read( addr );
     // OAM
     else if( 0xFE00 <= addr && addr <= 0xFE9F )
         return readListeners[Oam]->read( addr );
@@ -89,10 +130,10 @@ data_t Memory::read( addr_t addr ) {
         return readListeners[IOPorts]->read( addr );
     // HRAM
     else if( 0xFF80 <= addr && addr <= 0xFFFE )
-        return readListeners[IReg]->read( addr );
+        return readListeners[HRam]->read( addr );
     // Interrupt Enable
     else if( addr == 0xFFFF )
-        return readListeners[HRam]->read( addr );
+        return readListeners[IReg]->read( addr );
     return 0;
 }
 
@@ -103,9 +144,12 @@ data_t Memory::read( addr_t addr ) {
  * @param addr The address where {@code val} should be written
  * @param val The value to write
  */
-void Memory::write( addr_t addr, data_t val ) {
+void Memory::write( addr_t addr, data_t val ) 
+{
+    if (dmg->isEnabled() && addr <= 0xFF)
+        dmg->write(addr, val);
     // ROM
-    if( addr <= 0x1FFF )
+    else if( addr <= 0x1FFF )
         writeListeners[RomBank0_1]->write( addr, val );
     else if( 0x2000 <= addr && addr <= 0x3FFF )
         writeListeners[RomBank0_2]->write( addr, val );
@@ -115,7 +159,7 @@ void Memory::write( addr_t addr, data_t val ) {
         writeListeners[RomBanks_2]->write( addr, val );
     // VRAM
     else if( 0x8000 <= addr && addr <= 0x9FFF )
-        writeListeners[VRam]->write( addr, val );
+        writeListeners[VRAM]->write( addr, val );
     // external RAM
     else if( 0xA000 <= addr && addr <= 0xBFFF )
         writeListeners[ERam]->write( addr, val );
@@ -127,7 +171,7 @@ void Memory::write( addr_t addr, data_t val ) {
         writeListeners[WRam1]->write( addr, val );
     // echo of internal RAM
     else if( 0xE000 <= addr && addr <= 0xFDFF )
-        writeListeners[EchoRam]->write( addr, val );
+        writeListeners[ECHORAM]->write( addr, val );
     // OAM
     else if( 0xFE00 <= addr && addr <= 0xFE9F )
         writeListeners[Oam]->write( addr, val );
@@ -139,10 +183,10 @@ void Memory::write( addr_t addr, data_t val ) {
         writeListeners[IOPorts]->write( addr, val );
     // HRAM
     else if( 0xFF80 <= addr && addr <= 0xFFFE )
-        writeListeners[IReg]->write( addr, val );
+        writeListeners[HRam]->write( addr, val );
     // Interrupt Enable
     else if( addr == 0xFFFF )
-        writeListeners[HRam]->write( addr, val );
+        writeListeners[IReg]->write( addr, val );
 }
 
 void Memory::registerListener( AddressRange range, MemoryInterface* mem ) {
@@ -156,4 +200,9 @@ void Memory::registerReadListener( AddressRange range, MemoryInterface* mem ) {
 
 void Memory::registerWriteListener( AddressRange range, MemoryInterface* mem ) {
     writeListeners[range] = mem;
+}
+
+IOMemory* Memory::getIOMemory()
+{
+    return ioMem;
 }
