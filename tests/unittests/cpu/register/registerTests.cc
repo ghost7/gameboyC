@@ -30,8 +30,9 @@ TEST_F(RegisterTest, RegisterPairTest)
     uint8_t low = 0x47;
 
     registers.BC.val = high << 8 | low;
-    ASSERT_EQ(high, registers.BC.hi);
-    ASSERT_EQ(low, registers.BC.lo);
+    Z80HalfRegisters hRegisters(registers);
+    ASSERT_EQ(high, hRegisters.B);
+    ASSERT_EQ(low, hRegisters.C);
 }
 
 /**
@@ -41,9 +42,11 @@ TEST_F(RegisterTest, RegisterPairTest)
 TEST_F(RegisterTest, ZFlagTest)
 {
     flags->Z = 1;
-	ASSERT_EQ(0x80, registers.AF.lo);
+    uint8_t registerF = registers.AF.lo;
+	ASSERT_EQ(0x80, registerF);
     flags->Z = 0;
-	ASSERT_EQ(0x00, registers.AF.lo);
+	registerF = registers.AF.lo;
+    ASSERT_EQ(0x00, registerF);
 }
 
 /**
@@ -53,9 +56,11 @@ TEST_F(RegisterTest, ZFlagTest)
 TEST_F(RegisterTest, NFlagTest)
 {
     flags->N = 1;
-    ASSERT_EQ(0x40, registers.AF.lo);
+    uint8_t registerF = registers.AF.lo;
+    ASSERT_EQ(0x40, registerF);
     flags->N = 0;
-    ASSERT_EQ(0x00, registers.AF.lo);
+    registerF = registers.AF.lo;
+    ASSERT_EQ(0x00, registerF);
 }
 
 /**
@@ -65,9 +70,11 @@ TEST_F(RegisterTest, NFlagTest)
 TEST_F(RegisterTest, HFlagTest)
 {
     flags->H = 1;
-    ASSERT_EQ(0x20, registers.AF.lo);
+    uint8_t registerF = registers.AF.lo;
+    ASSERT_EQ(0x20, registerF);
     flags->H = 0;
-    ASSERT_EQ(0x00, registers.AF.lo);
+    registerF = registers.AF.lo;
+    ASSERT_EQ(0x00, registerF);
 }
 
 /**
@@ -77,9 +84,11 @@ TEST_F(RegisterTest, HFlagTest)
 TEST_F(RegisterTest, CFlagTest)
 {
     flags->C = 1;
-    ASSERT_EQ(0x10, registers.AF.lo);
+    uint8_t registerF = registers.AF.lo;
+    ASSERT_EQ(0x10, registerF);
     flags->C = 0;
-    ASSERT_EQ(0x00, registers.AF.lo);
+    registerF = registers.AF.lo;
+    ASSERT_EQ(0x00, registerF);
 }
 
 /**
@@ -92,11 +101,17 @@ TEST_F(RegisterTest, AllFlagTest)
     flags->N = 1;
     flags->H = 1;
     flags->C = 1;
-    ASSERT_EQ(0xF0, registers.AF.lo);
+    uint8_t registerF = registers.AF.lo;
+    ASSERT_EQ(0xF0, registerF);
 
     flags->Z = 0;
     flags->N = 0;
     flags->H = 0;
     flags->C = 0;
-    ASSERT_EQ(0x00, registers.AF.lo);
+    registerF = registers.AF.lo;
+    ASSERT_EQ(0x00, registerF);
+
+    flags->Z = 1;
+    int H = flags->H;
+    ASSERT_EQ(H, 0);
 }

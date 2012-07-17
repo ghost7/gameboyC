@@ -190,8 +190,9 @@ TEST_F(RotateAndShiftTest, RotateRegLeftCTest)
     for (int i = 0; i < 0xFF; i++)
     {
         registers.BC.hi = i;
-        instSet->rotateRegLeftC(&registers.BC.hi);
-        ASSERT_EQ(RotateLeft(i), registers.BC.hi);
+        Z80HalfRegisters hRegisters(registers);
+        instSet->rotateRegLeftC(&hRegisters.B);
+        ASSERT_EQ(RotateLeft(i), hRegisters.B);
         // Make sure the msb went into the carry.
         ASSERT_NO_FATAL_FAILURE(CheckCarryMSB(i));
     }
@@ -203,22 +204,24 @@ TEST_F(RotateAndShiftTest, RotateRegLeftTest)
     {
         flags->C = 1;
         registers.BC.hi = i;
-        instSet->rotateRegLeft(&registers.BC.hi);
+        Z80HalfRegisters hRegisters(registers);
+        instSet->rotateRegLeft(&hRegisters.B);
         // make sure the msb went into the carry.
         ASSERT_NO_FATAL_FAILURE(CheckCarryMSB(i))
             << i;
         // Make sure the old carry went into the lsb.
-        ASSERT_EQ(1, GetLSB(registers.BC.hi))
+        ASSERT_EQ(1, GetLSB(hRegisters.B))
             << i;
     
         flags->C = 0;
         registers.BC.hi = i;
-        instSet->rotateRegLeft(&registers.BC.hi);
+        hRegisters = Z80HalfRegisters(registers);
+        instSet->rotateRegLeft(&hRegisters.B);
         // make sure the msb went into the carry
         ASSERT_NO_FATAL_FAILURE(CheckCarryMSB(i))
             << i;
         // Make sure the old carry went into the lsb.
-        ASSERT_EQ(0, GetLSB(registers.BC.hi))
+        ASSERT_EQ(0, GetLSB(hRegisters.B))
             << i;
     }
 }
@@ -228,8 +231,9 @@ TEST_F(RotateAndShiftTest, RotateRegRightCTest)
     for (int i = 0; i < 0xFF; i++)
     {
         registers.BC.hi = i;
-        instSet->rotateRegRightC(&registers.BC.hi);
-        ASSERT_EQ(RotateRight(i), registers.BC.hi);
+        Z80HalfRegisters hRegisters(registers);
+        instSet->rotateRegRightC(&hRegisters.B);
+        ASSERT_EQ(RotateRight(i), hRegisters.B);
         // Make sure the lsb went into the carry.
         ASSERT_NO_FATAL_FAILURE(CheckCarryLSB(i));
     }
@@ -241,22 +245,23 @@ TEST_F(RotateAndShiftTest, RotateRegRightTest)
     {
         flags->C = 1;
         registers.BC.hi = i;
-        instSet->rotateRegRight(&registers.BC.hi);
+        Z80HalfRegisters hRegisters(registers);
+        instSet->rotateRegRight(&hRegisters.B);
         // Make sure the lsb went into the carry.
         ASSERT_NO_FATAL_FAILURE(CheckCarryLSB(i))
             << i;
         // Make sure the old carry went into the msb.
-        ASSERT_EQ(1, GetMSB(registers.BC.hi))
+        ASSERT_EQ(1, GetMSB(hRegisters.B))
             << i;
     
         flags->C = 0;
-        registers.BC.hi = i;
-        instSet->rotateRegRight(&registers.BC.hi);
+        hRegisters.B = i;
+        instSet->rotateRegRight(&hRegisters.B);
         // Make sure the lsb went into the carry.
         ASSERT_NO_FATAL_FAILURE(CheckCarryLSB(i))
             << i;
         // Make sure the old carry went into the msb.
-        ASSERT_EQ(0, GetMSB(registers.BC.hi))
+        ASSERT_EQ(0, GetMSB(hRegisters.B))
             << i;
     }
 }
@@ -266,8 +271,9 @@ TEST_F(RotateAndShiftTest, ShiftRegLeftATest)
     for (int i = 0; i < 0xFF; i++)
     {
         registers.BC.hi = i;
-        instSet->shiftRegLeftA(&registers.BC.hi);
-        ASSERT_EQ(ShiftLeft(i), registers.BC.hi);
+        Z80HalfRegisters hRegisters(registers);
+        instSet->shiftRegLeftA(&hRegisters.B);
+        ASSERT_EQ(ShiftLeft(i), hRegisters.B);
         // Make sure the msb went into the carry.
         ASSERT_NO_FATAL_FAILURE(CheckCarryMSB(i));
     }
@@ -282,8 +288,9 @@ TEST_F(RotateAndShiftTest, SwapRegTest)
         int lowNibble = i & 0xF;
         int expectedValue = lowNibble << 4 | highNibble;
         
-        instSet->swapReg(&registers.BC.hi);
-        ASSERT_EQ(expectedValue, registers.BC.hi) << i;
+        Z80HalfRegisters hRegisters(registers);
+        instSet->swapReg(&hRegisters.B);
+        ASSERT_EQ(expectedValue, hRegisters.B) << i;
     }
 }
 
@@ -292,11 +299,12 @@ TEST_F(RotateAndShiftTest, ShiftRegRightATest)
     for (int i = 0; i < 0xFF; i++)
     {
         registers.BC.hi = i;
-        instSet->shiftRegRightA(&registers.BC.hi);
+        Z80HalfRegisters hRegisters(registers);
+        instSet->shiftRegRightA(&hRegisters.B);
 
         // The 7th bit stays the same
         int expectedValue = ShiftRight(i) | (i & 0x80);
-        ASSERT_EQ(expectedValue, registers.BC.hi) << i;
+        ASSERT_EQ(expectedValue, hRegisters.B) << i;
         // Make sure the lsb went into the carry.
         ASSERT_NO_FATAL_FAILURE(CheckCarryLSB(i)) << i;
     }
@@ -307,10 +315,11 @@ TEST_F(RotateAndShiftTest, ShiftRegRightLTest)
     for (int i = 0; i < 0xFF; i++)
     {
         registers.BC.hi = i;
-        instSet->shiftRegRightL(&registers.BC.hi);
+        Z80HalfRegisters hRegisters(registers);
+        instSet->shiftRegRightL(&hRegisters.B);
 
         // The 7th bit goes to 0.
-        ASSERT_EQ(ShiftRight(i), registers.BC.hi) << i;
+        ASSERT_EQ(ShiftRight(i), hRegisters.B) << i;
         // Make sure the lsb went into the carry.
         ASSERT_NO_FATAL_FAILURE(CheckCarryLSB(i)) << i;
     }

@@ -6,33 +6,6 @@
 #define IE_ADDR 0xFFFF
 #define TIMER_REQUEST 0x40
 
-struct HalfRegisters
-{
-    uint8_t B, C, D, E, H, L, A;
-    HalfRegisters(Z80Registers registers)
-    {
-        B = registers.BC.hi;
-        C = registers.BC.lo;
-        D = registers.DE.hi;
-        E = registers.DE.lo;
-        H = registers.HL.hi;
-        L = registers.HL.lo;
-        A = registers.AF.hi;
-    }
-    Z80Registers getRegisters()
-    {
-        Z80Registers registers;
-        registers.BC.hi = B;
-        registers.BC.lo = C;
-        registers.DE.hi = D;
-        registers.DE.lo = E;
-        registers.HL.hi = H;
-        registers.HL.lo = L;
-        registers.AF.hi = A;
-        return registers;
-    }
-};
-
 Z80Cpu::Z80Cpu(Memory* mem) 
 {
     memory = mem;
@@ -129,7 +102,7 @@ int Z80Cpu::step()
     data_t cpuInst = memory->read(registers.PC.val++);
     // Execute the instruction
     stepTime += executeInstruction(cpuInst);
-    
+     
     advanceTimer(stepTime);
     return stepTime;
 }
@@ -137,7 +110,7 @@ int Z80Cpu::step()
 int Z80Cpu::executeInstruction(data_t cpuInst)
 {
     int stepTime = 0;
-    HalfRegisters hRegisters(registers);
+    Z80HalfRegisters hRegisters(registers);
     switch(cpuInst)
     {
         case 0x00: // NOP
@@ -154,15 +127,15 @@ int Z80Cpu::executeInstruction(data_t cpuInst)
             break;
         case 0x04: // INC B
             stepTime += instSet->incReg8(&hRegisters.B);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x05: // DEC B
             stepTime += instSet->decReg8(&hRegisters.B);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x06: // LD B, n
             stepTime += instSet->loadImmReg8(&hRegisters.B);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x07: // RLCA
             stepTime += instSet->rotateALeftC(); 
@@ -181,15 +154,15 @@ int Z80Cpu::executeInstruction(data_t cpuInst)
             break;
         case 0x0C: // INC C
             stepTime += instSet->incReg8(&hRegisters.C);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x0D: // DEC C
             stepTime += instSet->decReg8(&hRegisters.C);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x0E: // LD C, n
             stepTime += instSet->loadImmReg8(&hRegisters.C);
-            registers = hRegisters.getRegisters(); 
+            hRegisters.storeRegisters(&registers); 
             break;
         case 0x0F: // RRCA
             stepTime += instSet->rotateARightC();
@@ -208,15 +181,15 @@ int Z80Cpu::executeInstruction(data_t cpuInst)
             break;
         case 0x14: // INC D
             stepTime += instSet->incReg8(&hRegisters.D);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x15: // DEC D
             stepTime += instSet->decReg8(&hRegisters.D);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x16: // LD D, n
             stepTime += instSet->loadImmReg8(&hRegisters.D);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x17: // RLA
             stepTime += instSet->rotateALeft(); 
@@ -235,15 +208,15 @@ int Z80Cpu::executeInstruction(data_t cpuInst)
             break;
         case 0x1C: // INC E
             stepTime += instSet->incReg8(&hRegisters.E);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x1D: // DEC E 
             stepTime += instSet->decReg8(&hRegisters.E);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x1E: // LD E, n
             stepTime += instSet->loadImmReg8(&hRegisters.E);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x1F: // RRA
             stepTime += instSet->rotateARight();
@@ -262,15 +235,15 @@ int Z80Cpu::executeInstruction(data_t cpuInst)
             break;
         case 0x24: // INC H
             stepTime += instSet->incReg8(&hRegisters.H);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x25: // DEC H
             stepTime += instSet->decReg8(&hRegisters.H);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x26: // LD H, n
             stepTime += instSet->loadImmReg8(&hRegisters.H);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x27: // DAA
             stepTime += instSet->decimalyAdjustA();
@@ -289,15 +262,15 @@ int Z80Cpu::executeInstruction(data_t cpuInst)
             break;
         case 0x2C: // INC L
             stepTime += instSet->incReg8(&hRegisters.L);
-            registers = hRegisters.getRegisters(); 
+            hRegisters.storeRegisters(&registers); 
             break;
         case 0x2D: // DEC L
             stepTime += instSet->decReg8(&hRegisters.L);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x2E: // LD L, n
             stepTime += instSet->loadImmReg8(&hRegisters.L);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x2F: // CPL
             stepTime += instSet->complementA();
@@ -342,210 +315,210 @@ int Z80Cpu::executeInstruction(data_t cpuInst)
             break; 
         case 0x3C: // INC A
             stepTime += instSet->incReg8(&hRegisters.A);
-            registers = hRegisters.getRegisters(); 
+            hRegisters.storeRegisters(&registers); 
             break;
         case 0x3D: // DEC A
             stepTime += instSet->decReg8(&hRegisters.A);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x3E: // LD A, n
             stepTime += instSet->loadImmReg8(&hRegisters.A);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x3F: // CCF
             stepTime += instSet->complementCarry();
             break;
         case 0x40: // LD B, B
             stepTime += instSet->loadReg8(&hRegisters.B, &hRegisters.B);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x41: // LD B, C
             stepTime += instSet->loadReg8(&hRegisters.C, &hRegisters.B);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x42: // LD B, D
             stepTime += instSet->loadReg8(&hRegisters.D, &hRegisters.B);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x43: // LD B, E
             stepTime += instSet->loadReg8(&hRegisters.E, &hRegisters.B);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x44: // LD B, H
             stepTime += instSet->loadReg8(&hRegisters.H, &hRegisters.B);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x45: // LD B, L
             stepTime += instSet->loadReg8(&hRegisters.L, &hRegisters.B);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x46: // LD B, (HL)
             stepTime += instSet->loadReg8HL(&hRegisters.B);
-            registers = hRegisters.getRegisters(); 
+            hRegisters.storeRegisters(&registers); 
             break;
         case 0x47: // LD B, A
             stepTime += instSet->loadReg8(&hRegisters.A, &hRegisters.B);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x48: // LD C, B
             stepTime += instSet->loadReg8(&hRegisters.B, &hRegisters.C);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x49: // LD C, C
             stepTime += instSet->loadReg8(&hRegisters.C, &hRegisters.C);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x4A: // LD C, D
             stepTime += instSet->loadReg8( &hRegisters.D, &hRegisters.C);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x4B:// LD C, E
             stepTime += instSet->loadReg8(&hRegisters.E, &hRegisters.C);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x4C: // LD C, H
             stepTime += instSet->loadReg8(&hRegisters.H, &hRegisters.C);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x4D: // LD C, L
             stepTime += instSet->loadReg8(&hRegisters.L, &hRegisters.C);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x4E: // LD C, (HL)
             stepTime += instSet->loadReg8HL(&hRegisters.C);
-            registers = hRegisters.getRegisters(); 
+            hRegisters.storeRegisters(&registers); 
             break;
         case 0x4F: // LD C, A
             stepTime += instSet->loadReg8(&hRegisters.A, &hRegisters.C);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x50: // LD D, B
             stepTime += instSet->loadReg8(&hRegisters.B, &hRegisters.D);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x51: // LD D, C
             stepTime += instSet->loadReg8(&hRegisters.C, &hRegisters.D);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x52: // LD D, D
             stepTime += instSet->loadReg8(&hRegisters.D, &hRegisters.D);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x53: // LD D, E
             stepTime += instSet->loadReg8(&hRegisters.E, &hRegisters.D);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x54: // LD D, H
             stepTime += instSet->loadReg8(&hRegisters.H, &hRegisters.D);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x55: // LD D, L
             stepTime += instSet->loadReg8(&hRegisters.L, &hRegisters.D);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x56: // LD D, (HL)
             stepTime += instSet->loadReg8HL(&hRegisters.D); 
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x57: // LD D, A
             stepTime += instSet->loadReg8(&hRegisters.A, &hRegisters.D);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x58: // LD E, B
             stepTime += instSet->loadReg8(&hRegisters.B, &hRegisters.E);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x59: // LD E, C
             stepTime += instSet->loadReg8(&hRegisters.C, &hRegisters.E);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x5A: // LD E, D
             stepTime += instSet->loadReg8(&hRegisters.D, &hRegisters.E);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x5B: // LD E, E
             stepTime += instSet->loadReg8(&hRegisters.E, &hRegisters.E);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x5C: // LD E, H
             stepTime += instSet->loadReg8(&hRegisters.H, &hRegisters.E);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x5D: // LD E, L
             stepTime += instSet->loadReg8(&hRegisters.L, &hRegisters.E);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x5E: // LD E, (HL)
             stepTime += instSet->loadReg8HL(&hRegisters.E); 
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x5F: // LD E, A
             stepTime += instSet->loadReg8( &hRegisters.B, &hRegisters.E);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x60: // LD H, B
             stepTime += instSet->loadReg8(&hRegisters.B, &hRegisters.H);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x61: // LD H, C
             stepTime += instSet->loadReg8(&hRegisters.C, &hRegisters.H);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x62: // LD H, D
             stepTime += instSet->loadReg8(&hRegisters.D, &hRegisters.H);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x63: // LD H, E
             stepTime += instSet->loadReg8(&hRegisters.E, &hRegisters.H);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x64: // LD H, H
             stepTime += instSet->loadReg8(&hRegisters.H, &hRegisters.H);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x65: // LD H, L
             stepTime += instSet->loadReg8(&hRegisters.L, &hRegisters.H);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x66: // LD H, (HL)
             stepTime += instSet->loadReg8HL(&hRegisters.H); 
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x67: // LD H, A
             stepTime += instSet->loadReg8(&hRegisters.A, &hRegisters.H);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x68: // LD L, B
             stepTime += instSet->loadReg8(&hRegisters.B, &hRegisters.L);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x69: // LD L, C
             stepTime += instSet->loadReg8(&hRegisters.C, &hRegisters.L);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x6A: // LD L, D
             stepTime += instSet->loadReg8(&hRegisters.D, &hRegisters.L);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x6B: // LD L, E
             stepTime += instSet->loadReg8(&hRegisters.E, &hRegisters.L);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x6C: // LD L, H
             stepTime += instSet->loadReg8(&hRegisters.H, &hRegisters.L);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x6D: // LD L, L
             stepTime += instSet->loadReg8(&hRegisters.L, &hRegisters.L);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x6E: // LD L, (HL)
             stepTime += instSet->loadReg8HL(&hRegisters.L); 
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x6F: // LD L, A
             stepTime += instSet->loadReg8(&hRegisters.A, &hRegisters.L);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x70: // LD (HL), B
             stepTime += instSet->storeReg8HL(hRegisters.B); 
@@ -573,35 +546,35 @@ int Z80Cpu::executeInstruction(data_t cpuInst)
             break;
         case 0x78: // LD A, B
             stepTime += instSet->loadReg8(&hRegisters.B, &hRegisters.A);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x79: // LD A, C
             stepTime += instSet->loadReg8(&hRegisters.C, &hRegisters.A);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x7A: // LD A, D
             stepTime += instSet->loadReg8(&hRegisters.D, &hRegisters.A);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x7B: // LD A, E
             stepTime += instSet->loadReg8(&hRegisters.E, &hRegisters.A);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x7C: // LD A, H
             stepTime += instSet->loadReg8(&hRegisters.H, &hRegisters.A);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x7D: // LD A, L
             stepTime += instSet->loadReg8(&hRegisters.L, &hRegisters.A);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x7E: // LD A, (HL)
             stepTime += instSet->loadReg8HL(&hRegisters.A); 
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
             break;
         case 0x7F: // LD A, A
             stepTime += instSet->loadReg8(&hRegisters.A, &hRegisters.A);
-            registers = hRegisters.getRegisters();
+            hRegisters.storeRegisters(&registers);
                 break;
         case 0x80: // ADD A, B
             stepTime += instSet->addReg(hRegisters.B); 
@@ -975,7 +948,7 @@ int Z80Cpu::executeCBInstruction()
     uint8_t hlMem = 0;
     int memWrite = 1;
 
-    HalfRegisters hRegisters(registers);
+    Z80HalfRegisters hRegisters(registers);
     // find out which value is going to be used
     switch(lowInst)
     {
@@ -1107,7 +1080,7 @@ int Z80Cpu::executeCBInstruction()
     }
     else
     {
-        registers = hRegisters.getRegisters();
+        hRegisters.storeRegisters(&registers);
     }
     return stepTime;
 }

@@ -20,24 +20,27 @@ protected:
 TEST_F(EightBitLoadTest, LoadReg8Test)
 {
     registers.BC.hi = 16;
-    instSet->loadReg8(&registers.BC.hi, &registers.BC.lo);
-    ASSERT_EQ(registers.BC.hi, registers.BC.lo);
+    Z80HalfRegisters hRegsiters(registers);
+    instSet->loadReg8(&hRegsiters.B, &hRegsiters.C);
+    ASSERT_EQ(hRegsiters.B, hRegsiters.C);
 }
 
 TEST_F(EightBitLoadTest, LoadReg8ImmTest)
 {
     uint8_t imm = 20;
     SetImmValue(imm);
-    instSet->loadImmReg8(&registers.BC.hi);
-    ASSERT_EQ(imm, registers.BC.hi);
+    Z80HalfRegisters hRegisters(registers);
+    instSet->loadImmReg8(&hRegisters.B);
+    ASSERT_EQ(imm, hRegisters.B);
 }
 
 TEST_F(EightBitLoadTest, LoadReg8HLTest)
 {
     uint16_t memoryAddress = LoadMemoryReg(&registers.HL);
     SetMemory(memoryAddress, 20);
-    instSet->loadReg8HL(&registers.BC.hi);
-    ASSERT_EQ(registers.BC.hi, GetMemory(memoryAddress));
+    Z80HalfRegisters hRegisters(registers);
+    instSet->loadReg8HL(&hRegisters.B);
+    ASSERT_EQ(hRegisters.B, GetMemory(memoryAddress));
 }
 
 TEST_F(EightBitLoadTest, StoreReg8HLTest)

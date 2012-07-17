@@ -67,7 +67,7 @@ protected:
     /**
      * Test flags.
      */
-    struct Z80Flags *testFlags;
+    Z80Flags *testFlags;
 };
 
 #endif

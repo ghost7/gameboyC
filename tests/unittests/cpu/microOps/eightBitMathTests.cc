@@ -341,8 +341,9 @@ TEST_F(EightBitMathTest, IncReg8Test)
     for (int i = 0; i < 0xFF; i++)
     {
         registers.AF.hi = i;
-        instSet->incReg8(&registers.AF.hi);
-        ASSERT_EQ((uint8_t)(i + 1), registers.AF.hi) << i << " + 1";
+        Z80HalfRegisters hRegisters(registers);
+        instSet->incReg8(&hRegisters.A);
+        ASSERT_EQ((uint8_t)(i + 1), hRegisters.A) << i << " + 1";
     }
 }
 
@@ -362,8 +363,9 @@ TEST_F(EightBitMathTest, DecReg8Test)
     for (int i = 0; i < 0xFF; i++)
     {
         registers.AF.hi = i;
-        instSet->decReg8(&registers.AF.hi);
-        ASSERT_EQ((uint8_t)(i - 1), registers.AF.hi) << i << " - 1";
+        Z80HalfRegisters hRegisters(registers);
+        instSet->decReg8(&hRegisters.A);
+        ASSERT_EQ((uint8_t)(i - 1), hRegisters.A) << i << " - 1";
     }
 }
 
