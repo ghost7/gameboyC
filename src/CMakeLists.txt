@@ -44,6 +44,8 @@ set(SRCS gameboy.cpp
          Lcd/LcdComponent.cpp
          Lcd/LcdComponent.h
          Lcd/LcdInterface.h
+         Lcd/LcdSprites.cpp
+         Lcd/LcdSprites.h
          Window/GBSDLWindow.cpp
          Window/GBSDLWindow.h
          Window/GBWindow.h
@@ -127,6 +129,8 @@ source_group(Lcd
              Lcd/LcdComponent.cpp
              Lcd/LcdComponent.h
              Lcd/LcdInterface.h
+             Lcd/LcdSprites.cpp
+             Lcd/LcdSprites.h
             )
 
 source_group(Common

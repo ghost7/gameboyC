@@ -18,6 +18,10 @@ void Lcd::init(uint32_t* pixels)
 {
     lcdPixels = pixels;
     background = new LcdBackground(memory, pixels);
+    sprites = new LcdSprites(memory, pixels);
+    
+    currentMode = HBlank;
+    lcdCycles = 0;
 }
 
 void Lcd::step(int cycles)
@@ -132,4 +136,5 @@ void Lcd::incrementScanLine()
 void Lcd::drawScanLine()
 {
     background->drawScanline();
+    sprites->drawScanline();
 }

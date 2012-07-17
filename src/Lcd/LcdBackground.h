@@ -20,11 +20,8 @@ public:
     LcdBackground(Memory* mem, uint32_t* pixels);
 
     virtual void drawScanline();
-private:
-    Memory* memory;
-    IOMemory* ioPorts;
-    uint32_t* lcdPixels;
 
+private:
     /**
      * Helper function to get the tile map address of the tiles that are 
      * currently being drawn as part of the scanline.

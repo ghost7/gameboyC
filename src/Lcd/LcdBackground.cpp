@@ -4,11 +4,9 @@
 #define TILE_MAP_SELECT 0x4
 #define TILE_DATA_SELECT 0x10
 
-LcdBackground::LcdBackground(Memory* mem, uint32_t* pixels)
+LcdBackground::LcdBackground(Memory* mem, uint32_t* pixels) 
+    : LcdComponent(mem, pixels)  
 {
-    memory = mem;
-    ioPorts = memory->getIOMemory();
-    lcdPixels = pixels;
 }
 
 void LcdBackground::drawScanline()

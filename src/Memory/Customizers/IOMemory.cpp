@@ -1,7 +1,48 @@
 #include "../../Common/Config.h"
 #include "IOMemory.h"
 
-IOMemory::IOMemory() {
+IOMemory::IOMemory() 
+{
+    JOYP = 0;
+    SD = 0;
+    SC = 0;
+    DIV = 0;
+    TIMA = 0;
+    TMA = 0;
+    TAC = 0;
+    IFLAGS = 0;
+    NR10 = 0;
+    NR11 = 0;
+    NR12 = 0;
+    NR13 = 0;
+    NR14 = 0;
+    NR21 = 0;
+    NR22 = 0;
+    NR23 = 0;
+    NR24 = 0;
+    NR30 = 0;
+    NR31 = 0;
+    NR32 = 0;
+    NR33 = 0;
+    NR34 = 0;
+    NR41 = 0;
+    NR42 = 0;
+    NR43 = 0;
+    NR44 = 0;
+    NR50 = 0;
+    NR51 = 0;
+    NR52 = 0;
+    LCDC = 0;
+    STAT = 0;
+    SCY = 0;
+    SCX = 0;
+    LY = 0;
+    LYC = 0;
+    BGP = 0;
+    OBP0 = 0;
+    OBP1 = 0;
+    WY = 0;
+    WX = 0;
 }
 
 data_t IOMemory::read( addr_t addr ) 

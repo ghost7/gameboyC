@@ -3,6 +3,7 @@
 
 #include "LcdInterface.h"
 #include "LcdBackground.h"
+#include "LcdSprites.h"
 #include "../Memory/Memory.h"
 #include "../Memory/Customizers/IOMemory.h"
 
@@ -41,6 +42,7 @@ private:
     uint32_t* lcdPixels;
     
     LcdBackground* background;
+    LcdSprites* sprites;
 
     bool dirty;
     int lcdCycles;

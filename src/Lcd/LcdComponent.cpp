@@ -1,5 +1,12 @@
 #include "LcdComponent.h"
 
+LcdComponent::LcdComponent(Memory* mem, uint32_t* pixels)
+{
+    memory = mem;
+    ioPorts = memory->getIOMemory();
+    lcdPixels = pixels;
+}
+
 void LcdComponent::setPixel(uint32_t* pixels, int x, int y, Color color)
 {
     pixels[y * 160 + x] = color.getColor();
