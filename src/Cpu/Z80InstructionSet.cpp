@@ -445,18 +445,18 @@ int Z80InstructionSet::decimalyAdjustA()
             if(flags->H)
             {
                 if((high >= 6) && (low >= 6))
-                    registers->AF.hi += 0x9A;
+                    registers->AF.hi = registers->AF.hi + 0x9A;
             }
             else if(high >= 7 && low <= 9)
             {
-                registers->AF.hi += 0xA0;
+                registers->AF.hi = registers->AF.hi + 0xA0;
             }
         }
         else
         {
             if(flags->H && (high <= 8) && (low >= 6))
             {
-                registers->AF.hi += 0xFA;
+                registers->AF.hi = registers->AF.hi + 0xFA;
             }
         }
     }
@@ -467,17 +467,17 @@ int Z80InstructionSet::decimalyAdjustA()
             if(flags->H)
             {
                 if((high <= 3) && (low <= 3))
-                    registers->AF.hi += 0x66;
+                    registers->AF.hi = registers->AF.hi + 0x66;
             }
             else if(high <= 2)
             {
                 if(low <= 9)
                 {
-                    registers->AF.hi += 0x60;
+                    registers->AF.hi = registers->AF.hi + 0x60;
                 }
                 else
                 {
-                    registers->AF.hi += 0x66;
+                    registers->AF.hi = registers->AF.hi + 0x66;
                 }
             }
         }
@@ -489,11 +489,11 @@ int Z80InstructionSet::decimalyAdjustA()
                 {
                     if((high <= 9))
                     {
-                        registers->AF.hi += 0x06;
+                        registers->AF.hi = registers->AF.hi + 0x06;
                     }
                     else
                     {
-                        registers->AF.hi += 0x66;
+                        registers->AF.hi = registers->AF.hi + 0x66;
                     }
                 }
             }
@@ -503,7 +503,7 @@ int Z80InstructionSet::decimalyAdjustA()
                 {
                     if(high > 9)
                     {
-                        registers->AF.hi += 0x60;
+                        registers->AF.hi = registers->AF.hi + 0x60;
                         flags->C = 1;
                     }
                 }
@@ -511,11 +511,11 @@ int Z80InstructionSet::decimalyAdjustA()
                 {
                     if(high <= 8)
                     {
-                        registers->AF.hi += 0x06;
+                        registers->AF.hi = registers->AF.hi + 0x06;
                     }
                     else
                     {
-                        registers->AF.hi += 0x66;
+                        registers->AF.hi = registers->AF.hi + 0x66;
                         flags->C = 1;
                     }
                 }
@@ -528,7 +528,7 @@ int Z80InstructionSet::decimalyAdjustA()
 
 int Z80InstructionSet::complementA()
 {
-    registers->AF.hi ^= 0xFF;
+    registers->AF.hi = registers->AF.hi ^ 0xFF;
     flags->N = 1;
     flags->H = 1;
     return 4;

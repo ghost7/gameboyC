@@ -1,4 +1,5 @@
 set(SRCS gameboy.cpp
+         Common/Bitfield.h
          Common/Color.cpp
          Common/Color.h
          Common/Config.h
@@ -135,6 +136,7 @@ source_group(Lcd
 
 source_group(Common
              FILES
+             Common/Bitfield.h
              Common/Color.cpp
              Common/Color.h
              Common/Config.h

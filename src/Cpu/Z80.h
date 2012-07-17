@@ -2,6 +2,7 @@
 #define __Z80_H__
 
 #include <stdint.h>
+#include "../Common/Bitfield.h"
 
 /**
  * @brief 16-bit register pair.
@@ -10,12 +11,9 @@
  */
 union RegisterPair
 {   
-    uint16_t val;       //!< 16-bit value stored in the register
-    struct
-    {
-        uint8_t lo;     //!< Lower 8-bits of the register
-        uint8_t hi;     //!< Upper 8-bits of the register
-    };
+    uint16_t val;                 //!< 16-bit value stored in the register
+    Bitfield<0, 8, uint16_t> lo;  //!< Lower 8-bits of the register
+    Bitfield<8, 8, uint16_t> hi;  //!< Upper 8-bits of the register
     
     /**
      * Creates a RegisterPair from two 8-bit register values.
@@ -43,14 +41,15 @@ union RegisterPair
  *
  * @ingroup CPU 
  */
-struct Z80Flags
+union Z80Flags
 {
-    unsigned unused : 4;        //!< Lower 4-bits that should remain 0.
-    unsigned C : 1;             //!< Carry flag.
-    unsigned H : 1;             //!< Half Carry Flag.
-    unsigned N : 1;             //!< Negation flag.
-    unsigned Z : 1;             //!< Zero flag.
-    Z80Flags() { }
+private:
+    uint8_t value;
+public:
+    Bitfield<7, 1, uint8_t> Z;
+    Bitfield<6, 1, uint8_t> N;
+    Bitfield<5, 1, uint8_t> H;
+    Bitfield<4, 1, uint8_t> C;
 };
 
 /**
@@ -75,6 +74,49 @@ struct Z80Registers
     Z80Flags *getFlags()
     {
         return (Z80Flags*)&AF.lo;
+    }
+};
+
+/*
+ * @breif Z80 Half Registers helper.
+ * 
+ * This structure can be used to extract the 8-bit register values from a set of
+ * Z80Registers. 
+ */
+struct Z80HalfRegisters
+{
+    uint8_t B, C, D, E, H, L, A;
+
+    /**
+     * Create the half-registers from the Z80 registers.
+     *
+     * @param registers The registers to create from.
+     */
+    Z80HalfRegisters(Z80Registers registers)
+    {
+        B = registers.BC.hi;
+        C = registers.BC.lo;
+        D = registers.DE.hi;
+        E = registers.DE.lo;
+        H = registers.HL.hi;
+        L = registers.HL.lo;
+        A = registers.AF.hi;
+    }
+
+    /**
+     * Store the half-register values into Z80 registers.
+     * 
+     * @param registers Registers to store into.
+     */
+    void storeRegisters(Z80Registers* registers)
+    {
+        registers->BC.hi = B;
+        registers->BC.lo = C;
+        registers->DE.hi = D;
+        registers->DE.lo = E;
+        registers->HL.hi = H;
+        registers->HL.lo = L;
+        registers->AF.hi = A;
     }
 };
 
