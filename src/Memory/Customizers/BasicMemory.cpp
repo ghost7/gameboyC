@@ -3,7 +3,7 @@
 #include "BasicMemory.h"
 
 BasicMemory::BasicMemory( addr_t start, addr_t end ) {
-    if( end <= start )
+    if( end < start )
         // TODO: good errors
         std::cout << "Invalid initializers for BasicMemory." << std::endl;
     size = end - start + 1;

@@ -2,6 +2,7 @@
 #define __Z80_H__
 
 #include <stdint.h>
+#include "../Common/Bitfield.h"
 
 /**
  * @brief 16-bit register pair.
@@ -11,11 +12,13 @@
 union RegisterPair
 {   
     uint16_t val;       //!< 16-bit value stored in the register
-    struct
+    /*struct
     {
         uint8_t lo;     //!< Lower 8-bits of the register
         uint8_t hi;     //!< Upper 8-bits of the register
-    };
+    };*/
+    Bitfield<0, 8> lo;
+    Bitfield<8, 8> hi;
     
     /**
      * Creates a RegisterPair from two 8-bit register values.
